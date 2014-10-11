@@ -23,22 +23,21 @@ public class TDTI {
 
 		JPanel panel = new JPanel();
 
-		JButton testButton = new JButton("Test");
+		JButton testButton = new JButton("Baum ausgeben");
 		panel.add(testButton);
 
 		frame.add(panel, "South");
 		frame.setVisible(true);
 
-		final Vertice a = new Vertice("0.0");
-		new Vertice("1.0",a);
-		new Vertice("1.1",a);
+		final Vertice a = new Vertice("0");
+		new Vertice("0.0",a);
+		new Vertice("0.1",a);
 
 		testButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//System.out.println(a);
 				a.logSubtree();
-				System.out.println("Test pressed");
 			}
 		});
 	}
