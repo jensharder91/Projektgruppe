@@ -1,12 +1,10 @@
 package tdti;
 
 import java.applet.Applet;
-import java.awt.BorderLayout;
-import java.awt.Color;
+import java.awt.*;
+import java.awt.event.*;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
+import javax.swing.*;
 
 public class TDTI {
 	private static final String TITLE = "Tree Decontamination with Temporary Immunity";
@@ -23,11 +21,21 @@ public class TDTI {
 		frame.setLocationRelativeTo(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBackground(Color.WHITE);
-		panel.add(new JLabel("Test"));
 		
-		frame.add(panel, "Center");
+		JButton testButton = new JButton("Test");
+		panel.add(testButton);
+		
+		frame.add(panel, "South");
 		frame.setVisible(true);
+		
+		testButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Vertice a = new Vertice("Wurzel");
+				System.out.println(a);
+				System.out.println("Test pressed");
+			}
+		});
 	}
 	
 	public static void main(String[] args){
