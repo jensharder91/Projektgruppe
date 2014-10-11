@@ -31,6 +31,7 @@ public class TDTI {
 	}
 	
 	public static void main(String[] args){
+		new TDTI();
 		Applet applet = new Applet();
 		applet.setVisible(true);
 	}
