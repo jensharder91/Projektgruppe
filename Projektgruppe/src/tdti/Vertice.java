@@ -82,12 +82,18 @@ public class Vertice {
 		}
 
 		if(this.state == 1){
-			// state is computing
-			// TODO: sort dataReceived to get the maximum values
-			// TODO: check which case it is
-			// TODO: send data to N(x)\l
-			// TODO: set this.psi (minimum number of agents)
-			// TODO: become done (this.state = 2)
+			// check if we have all data
+			int neighborCount = this.numberOfNeighbors();
+			int dataCount = this.dataReceived.size();
+
+			if(dataCount == neighborCount){
+				// state is computing
+				// TODO: sort dataReceived to get the maximum values
+				// TODO: check which case it is
+				// TODO: send data to N(x)\l
+				// TODO: set this.psi (minimum number of agents)
+				// TODO: become done (this.state = 2)
+			}
 		}
 	}
 
