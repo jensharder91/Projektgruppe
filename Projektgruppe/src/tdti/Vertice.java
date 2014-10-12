@@ -8,7 +8,7 @@ public class Vertice {
 	private int state = 0; // 0=ready, 1=computing, 2=done
 	private int psi = 0;
 	private List<Vertice> children = new ArrayList<Vertice>();
-	private List<Array> dataReceived = new ArrayList<Array>();
+	private List<int[]> dataReceived = new ArrayList<int[]>();
 
 	public Vertice(){
 		this("");
@@ -62,7 +62,7 @@ public class Vertice {
 		}
 	}
 
-	public void receive(data){
+	public void receive(int[] data){
 		this.dataReceived.add(data);
 
 		if((this.state == 0) && (this.children.size() > 0)){
