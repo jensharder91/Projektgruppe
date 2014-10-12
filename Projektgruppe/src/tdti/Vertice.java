@@ -3,9 +3,14 @@ package tdti;
 import java.util.*;
 
 public class Vertice {
+	
+	public enum states{
+		READY, COMPUTING, DONE
+	}
+
 	private String name;
 	private Vertice parent;
-	private int state = 0; // 0=ready, 1=computing, 2=done
+	private states state = states.READY; // 0=ready, 1=computing, 2=done
 	private int psi = 0;
 	private List<Vertice> children = new ArrayList<Vertice>();
 	private List<int[]> dataReceived = new ArrayList<int[]>();
@@ -47,17 +52,17 @@ public class Vertice {
 	}
 
 	public void computeMinTeamSize(){
-		if((this.state == 0) && (this.children.size() == 0)){
+		if((this.state == states.READY) && (this.children.size() == 0)){
 			// it’s a ready leaf, we should send (1,1)
 			int[] data = {1,1};
 			if(this.parent instanceof Vertice){
 				// this is a leaf, only neighbor we can send to is the parent
 				this.parent.receive(data);
-				this.state = 1;
+				this.state = states.COMPUTING;
 			} else {
 				// this is the only vertice in the tree
 				this.psi = 1;
-				this.state = 2; // we’re done with everything
+				this.state = states.DONE; // we’re done with everything
 			}
 		}
 	}
@@ -65,7 +70,7 @@ public class Vertice {
 	public void receive(int[] data){
 		this.dataReceived.add(data);
 
-		if((this.state == 0) && (this.children.size() > 0)){
+		if((this.state == states.READY) && (this.children.size() > 0)){
 			// it’s a ready non-leaf
 			int neighborCount = this.numberOfNeighbors();
 			int dataCount = this.dataReceived.size();
@@ -81,7 +86,7 @@ public class Vertice {
 			}
 		}
 
-		if(this.state == 1){
+		if(this.state == states.COMPUTING){
 			// check if we have all data
 			int neighborCount = this.numberOfNeighbors();
 			int dataCount = this.dataReceived.size();
