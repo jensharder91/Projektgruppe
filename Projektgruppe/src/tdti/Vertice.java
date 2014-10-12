@@ -88,8 +88,8 @@ public class Vertice {
 		Collections.sort(dataReceived, new MessageDataComparator());
 		MessageData max1 = dataReceived.get(0);
 		MessageData max2 = dataReceived.get(1);
-		boolean case1Boolaen = (max1.getA() == max2.getA()) && true; //TODO insert 2. check
-		boolean case2Boolean = (((max1.getA() == max2.getA()) && (max2.getC() <= TDTI.IMMUNITY_TIME/2)) || (max1.getA() != max2.getA()));
+		boolean case1Boolaen = (max1.getA() == max2.getA()) && max2.getC() > TDTI.IMMUNITY_TIME/2; 
+//		boolean case2Boolean = (((max1.getA() == max2.getA()) && (max2.getC() <= TDTI.IMMUNITY_TIME/2)) || (max1.getA() != max2.getA()));
 
 		if((this.state == states.READY) && (this.children.size() > 0)){
 			// it’s a ready non-leaf
@@ -102,7 +102,7 @@ public class Vertice {
 					//case1
 					sendToMissingNeighbor(new MessageData(max1.getA() + 1, 1));
 				}
-				if(case2Boolean){
+				else{
 					//case2
 					sendToMissingNeighbor(new MessageData(max1.getA(), Math.max(max1.getC(), max2.getC()) + 1));
 				}
