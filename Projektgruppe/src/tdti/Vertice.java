@@ -60,11 +60,11 @@ public class Vertice {
 	public void sendToAllNeighbors (MessageData data, Vertice exceptTo){
 		for(Vertice vertice : children){
 			if(vertice != exceptTo){
-				vertice.receive(data, this);
+				vertice.receive(data);
 			}
 		}
 		if(parent instanceof Vertice && parent != exceptTo){
-			parent.receive(data, this);
+			parent.receive(data);
 		}
 	}
 
@@ -73,7 +73,47 @@ public class Vertice {
 	 * @param data The MessageData object to send
 	 */
 	public void sendToMissingNeighbor(MessageData data){
-		//TODO find out which neightbor is missing and send the data: missingNeighbor.receive(data, this);
+		boolean missingNeighborFound = false;
+		boolean result;
+		for(Vertice vertice : children){
+			//result and if/else is just for checking that only one is found
+			result = checkVertice(vertice, data);
+			if(result && missingNeighborFound){
+				//both are true
+				System.out.println("ERROR Vertice.sentToMissingNeighbor\n multiple found");
+			}else{
+				missingNeighborFound = result;
+			}
+		}
+		if(parent instanceof Vertice){
+			//result and if/else is just for checking that only one is found
+			result = checkVertice(parent, data);
+			if(result && missingNeighborFound){
+				//both are true
+				System.out.println("ERROR Vertice.sentToMissingNeighbor\n multiple found");
+			}else{
+				missingNeighborFound = result;
+			}
+		}
+	}
+
+	/**
+	 * Sends a MessageData object to all neighbors that didn’t yet send any data
+	 * @param vertice The vertice which should be checked
+	 * @param data The MessageData object to send
+	 */
+	private boolean checkVertice(Vertice vertice, MessageData data){
+		boolean found = false;
+		for(MessageData msgData : dataReceived){
+			if(vertice.equals(msgData.getSender())){
+				found = true;
+			}
+		}
+		if(!found){
+			vertice.receive(data);
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -89,10 +129,10 @@ public class Vertice {
 	public void computeMinTeamSize(){
 		if((this.state == states.READY) && (this.children.size() == 0)){
 			// this is a ready leaf, we should send (1,1)
-			MessageData data = new MessageData(1, 1);
+			MessageData data = new MessageData(1, 1, this);
 			if(this.parent instanceof Vertice){
 				// this is a leaf, only neighbor we can send to is the parent
-				this.parent.receive(data, this);
+				this.parent.receive(data);
 				this.state = states.COMPUTING;
 			} else {
 				// this is the only vertice in the tree
@@ -102,7 +142,7 @@ public class Vertice {
 		}
 	}
 
-	public void receive(MessageData data, Vertice sender){
+	public void receive(MessageData data){
 		this.dataReceived.add(data);
 
 		// sort dataReceived to get the maximum values:
@@ -121,11 +161,11 @@ public class Vertice {
 				// received data from all neighbors but one
 				if(case1Boolaen){
 					//case1
-					sendToMissingNeighbor(new MessageData(max1.getA() + 1, 1));
+					sendToMissingNeighbor(new MessageData(max1.getA() + 1, 1, this));
 				}
 				else{
 					//case2
-					sendToMissingNeighbor(new MessageData(max1.getA(), Math.max(max1.getC(), max2.getC()) + 1));
+					sendToMissingNeighbor(new MessageData(max1.getA(), Math.max(max1.getC(), max2.getC()) + 1, this));
 				}
 				this.state = states.COMPUTING;
 			} else {
@@ -142,11 +182,11 @@ public class Vertice {
 				if(case1Boolaen){
 					//case 1
 					this.psi = max1.getA() +1;
-					sendToAllNeighbors(new MessageData(max1.getA() + 1, 1), sender);//send data to N(x)\l
+					sendToAllNeighbors(new MessageData(max1.getA() + 1, 1, this), data.getSender());//send data to N(x)\l
 				}else{
 					//case 2
 					this.psi = max1.getA();
-					sendToAllNeighbors(new MessageData(max1.getA(), Math.max(max1.getC(), max2.getC()) + 1), sender);//send data to N(x)\l
+					sendToAllNeighbors(new MessageData(max1.getA(), Math.max(max1.getC(), max2.getC()) + 1, this), data.getSender());//send data to N(x)\l
 				}
 				this.state = states.DONE;
 			}
