@@ -10,6 +10,8 @@ public class TDTI {
 	private static final String TITLE = "Tree Decontamination with Temporary Immunity";
 	private static final int DEFAULT_WIDTH = 800;
 	private static final int DEFAULT_HEIGHT = 600;
+	
+	public static int IMMUNITY_TIME = 0;
 
 	public TDTI(){
 		JFrame frame = new JFrame();

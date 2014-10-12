@@ -10,10 +10,10 @@ public class Vertice {
 
 	private String name;
 	private Vertice parent;
-	private states state = states.READY; // 0=ready, 1=computing, 2=done
+	private states state = states.READY;
 	private int psi = 0;
 	private List<Vertice> children = new ArrayList<Vertice>();
-	private List<int[]> dataReceived = new ArrayList<int[]>();
+	private List<MessageData> dataReceived = new ArrayList<MessageData>();
 
 	public Vertice(){
 		this("");
@@ -43,6 +43,20 @@ public class Vertice {
 		}
 		return count;
 	}
+	
+	public void sendToAllNeighbors (MessageData data, Vertice exceptTo){
+		for(Vertice vertice : children){
+			if(vertice != exceptTo){
+				vertice.receive(data, this);
+			}
+		}
+		if(parent instanceof Vertice && parent != exceptTo){
+			parent.receive(data, this);
+		}
+	}
+	public void sendToMissingNeighbor(MessageData data){
+		//TODO find out which neightbor is missing and send the data: missingNeighbor.receive(data, this);
+	}
 
 	public void logSubtree(){
 		System.out.println(this);
@@ -54,10 +68,10 @@ public class Vertice {
 	public void computeMinTeamSize(){
 		if((this.state == states.READY) && (this.children.size() == 0)){
 			// it’s a ready leaf, we should send (1,1)
-			int[] data = {1,1};
+			MessageData data = new MessageData(1, 1);
 			if(this.parent instanceof Vertice){
 				// this is a leaf, only neighbor we can send to is the parent
-				this.parent.receive(data);
+				this.parent.receive(data, this);
 				this.state = states.COMPUTING;
 			} else {
 				// this is the only vertice in the tree
@@ -67,8 +81,15 @@ public class Vertice {
 		}
 	}
 
-	public void receive(int[] data){
+	public void receive(MessageData data, Vertice sender){
 		this.dataReceived.add(data);
+		
+		// sort dataReceived to get the maximum values:
+		Collections.sort(dataReceived, new MessageDataComparator());
+		MessageData max1 = dataReceived.get(0);
+		MessageData max2 = dataReceived.get(1);
+		boolean case1Boolaen = (max1.getA() == max2.getA()) && true; //TODO insert 2. check
+		boolean case2Boolean = (((max1.getA() == max2.getA()) && (max2.getC() <= TDTI.IMMUNITY_TIME/2)) || (max1.getA() != max2.getA()));
 
 		if((this.state == states.READY) && (this.children.size() > 0)){
 			// it’s a ready non-leaf
@@ -77,10 +98,15 @@ public class Vertice {
 
 			if(dataCount == neighborCount-1){
 				// received data from all neighbors but one
-				// TODO: sort dataReceived to get the maximum values
-				// TODO: check which case it is
-				// TODO: send data to missing neighbor (currently not known which one it is)
-				// TODO: become computing (this.state = 1)
+				if(case1Boolaen){
+					//case1
+					sendToMissingNeighbor(new MessageData(max1.getA() + 1, 1));
+				}
+				if(case2Boolean){
+					//case2
+					sendToMissingNeighbor(new MessageData(max1.getA(), Math.max(max1.getC(), max2.getC()) + 1));
+				}
+				this.state = states.COMPUTING;
 			} else {
 				// waiting for more data
 			}
@@ -92,12 +118,16 @@ public class Vertice {
 			int dataCount = this.dataReceived.size();
 
 			if(dataCount == neighborCount){
-				// state is computing
-				// TODO: sort dataReceived to get the maximum values
-				// TODO: check which case it is
-				// TODO: send data to N(x)\l
-				// TODO: set this.psi (minimum number of agents)
-				// TODO: become done (this.state = 2)
+				if(case1Boolaen){
+					//case 1
+					this.psi = max1.getA() +1; 
+					sendToAllNeighbors(new MessageData(max1.getA() + 1, 1), sender);//send data to N(x)\l
+				}else{
+					//case 2
+					this.psi = max1.getA();
+					sendToAllNeighbors(new MessageData(max1.getA(), Math.max(max1.getC(), max2.getC()) + 1), sender);//send data to N(x)\l
+				}
+				this.state = states.DONE;
 			}
 		}
 	}
