@@ -51,7 +51,11 @@ public class Vertice {
 			// it’s a ready leaf, we should send (1,1)
 			int[] data = {1,1};
 			if(this.parent instanceof Vertice){
+				// this is a leaf, only neighbor we can send to is the parent
 				this.parent.receive(data);
+			} else {
+				// this is the only vertice in the tree
+				this.psi = 1;
 			}
 			this.state = 1;
 		}
@@ -65,7 +69,7 @@ public class Vertice {
 			int neighborCount = this.numberOfNeighbors();
 			int dataCount = this.dataReceived.size();
 
-			if(dataCount === neighborCount-1){
+			if(dataCount == neighborCount-1){
 				// received data from all neighbors but one
 				// TODO: sort dataReceived to get the maximum values
 				// TODO: check which case it is
