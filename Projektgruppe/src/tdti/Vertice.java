@@ -5,7 +5,10 @@ import java.util.*;
 public class Vertice {
 	private String name;
 	private Vertice parent;
+	private int state = 0; // 0=ready, 1=computing, 2=done
+	private int psi = 0;
 	private List<Vertice> children = new ArrayList<Vertice>();
+	private List<Array> dataReceived = new ArrayList<Array>();
 
 	public Vertice(){
 		this("");
@@ -28,10 +31,56 @@ public class Vertice {
 		this.children.add(child);
 	}
 
+	public int numberOfNeighbors(){
+		int count = this.children.size();
+		if(this.parent instanceof Vertice){
+			count++;
+		}
+		return count;
+	}
+
 	public void logSubtree(){
 		System.out.println(this);
 		for(int i=0; i<this.children.size(); i++){
 			this.children.get(i).logSubtree();
+		}
+	}
+
+	public void computeMinTeamSize(){
+		if((this.state == 0) && (this.children.size() == 0)){
+			// it’s a ready leaf, we should send (1,1)
+			int[] data = {1,1};
+			if(this.parent instanceof Vertice){
+				this.parent.receive(data);
+			}
+			this.state = 1;
+		}
+	}
+
+	public void receive(data){
+		this.dataReceived.add(data);
+
+		if((this.state == 0) && (this.children.size() > 0)){
+			// it’s a ready non-leaf
+			int neighborCount = this.numberOfNeighbors();
+			int dataCount = this.dataReceived.size();
+
+			if(dataCount === neighborCount-1){
+				// received data from all neighbors but one
+				// TODO: sort dataReceived to get the maximum values
+				// TODO: check which case it is
+				// TODO: send data to missing neighbor (currently not known which one it is)
+				// TODO: become computing (this.state = 1)
+			}
+		}
+
+		if(this.state == 1){
+			// state is computing
+			// TODO: sort dataReceived to get the maximum values
+			// TODO: check which case it is
+			// TODO: send data to N(x)\l
+			// TODO: set this.psi (minimum number of agents)
+			// TODO: become done (this.state = 2)
 		}
 	}
 
