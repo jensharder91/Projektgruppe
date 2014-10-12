@@ -3,15 +3,15 @@ package tdti;
 import java.util.*;
 
 public class Vertice {
-	
+
 	public enum states{
 		READY, COMPUTING, DONE
 	}
 
 	private String name;
-	private Vertice parent;
 	private states state = states.READY;
 	private int psi = 0;
+	private Vertice parent;
 	private List<Vertice> children = new ArrayList<Vertice>();
 	private List<MessageData> dataReceived = new ArrayList<MessageData>();
 
@@ -32,10 +32,18 @@ public class Vertice {
 		}
 	}
 
+	/**
+	 * Appends a child to the list of children
+	 * @param child child to append
+	 */
 	public void addChild(Vertice child){
 		this.children.add(child);
 	}
 
+	/**
+	 * Calculates the number of neighbors
+	 * @return int
+	 */
 	public int numberOfNeighbors(){
 		int count = this.children.size();
 		if(this.parent instanceof Vertice){
@@ -43,7 +51,12 @@ public class Vertice {
 		}
 		return count;
 	}
-	
+
+	/**
+	 * Sends MessageData to all its neighbors except one
+	 * @param data The MessageData object to send
+	 * @param exceptTo The neighbor which should be skipped
+	 */
 	public void sendToAllNeighbors (MessageData data, Vertice exceptTo){
 		for(Vertice vertice : children){
 			if(vertice != exceptTo){
@@ -54,10 +67,18 @@ public class Vertice {
 			parent.receive(data, this);
 		}
 	}
+
+	/**
+	 * Sends a MessageData object to all neighbors that didn’t yet send any data
+	 * @param data The MessageData object to send
+	 */
 	public void sendToMissingNeighbor(MessageData data){
 		//TODO find out which neightbor is missing and send the data: missingNeighbor.receive(data, this);
 	}
 
+	/**
+	 * Logs the subtree rooted at the current Vertice to System.out recursively.
+	 */
 	public void logSubtree(){
 		System.out.println(this);
 		for(int i=0; i<this.children.size(); i++){
@@ -67,7 +88,7 @@ public class Vertice {
 
 	public void computeMinTeamSize(){
 		if((this.state == states.READY) && (this.children.size() == 0)){
-			// it’s a ready leaf, we should send (1,1)
+			// this is a ready leaf, we should send (1,1)
 			MessageData data = new MessageData(1, 1);
 			if(this.parent instanceof Vertice){
 				// this is a leaf, only neighbor we can send to is the parent
@@ -83,13 +104,13 @@ public class Vertice {
 
 	public void receive(MessageData data, Vertice sender){
 		this.dataReceived.add(data);
-		
+
 		// sort dataReceived to get the maximum values:
 		Collections.sort(dataReceived, new MessageDataComparator());
 		MessageData max1 = dataReceived.get(0);
 		MessageData max2 = dataReceived.get(1);
-		boolean case1Boolaen = (max1.getA() == max2.getA()) && max2.getC() > TDTI.IMMUNITY_TIME/2; 
-//		boolean case2Boolean = (((max1.getA() == max2.getA()) && (max2.getC() <= TDTI.IMMUNITY_TIME/2)) || (max1.getA() != max2.getA()));
+		boolean case1Boolaen = (max1.getA() == max2.getA()) && max2.getC() > TDTI.IMMUNITY_TIME/2;
+		//		boolean case2Boolean = (((max1.getA() == max2.getA()) && (max2.getC() <= TDTI.IMMUNITY_TIME/2)) || (max1.getA() != max2.getA()));
 
 		if((this.state == states.READY) && (this.children.size() > 0)){
 			// it’s a ready non-leaf
@@ -120,7 +141,7 @@ public class Vertice {
 			if(dataCount == neighborCount){
 				if(case1Boolaen){
 					//case 1
-					this.psi = max1.getA() +1; 
+					this.psi = max1.getA() +1;
 					sendToAllNeighbors(new MessageData(max1.getA() + 1, 1), sender);//send data to N(x)\l
 				}else{
 					//case 2
