@@ -53,11 +53,12 @@ public class Vertice {
 			if(this.parent instanceof Vertice){
 				// this is a leaf, only neighbor we can send to is the parent
 				this.parent.receive(data);
+				this.state = 1;
 			} else {
 				// this is the only vertice in the tree
 				this.psi = 1;
+				this.state = 2; // we’re done with everything
 			}
-			this.state = 1;
 		}
 	}
 
@@ -75,6 +76,8 @@ public class Vertice {
 				// TODO: check which case it is
 				// TODO: send data to missing neighbor (currently not known which one it is)
 				// TODO: become computing (this.state = 1)
+			} else {
+				// waiting for more data
 			}
 		}
 
@@ -90,6 +93,6 @@ public class Vertice {
 
 	@Override
 	public String toString(){
-		return "Vertice ("+this.name+") ("+this.children.size()+" children)";
+		return "Vertice ("+this.name+") ("+this.children.size()+" children) ("+this.psi+" minAgents)";
 	}
 }
