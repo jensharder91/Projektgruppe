@@ -69,6 +69,14 @@ public class Vertice {
 		}
 	}
 
+	public void reset(){
+		this.state = states.READY;
+		this.dataReceived = new ArrayList<MessageData>();
+		for(Vertice child : this.children){
+			child.reset();
+		}
+	}
+
 	public void init(){
 		if((this.state == states.READY) && (this.children.size() == 0)){
 			// this is a ready leaf, we should send (1,1)
