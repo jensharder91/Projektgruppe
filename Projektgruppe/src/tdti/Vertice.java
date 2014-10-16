@@ -2,6 +2,8 @@ package tdti;
 
 import java.util.*;
 
+import Gui.VerticeGui;
+
 public class Vertice {
 
 	public enum states{
@@ -14,6 +16,7 @@ public class Vertice {
 	private Vertice parent;
 	private List<Vertice> children = new ArrayList<Vertice>();
 	private List<MessageData> dataReceived = new ArrayList<MessageData>();
+	private VerticeGui verticeGui;
 
 	public Vertice(){
 		this("");
@@ -238,5 +241,18 @@ public class Vertice {
 	@Override
 	public String toString(){
 		return "Vertice ("+this.name+") ("+this.children.size()+" children) ("+this.state+") ("+this.psi+" minAgents)";
+	}
+
+	public void setVerticeGui(VerticeGui verticeGui){
+		this.verticeGui = verticeGui;
+	}
+	public VerticeGui getVerticeGui(){
+		return verticeGui;
+	}
+	public Vertice getParent(){
+		return parent;
+	}
+	public int getPsi(){
+		return psi;
 	}
 }
