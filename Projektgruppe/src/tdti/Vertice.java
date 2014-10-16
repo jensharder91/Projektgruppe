@@ -74,6 +74,8 @@ public class Vertice {
 				// this is a leaf, only neighbor we can send to is the parent
 				this.parent.receive(data);
 				this.state = states.COMPUTING;
+				// should not wait for data, if they are already received
+				checkDataAlreadyReceived();
 			} else {
 				// this is the only vertice in the tree
 				this.psi = 1;
@@ -83,6 +85,30 @@ public class Vertice {
 			for(int i=0; i<this.children.size(); i++){
 				this.children.get(i).init();
 			}
+		}
+	}
+
+	public void checkDataAlreadyReceived(){
+		int neighborCount = this.numberOfNeighbors();
+		int dataCount = this.dataReceived.size();
+
+		if(dataCount == neighborCount){
+			// sort dataReceived to get the maximum values:
+			Collections.sort(dataReceived, new MessageDataComparator());
+			MessageData max1 = dataReceived.get(0);
+			MessageData max2 = new MessageData(0,0,null);
+			if(dataReceived.size() >= 2){
+				max2 = dataReceived.get(1);
+			}
+
+			// having data from all neighbors, send data to all neighbors except last sender
+			System.out.println("- All data received, computing and sending data");
+			if((max1.getA() == max2.getA()) && max2.getC() > TDTI.IMMUNITY_TIME/2){
+				this.psi = max1.getA()+1;
+			} else {
+				this.psi = max1.getA();
+			}
+			this.state = states.DONE;
 		}
 	}
 
@@ -211,6 +237,6 @@ public class Vertice {
 
 	@Override
 	public String toString(){
-		return "Vertice ("+this.name+") ("+this.children.size()+" children) ("+this.psi+" minAgents)";
+		return "Vertice ("+this.name+") ("+this.children.size()+" children) ("+this.state+") ("+this.psi+" minAgents)";
 	}
 }
