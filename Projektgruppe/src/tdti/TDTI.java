@@ -10,7 +10,7 @@ public class TDTI {
 	private static final String TITLE = "Tree Decontamination with Temporary Immunity";
 	private static final int DEFAULT_WIDTH = 800;
 	private static final int DEFAULT_HEIGHT = 600;
-	
+
 	public static int IMMUNITY_TIME = 0;
 
 	public TDTI(){
@@ -31,14 +31,23 @@ public class TDTI {
 		frame.add(panel, "South");
 		frame.setVisible(true);
 
-		final Vertice a = new Vertice("0");
-		new Vertice("0.0",a);
-		new Vertice("0.1",a);
-
 		testButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//System.out.println(a);
+
+				Vertice a = new Vertice("0");
+				Vertice b = new Vertice("0.0",a);
+				Vertice c = new Vertice("0.1",a);
+				Vertice d = new Vertice("0.2",a);
+				new Vertice("0.0.0",b);
+				new Vertice("0.0.1",b);
+				new Vertice("0.1.0",c);
+				new Vertice("0.2.0",d);
+				new Vertice("0.2.1",d);
+				new Vertice("0.2.2",d);
+
+				a.init();
+
 				a.logSubtree();
 			}
 		});

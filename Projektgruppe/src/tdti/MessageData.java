@@ -14,7 +14,7 @@ public class MessageData{
 
 	@Override
 	public String toString() {
-		return "MessageData: a: "+getA()+"  c: "+getC();
+		return "("+getA()+"|"+getC()+") from "+this.sender.getName();
 	}
 
 	public int getA(){
