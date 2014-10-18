@@ -30,9 +30,9 @@ public class Gui extends JPanel{
 
 	/**  */
 
-	private List<VerticeGui> allVertices = new ArrayList<VerticeGui>();
-	private VerticeGui rootVertice = null;
-	private VerticeGui currentVertice = null;
+	private List<Vertice> allVertices = new ArrayList<Vertice>();
+	private Vertice rootVertice = null;
+	private Vertice currentVertice = null;
 
 	private boolean insertChild = false;
 	/** */
@@ -73,16 +73,16 @@ public class Gui extends JPanel{
 
 				if(insertChild && !pointExists(e.getX(), e.getY())){
 					System.out.println("insert Child");
-					VerticeGui newVertice = new VerticeGui(e.getX(), e.getY(), new Vertice("test", currentVertice.getVertice()));
+					Vertice newVertice = new Vertice("test", currentVertice, e.getX(), e.getY());
 					allVertices.add(newVertice);
 				}
 
 				boolean onVerticeClick = false;
-				for(VerticeGui verticeGui : allVertices){
+				for(Vertice vertice : allVertices){
 					System.out.println("check points");
-					if(verticeGui.isSamePoint(e.getX(), e.getY())){
+					if(vertice.isSamePoint(e.getX(), e.getY())){
 						System.out.println("is same point");
-						currentVertice = verticeGui;
+						currentVertice = vertice;
 						onVerticeClick = true;
 						if(SwingUtilities.isRightMouseButton(e)){
 							// insert child
@@ -97,8 +97,8 @@ public class Gui extends JPanel{
 				}
 
 				if(allVertices.size() == 0 && SwingUtilities.isRightMouseButton(e)){
-					System.out.println("insert root");
-					rootVertice = new VerticeGui(e.getX(), e.getY(), new Vertice("test", null));
+					System.out.println("insert root : coord("+e.getX()+" , "+e.getY()+")");
+					rootVertice = new Vertice("test", null, e.getX(), e.getY());
 					allVertices.add(rootVertice);
 				}
 
@@ -123,15 +123,15 @@ public class Gui extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				if(rootVertice instanceof VerticeGui){
-					rootVertice.getVertice().reset();
-					rootVertice.getVertice().init();
-					rootVertice.getVertice().logSubtree();
+				if(rootVertice instanceof Vertice){
+					rootVertice.algorithmus();
+					rootVertice.logSubtree();
 
 					repaint();
 				} else {
 					System.out.println("No root available");
 				}
+
 
 			}
 		});
@@ -154,22 +154,22 @@ public class Gui extends JPanel{
 			g.drawRect(currentVertice.getX(), currentVertice.getY(), currentVertice.getWidth(), currentVertice.getHeight());
 		}
 		//draw all vertices
-		for(VerticeGui verticeGui : allVertices){
-			verticeGui.drawVertice(g);
+		for(Vertice vertice : allVertices){
+			vertice.drawVertice(g);
 		}
 
 	}
 
 	private boolean pointExists(int x, int y){
-		for(VerticeGui verticeGui : allVertices){
-			if(verticeGui.isSamePoint(x, y)){
+		for(Vertice vertice : allVertices){
+			if(vertice.isSamePoint(x, y)){
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public VerticeGui getRoot(){
+	public Vertice getRoot(){
 		return rootVertice;
 	}
 }

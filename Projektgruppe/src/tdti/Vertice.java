@@ -1,8 +1,8 @@
 package tdti;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.*;
-
-import Gui.VerticeGui;
 
 public class Vertice {
 
@@ -16,23 +16,37 @@ public class Vertice {
 	private Vertice parent;
 	private List<Vertice> children = new ArrayList<Vertice>();
 	private List<MessageData> dataReceived = new ArrayList<MessageData>();
-	private VerticeGui verticeGui;
 
-	public Vertice(){
-		this("");
+	//Gui
+	private int xCoord;
+	private int yCoord;
+	private int xMittel;
+	private int yMittel;
+	private int width = 12;
+	private int height = width;
+
+	public Vertice(int x, int y){
+		this("", x, y);
 	}
-	public Vertice(String name){
-		this(name,null);
+	public Vertice(String name, int x, int y){
+		this(name,null, x, y);
 	}
-	public Vertice(Vertice parent){
-		this("",parent);
+	public Vertice(Vertice parent, int x, int y){
+		this("",parent, x, y);
 	}
-	public Vertice(String name, Vertice parent){
+	public Vertice(String name, Vertice parent, int x, int y){
 		this.name = name;
+		this.xCoord = x - width/2;
+		this.yCoord = y - height/2;
+		this.xMittel = x;
+		this.yMittel = y;
 		if(parent instanceof Vertice){
 			this.parent = parent;
 			this.parent.addChild(this);
 		}
+
+
+		System.out.println("new Vertice created : coord("+xCoord+" , "+yCoord+")");
 	}
 
 	public String getName(){
@@ -69,7 +83,12 @@ public class Vertice {
 		}
 	}
 
-	public void reset(){
+	public void algorithmus(){
+		reset();
+		init();
+	}
+
+	private void reset(){
 		this.state = states.READY;
 		this.dataReceived = new ArrayList<MessageData>();
 		for(Vertice child : this.children){
@@ -77,7 +96,7 @@ public class Vertice {
 		}
 	}
 
-	public void init(){
+	private void init(){
 		if((this.state == states.READY) && (this.children.size() == 0)){
 			// this is a ready leaf, we should send (1,1)
 			MessageData data = new MessageData(1, 1, this);
@@ -246,21 +265,52 @@ public class Vertice {
 		}
 	}
 
+	public void drawVertice(Graphics g){
+		if(parent != null){
+			g.setColor(Color.black);
+			g.drawLine(xMittel, yMittel, parent.getMittelX(), parent.getMittelY());
+		}
+
+		g.setColor(Color.red);
+		g.fillOval(xCoord, yCoord, width, height);
+
+		g.drawString("Psi: "+psi, xCoord + width, yCoord + height);
+	}
+
+	public boolean isSamePoint(int x, int y){
+		if((Math.abs(this.xMittel - x) <= width/2) && (Math.abs(this.yMittel - y) < height/2)){
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public String toString(){
 		return "Vertice ("+this.name+") ("+this.children.size()+" children) ("+this.state+") ("+this.psi+" minAgents)";
 	}
 
-	public void setVerticeGui(VerticeGui verticeGui){
-		this.verticeGui = verticeGui;
-	}
-	public VerticeGui getVerticeGui(){
-		return verticeGui;
-	}
 	public Vertice getParent(){
 		return parent;
 	}
 	public int getPsi(){
 		return psi;
+	}
+	public int getMittelX(){
+		return xMittel;
+	}
+	public int getMittelY(){
+		return yMittel;
+	}
+	public int getX(){
+		return xCoord;
+	}
+	public int getY(){
+		return yCoord;
+	}
+	public int getWidth(){
+		return width;
+	}
+	public int getHeight(){
+		return height;
 	}
 }
