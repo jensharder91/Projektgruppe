@@ -189,8 +189,7 @@ public class Gui extends JPanel{
 		}
 		//draw all vertices recursively
 		if(rootVertice instanceof Vertice){
-			rootVertice.drawSubtreeLines(g,10,10,780);
-			rootVertice.drawSubtree(g,10,10,780);
+			rootVertice.drawTree(g,10,10,780);
 		}
 
 	}

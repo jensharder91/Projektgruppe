@@ -247,14 +247,16 @@ public class Vertice {
 		}
 	}
 
-	public void drawSubtree(Graphics g, int areaX, int areaY, int areaWidth){
+	public void drawTree(Graphics g, int areaX, int areaY, int areaWidth){
+		calcPoints(areaX, areaY, areaWidth);
+		drawAllTreeLines(g);
+		drawAllVertice(g);
+	}
+
+	public void calcPoints(int areaX, int areaY, int areaWidth){
 		int pointX = areaX + areaWidth/2;
 		this.xMittel = pointX + width/2;
 		this.yMittel = areaY + height/2;
-
-		g.setColor(Color.red);
-		g.fillOval(pointX, areaY, width, height);
-		g.drawString("Psi: "+psi, pointX + width, areaY + height);
 
 		int numberOfChildren = this.children.size();
 		if(numberOfChildren == 0){ numberOfChildren = 1; }
@@ -265,32 +267,32 @@ public class Vertice {
 
 		for(Vertice child : this.children){
 			subtreeAreaX = areaX + childrenCounter * subtreeAreaWidth;
-			child.drawSubtree(g,subtreeAreaX,subtreeAreaY,subtreeAreaWidth);
+			child.calcPoints(subtreeAreaX,subtreeAreaY,subtreeAreaWidth);
 			childrenCounter++;
 		}
 	}
 
-	public void drawSubtreeLines(Graphics g, int areaX, int areaY, int areaWidth){
-		int pointX = areaX + areaWidth/2;
-		this.xMittel = pointX + width/2;
-		this.yMittel = areaY + height/2;
-
-		if(parent instanceof Vertice){
+	private void drawAllTreeLines(Graphics g){
+		if(parent != null){
 			g.setColor(Color.black);
 			g.drawLine(xMittel, yMittel, parent.getMittelX(), parent.getMittelY());
 		}
+		for(Vertice child : children){
+			child.drawAllTreeLines(g);
+		}
+	}
 
-		int numberOfChildren = this.children.size();
-		if(numberOfChildren == 0){ numberOfChildren = 1; }
-		int subtreeAreaWidth = areaWidth / numberOfChildren;
-		int subtreeAreaX = areaX;
-		int subtreeAreaY = areaY + 50;
-		int childrenCounter = 0;
+	private void drawAllVertice(Graphics g){
 
-		for(Vertice child : this.children){
-			subtreeAreaX = areaX + childrenCounter * subtreeAreaWidth;
-			child.drawSubtreeLines(g,subtreeAreaX,subtreeAreaY,subtreeAreaWidth);
-			childrenCounter++;
+		g.setColor(Color.white);
+		g.fillOval(xMittel - width/2, yMittel - height/2, width, height);
+		g.setColor(Color.red);
+		g.drawOval(xMittel - width/2, yMittel - height/2, width, height);
+
+		g.drawString("Psi: "+psi, xMittel - width/2+ width, yMittel - height/2 + height);
+
+		for(Vertice child : children){
+			child.drawAllVertice(g);;
 		}
 	}
 
