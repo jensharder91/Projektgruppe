@@ -277,7 +277,7 @@ public class Vertice {
 	}
 	private void drawAllTreeLines(Graphics g){
 		if(parent != null){
-			g.setColor(Color.black);
+			g.setColor(new Color(0x33,0x44,0x55));
 			g.drawLine(xMittel, yMittel, parent.getMittelX(), parent.getMittelY());
 		}
 		for(Vertice child : children){
@@ -289,10 +289,12 @@ public class Vertice {
 
 		g.setColor(Color.white);
 		g.fillOval(xMittel - width/2, yMittel - height/2, width, height);
-		g.setColor(Color.red);
+		g.setColor(new Color(0x33,0x44,0x55));
 		g.drawOval(xMittel - width/2, yMittel - height/2, width, height);
 
-		g.drawString("Psi: "+psi, xMittel - width/2+ width, yMittel - height/2 + height);
+		String string = String.valueOf(psi);
+		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
+		g.drawString(string, xMittel - stringWidth/2, yMittel+height/4);
 
 		for(Vertice child : children){
 			child.drawAllVertice(g);;
