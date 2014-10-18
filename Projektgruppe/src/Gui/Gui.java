@@ -123,11 +123,13 @@ public class Gui extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				rootVertice.getVertice().reset();
-				rootVertice.getVertice().init();
-				rootVertice.getVertice().logSubtree();
+				if(rootVertice instanceof Vertice){
+					rootVertice.getVertice().reset();
+					rootVertice.getVertice().init();
+					rootVertice.getVertice().logSubtree();
 
-				repaint();
+					repaint();
+				}
 
 			}
 		});
