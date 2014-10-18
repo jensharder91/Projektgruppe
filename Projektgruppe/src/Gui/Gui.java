@@ -15,6 +15,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
 
 import tdti.Vertice;
 
@@ -71,17 +72,31 @@ public class Gui extends JPanel{
 			public void mouseClicked(MouseEvent e) {
 				System.out.println(e.getX() +" / "+e.getY());
 
-				if(rootVertice == null){
-					rootVertice = new Vertice("root", null);
-				}else if(rootVertice.pointExists(e.getX(), e.getY()) != null){
-					// add a child to this point
-					Vertice parent = null;
-					parent = rootVertice.pointExists(e.getX(), e.getY());
-					if(parent != null){
-						System.out.println("Add new Child to "+parent);
+				if(SwingUtilities.isRightMouseButton(e)){
+					if(rootVertice != null){
+						Vertice selectedVertice = rootVertice.pointExists(e.getX(), e.getY());
+						if(selectedVertice != null){
+							if(selectedVertice == rootVertice){
+								rootVertice = null;
+							}else{
+								selectedVertice.delete();
+							}
+						}
 					}
-					if(parent instanceof Vertice){
-						new Vertice("test", parent);
+				}else{
+
+					if(rootVertice == null){
+						rootVertice = new Vertice("root", null);
+					}else if(rootVertice.pointExists(e.getX(), e.getY()) != null){
+						// add a child to this point
+						Vertice parent = null;
+						parent = rootVertice.pointExists(e.getX(), e.getY());
+						if(parent != null){
+							System.out.println("Add new Child to "+parent);
+						}
+						if(parent instanceof Vertice){
+							new Vertice("test", parent);
+						}
 					}
 				}
 

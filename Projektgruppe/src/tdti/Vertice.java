@@ -38,15 +38,15 @@ public class Vertice {
 		return this.name;
 	}
 
-	public void deleteVertice(){
-
+	private void deleteChild(Vertice child){
+		children.remove(child);
 	}
 
 	/**
 	 * Appends a child to the list of children
 	 * @param child child to append
 	 */
-	public void addChild(Vertice child){
+	private void addChild(Vertice child){
 		this.children.add(child);
 	}
 
@@ -257,7 +257,7 @@ public class Vertice {
 		drawAllVertice(g);
 	}
 
-	public void calcPoints(int areaX, int areaY, int areaWidth){
+	private void calcPoints(int areaX, int areaY, int areaWidth){
 		int pointX = areaX + areaWidth/2;
 		this.xMittel = pointX + width/2;
 		this.yMittel = areaY + height/2;
@@ -319,6 +319,13 @@ public class Vertice {
 			}
 		}
 		return null;
+	}
+
+	public void delete(){
+		if(parent == null){
+			return;
+		}
+		parent.deleteChild(this);
 	}
 
 	@Override
