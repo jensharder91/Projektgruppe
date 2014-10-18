@@ -165,10 +165,9 @@ public class Gui extends JPanel{
 			g.drawRect(currentVertice.getX(), currentVertice.getY(), currentVertice.getWidth(), currentVertice.getHeight());
 		}
 		//draw all vertices
-		for(Vertice vertice : allVertices){
-			vertice.drawVertice(g);
+		if(rootVertice != null){
+			rootVertice.drawTree(g);
 		}
-
 	}
 
 	private boolean pointExists(int x, int y){

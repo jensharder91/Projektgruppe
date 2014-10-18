@@ -262,16 +262,31 @@ public class Vertice {
 		}
 	}
 
-	public void drawVertice(Graphics g){
+	public void drawTree(Graphics g){
+		drawAllTreeLines(g);
+		drawAllVertice(g);
+	}
+
+	private void drawAllTreeLines(Graphics g){
 		if(parent != null){
 			g.setColor(Color.black);
 			g.drawLine(xMittel, yMittel, parent.getMittelX(), parent.getMittelY());
 		}
+		for(Vertice child : children){
+			child.drawAllTreeLines(g);
+		}
+	}
+
+	private void drawAllVertice(Graphics g){
 
 		g.setColor(Color.red);
 		g.fillOval(xCoord, yCoord, width, height);
 
 		g.drawString("Psi: "+psi, xCoord + width, yCoord + height);
+
+		for(Vertice child : children){
+			child.drawAllVertice(g);;
+		}
 	}
 
 	public boolean isSamePoint(int x, int y){
