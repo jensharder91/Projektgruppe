@@ -130,7 +130,7 @@ public class Gui extends JPanel{
 
 					repaint();
 				} else {
-					System.out.println('No root available');
+					System.out.println("No root available");
 				}
 
 			}
