@@ -123,12 +123,14 @@ public class Gui extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				if(rootVertice instanceof Vertice){
+				if(rootVertice instanceof VerticeGui){
 					rootVertice.getVertice().reset();
 					rootVertice.getVertice().init();
 					rootVertice.getVertice().logSubtree();
 
 					repaint();
+				} else {
+					System.out.println('No root available');
 				}
 
 			}
