@@ -26,7 +26,8 @@ public class Gui extends JPanel{
 	private JPanel buttonBar = new JPanel();
 
 	/** Buttons */
-	private JButton testButton = new JButton("Berechnung starten");
+	private JButton buttonCalculate = new JButton("Berechnung starten");
+	private JButton buttonClear = new JButton("Clear");
 
 	/**  */
 
@@ -118,7 +119,17 @@ public class Gui extends JPanel{
 
 		setLayout(new BorderLayout());
 
-		testButton.addActionListener(new ActionListener() {
+		buttonClear.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				rootVertice = null;
+				currentVertice = null;
+				allVertices = new ArrayList<Vertice>();
+				repaint();
+			}
+		});
+
+		buttonCalculate.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -132,10 +143,10 @@ public class Gui extends JPanel{
 					System.out.println("No root available");
 				}
 
-
 			}
 		});
-		buttonBar.add(testButton);
+		buttonBar.add(buttonCalculate);
+		buttonBar.add(buttonClear);
 		this.add(buttonBar, "South");
 
 
