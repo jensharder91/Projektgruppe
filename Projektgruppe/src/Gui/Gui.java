@@ -11,13 +11,10 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
-import javax.swing.SwingUtilities;
 
 import tdti.Vertice;
 
@@ -34,13 +31,10 @@ public class Gui extends JPanel{
 	private JToggleButton toggleAutoAlgo = new JToggleButton("AutoCalc");
 
 	/**  */
-
-	private List<Vertice> allVertices = new ArrayList<Vertice>();
 	private Vertice rootVertice = null;
 	private Vertice currentVertice = null;
 
 	private boolean autoAlgo = false;
-	private boolean insertChild = false;
 	/** */
 
 	private Gui(){
@@ -77,59 +71,19 @@ public class Gui extends JPanel{
 			public void mouseClicked(MouseEvent e) {
 				System.out.println(e.getX() +" / "+e.getY());
 
-				if(pointExists(e.getX(), e.getY())){
+				if(rootVertice == null){
+					rootVertice = new Vertice("root", null);
+				}else if(rootVertice.pointExists(e.getX(), e.getY()) != null){
 					// add a child to this point
 					Vertice parent = null;
-					for(Vertice vertice : allVertices){
-						if(vertice.isSamePoint(e.getX(), e.getY())){
-							parent = vertice;
-							System.out.println("Add new Child to "+parent);
-							break;
-						}
+					parent = rootVertice.pointExists(e.getX(), e.getY());
+					if(parent != null){
+						System.out.println("Add new Child to "+parent);
 					}
 					if(parent instanceof Vertice){
-						Vertice newVertice = new Vertice("test", parent);
-						allVertices.add(newVertice);
-					}
-				} else {
-					if(allVertices.size() == 0){
-						Vertice newVertice = new Vertice("root", null);
-						allVertices.add(newVertice);
-						rootVertice = newVertice;
+						new Vertice("test", parent);
 					}
 				}
-
-				/*
-				if(insertChild && !pointExists(e.getX(), e.getY())){
-					System.out.println("insert Child");
-					Vertice newVertice = new Vertice("test", currentVertice, e.getX(), e.getY());
-					allVertices.add(newVertice);
-				}
-
-				boolean onVerticeClick = false;
-				for(Vertice vertice : allVertices){
-					System.out.println("check points");
-					if(vertice.isSamePoint(e.getX(), e.getY())){
-						System.out.println("is same point");
-						currentVertice = vertice;
-						onVerticeClick = true;
-						if(SwingUtilities.isRightMouseButton(e)){
-							// insert child
-							insertChild = true;
-						}else{
-							insertChild = false;
-						}
-					}
-				}
-				if(!onVerticeClick && !insertChild){
-					currentVertice = null;
-				}
-
-				if(allVertices.size() == 0 && SwingUtilities.isRightMouseButton(e)){
-					System.out.println("insert root : coord("+e.getX()+" , "+e.getY()+")");
-					rootVertice = new Vertice("test", null, e.getX(), e.getY());
-					allVertices.add(rootVertice);
-				}*/
 
 				repaint();
 			}
@@ -152,7 +106,7 @@ public class Gui extends JPanel{
 			public void actionPerformed(ActionEvent e){
 				rootVertice = null;
 				currentVertice = null;
-				allVertices = new ArrayList<Vertice>();
+				//				allVertices = new ArrayList<Vertice>();
 				repaint();
 			}
 		});
@@ -221,16 +175,6 @@ public class Gui extends JPanel{
 		if(rootVertice instanceof Vertice){
 			rootVertice.drawTree(g,10,10,780);
 		}
-	}
-
-	private boolean pointExists(int x, int y){
-		for(Vertice vertice : allVertices){
-			System.out.println("Comparing to "+vertice);
-			if(vertice.isSamePoint(x, y)){
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public Vertice getRoot(){

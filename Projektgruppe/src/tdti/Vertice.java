@@ -38,6 +38,10 @@ public class Vertice {
 		return this.name;
 	}
 
+	public void deleteVertice(){
+
+	}
+
 	/**
 	 * Appends a child to the list of children
 	 * @param child child to append
@@ -301,6 +305,20 @@ public class Vertice {
 			return true;
 		}
 		return false;
+	}
+
+	public Vertice pointExists(int x, int y){
+
+		if(isSamePoint(x, y)){
+			return this;
+		}
+		for(Vertice child : children){
+			Vertice vertice = child.pointExists(x, y);
+			if(vertice != null){
+				return vertice;
+			}
+		}
+		return null;
 	}
 
 	@Override
