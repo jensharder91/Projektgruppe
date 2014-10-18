@@ -74,11 +74,11 @@ public class Gui extends JPanel{
 
 				if(pointExists(e.getX(), e.getY())){
 					// add a child to this point
-					System.out.println("Add new Child");
 					Vertice parent = null;
 					for(Vertice vertice : allVertices){
 						if(vertice.isSamePoint(e.getX(), e.getY())){
 							parent = vertice;
+							System.out.println("Add new Child to "+parent);
 							break;
 						}
 					}
