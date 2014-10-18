@@ -18,35 +18,20 @@ public class Vertice {
 	private List<MessageData> dataReceived = new ArrayList<MessageData>();
 
 	//Gui
-	private int xCoord;
-	private int yCoord;
 	private int xMittel;
 	private int yMittel;
 	private int width = 20;
 	private int height = width;
 
-	public Vertice(int x, int y){
-		this("", x, y);
-	}
-	public Vertice(String name, int x, int y){
-		this(name,null, x, y);
-	}
-	public Vertice(Vertice parent, int x, int y){
-		this("",parent, x, y);
-	}
-	public Vertice(String name, Vertice parent, int x, int y){
+	public Vertice(String name, Vertice parent){
 		this.name = name;
-		this.xCoord = x - width/2;
-		this.yCoord = y - height/2;
-		this.xMittel = x;
-		this.yMittel = y;
 		if(parent instanceof Vertice){
 			this.parent = parent;
 			this.parent.addChild(this);
 		}
 
 
-		System.out.println("new Vertice created : coord("+xCoord+" , "+yCoord+")");
+		System.out.println("new Vertice created : "+name);
 	}
 
 	public String getName(){
@@ -262,11 +247,30 @@ public class Vertice {
 		}
 	}
 
-	public void drawTree(Graphics g){
+	public void drawTree(Graphics g, int areaX, int areaY, int areaWidth){
+		calcPoints(areaX, areaY, areaWidth);
 		drawAllTreeLines(g);
 		drawAllVertice(g);
 	}
 
+	public void calcPoints(int areaX, int areaY, int areaWidth){
+		int pointX = areaX + areaWidth/2;
+		this.xMittel = pointX + width/2;
+		this.yMittel = areaY + height/2;
+
+		int numberOfChildren = this.children.size();
+		if(numberOfChildren == 0){ numberOfChildren = 1; }
+		int subtreeAreaWidth = areaWidth / numberOfChildren;
+		int subtreeAreaX = areaX;
+		int subtreeAreaY = areaY + 50;
+		int childrenCounter = 0;
+
+		for(Vertice child : this.children){
+			subtreeAreaX = areaX + childrenCounter * subtreeAreaWidth;
+			child.calcPoints(subtreeAreaX,subtreeAreaY,subtreeAreaWidth);
+			childrenCounter++;
+		}
+	}
 	private void drawAllTreeLines(Graphics g){
 		if(parent != null){
 			g.setColor(Color.black);
@@ -280,11 +284,11 @@ public class Vertice {
 	private void drawAllVertice(Graphics g){
 
 		g.setColor(Color.white);
-		g.fillOval(xCoord, yCoord, width, height);
+		g.fillOval(xMittel - width/2, yMittel - height/2, width, height);
 		g.setColor(Color.red);
-		g.drawOval(xCoord, yCoord, width, height);
+		g.drawOval(xMittel - width/2, yMittel - height/2, width, height);
 
-		g.drawString("Psi: "+psi, xCoord + width, yCoord + height);
+		g.drawString("Psi: "+psi, xMittel - width/2+ width, yMittel - height/2 + height);
 
 		for(Vertice child : children){
 			child.drawAllVertice(g);;
@@ -292,6 +296,7 @@ public class Vertice {
 	}
 
 	public boolean isSamePoint(int x, int y){
+		System.out.println("Comparing to "+this.xMittel+","+this.yMittel);
 		if((Math.abs(this.xMittel - x) <= width/2) && (Math.abs(this.yMittel - y) < height/2)){
 			return true;
 		}
@@ -316,10 +321,10 @@ public class Vertice {
 		return yMittel;
 	}
 	public int getX(){
-		return xCoord;
+		return xMittel - width/2;
 	}
 	public int getY(){
-		return yCoord;
+		return yMittel - height/2;
 	}
 	public int getWidth(){
 		return width;
