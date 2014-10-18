@@ -78,8 +78,8 @@ public class Vertice {
 	 */
 	public void logSubtree(){
 		System.out.println(this);
-		for(int i=0; i<this.children.size(); i++){
-			this.children.get(i).logSubtree();
+		for(Vertice child : children){
+			child.logSubtree();
 		}
 	}
 
@@ -112,8 +112,8 @@ public class Vertice {
 				this.state = states.DONE; // we’re done with everything
 			}
 		} else {
-			for(int i=0; i<this.children.size(); i++){
-				this.children.get(i).init();
+			for(Vertice child : this.children){
+				child.init();
 			}
 		}
 	}
@@ -144,8 +144,7 @@ public class Vertice {
 
 	private void sendToRemainingNeighbor(MessageData data){
 		// find out which neighbor didn’t send any data yet
-		for(int i=0; i<this.children.size(); i++){
-			Vertice neighbor = this.children.get(i);
+		for(Vertice neighbor : this.children){
 			if(!didSendData(neighbor)){
 				// this neighbor didn’t send any data
 				System.out.println("-- Sending to "+neighbor);
@@ -160,8 +159,8 @@ public class Vertice {
 	}
 
 	private boolean didSendData(Vertice neighbor){
-		for(int i=0; i<this.dataReceived.size(); i++){
-			if(this.dataReceived.get(i).getSender() == neighbor){
+		for(MessageData data : this.dataReceived){
+			if(data.getSender() == neighbor){
 				return true;
 			}
 		}
@@ -223,15 +222,14 @@ public class Vertice {
 
 	private void redirectReceivedDataExceptTo(Vertice exceptTo){
 		List<Vertice> neighbors = new ArrayList<Vertice>();
-		for(int i=0; i<this.children.size(); i++){
-			neighbors.add( this.children.get(i) );
+		for(Vertice child : this.children){
+			neighbors.add( child );
 		}
 		if(this.parent instanceof Vertice){
 			neighbors.add( this.parent );
 		}
 
-		for(int j=0; j<neighbors.size(); j++){
-			Vertice neighbor = neighbors.get(j);
+		for(Vertice neighbor : neighbors){
 			if(neighbor != exceptTo){
 				// send this neighbor the data computed from the other neighbors
 				neighbor.receive(this.computeDataExceptFromNeighbor(neighbor));
@@ -243,8 +241,7 @@ public class Vertice {
 		// sort dataReceived to get the maximum values:
 		Collections.sort(this.dataReceived, new MessageDataComparator());
 		List<MessageData> maximums = new ArrayList<MessageData>();
-		for(int i=0; i<this.dataReceived.size(); i++){
-			MessageData data = this.dataReceived.get(i);
+		for(MessageData data : this.dataReceived){
 			if(data.getSender() != exceptTo){
 				maximums.add(data);
 			}
