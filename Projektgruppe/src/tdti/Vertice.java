@@ -22,7 +22,7 @@ public class Vertice {
 	private int yCoord;
 	private int xMittel;
 	private int yMittel;
-	private int width = 12;
+	private int width = 20;
 	private int height = width;
 
 	public Vertice(int x, int y){
@@ -279,8 +279,10 @@ public class Vertice {
 
 	private void drawAllVertice(Graphics g){
 
-		g.setColor(Color.red);
+		g.setColor(Color.white);
 		g.fillOval(xCoord, yCoord, width, height);
+		g.setColor(Color.red);
+		g.drawOval(xCoord, yCoord, width, height);
 
 		g.drawString("Psi: "+psi, xCoord + width, yCoord + height);
 
