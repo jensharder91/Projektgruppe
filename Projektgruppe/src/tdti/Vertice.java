@@ -65,7 +65,7 @@ public class Vertice {
 	 * Calculates the number of neighbors
 	 * @return int
 	 */
-	public int numberOfNeighbors(){
+	private int numberOfNeighbors(){
 		int count = this.children.size();
 		if(this.parent instanceof Vertice){
 			count++;
@@ -118,7 +118,7 @@ public class Vertice {
 		}
 	}
 
-	public void checkDataAlreadyReceived(){
+	private void checkDataAlreadyReceived(){
 		int neighborCount = this.numberOfNeighbors();
 		int dataCount = this.dataReceived.size();
 
@@ -142,7 +142,7 @@ public class Vertice {
 		}
 	}
 
-	public void sendToRemainingNeighbor(MessageData data){
+	private void sendToRemainingNeighbor(MessageData data){
 		// find out which neighbor didn’t send any data yet
 		for(int i=0; i<this.children.size(); i++){
 			Vertice neighbor = this.children.get(i);
@@ -159,7 +159,7 @@ public class Vertice {
 		}
 	}
 
-	public boolean didSendData(Vertice neighbor){
+	private boolean didSendData(Vertice neighbor){
 		for(int i=0; i<this.dataReceived.size(); i++){
 			if(this.dataReceived.get(i).getSender() == neighbor){
 				return true;
@@ -168,7 +168,7 @@ public class Vertice {
 		return false;
 	}
 
-	public void receive(MessageData data){
+	private void receive(MessageData data){
 		this.dataReceived.add(data);
 		System.out.println("Vertice "+this.name+" received "+data+" (message "+this.dataReceived.size()+" of "+this.numberOfNeighbors()+")");
 
@@ -221,7 +221,7 @@ public class Vertice {
 		}
 	}
 
-	public void redirectReceivedDataExceptTo(Vertice exceptTo){
+	private void redirectReceivedDataExceptTo(Vertice exceptTo){
 		List<Vertice> neighbors = new ArrayList<Vertice>();
 		for(int i=0; i<this.children.size(); i++){
 			neighbors.add( this.children.get(i) );
@@ -239,7 +239,7 @@ public class Vertice {
 		}
 	}
 
-	public MessageData computeDataExceptFromNeighbor(Vertice exceptTo){
+	private MessageData computeDataExceptFromNeighbor(Vertice exceptTo){
 		// sort dataReceived to get the maximum values:
 		Collections.sort(this.dataReceived, new MessageDataComparator());
 		List<MessageData> maximums = new ArrayList<MessageData>();
