@@ -252,11 +252,6 @@ public class Vertice {
 		this.xMittel = pointX + width/2;
 		this.yMittel = areaY + height/2;
 
-		if(parent != null){
-			g.setColor(Color.black);
-			g.drawLine(xMittel, yMittel, parent.getMittelX(), parent.getMittelY());
-		}
-
 		g.setColor(Color.red);
 		g.fillOval(pointX, areaY, width, height);
 		g.drawString("Psi: "+psi, pointX + width, areaY + height);
@@ -271,6 +266,30 @@ public class Vertice {
 		for(Vertice child : this.children){
 			subtreeAreaX = areaX + childrenCounter * subtreeAreaWidth;
 			child.drawSubtree(g,subtreeAreaX,subtreeAreaY,subtreeAreaWidth);
+			childrenCounter++;
+		}
+	}
+
+	public void drawSubtreeLines(Graphics g, int areaX, int areaY, int areaWidth){
+		int pointX = areaX + areaWidth/2;
+		this.xMittel = pointX + width/2;
+		this.yMittel = areaY + height/2;
+
+		if(parent instanceof Vertice){
+			g.setColor(Color.black);
+			g.drawLine(xMittel, yMittel, parent.getMittelX(), parent.getMittelY());
+		}
+
+		int numberOfChildren = this.children.size();
+		if(numberOfChildren == 0){ numberOfChildren = 1; }
+		int subtreeAreaWidth = areaWidth / numberOfChildren;
+		int subtreeAreaX = areaX;
+		int subtreeAreaY = areaY + 50;
+		int childrenCounter = 0;
+
+		for(Vertice child : this.children){
+			subtreeAreaX = areaX + childrenCounter * subtreeAreaWidth;
+			child.drawSubtreeLines(g,subtreeAreaX,subtreeAreaY,subtreeAreaWidth);
 			childrenCounter++;
 		}
 	}
