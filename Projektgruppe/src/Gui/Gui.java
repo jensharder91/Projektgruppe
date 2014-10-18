@@ -72,6 +72,29 @@ public class Gui extends JPanel{
 			public void mouseClicked(MouseEvent e) {
 				System.out.println(e.getX() +" / "+e.getY());
 
+				if(pointExists(e.getX(), e.getY())){
+					// add a child to this point
+					System.out.println("Add new Child");
+					Vertice parent = null;
+					for(Vertice vertice : allVertices){
+						if(vertice.isSamePoint(e.getX(), e.getY())){
+							parent = vertice;
+							break;
+						}
+					}
+					if(parent instanceof Vertice){
+						Vertice newVertice = new Vertice("test", parent);
+						allVertices.add(newVertice);
+					}
+				} else {
+					if(allVertices.size() == 0){
+						Vertice newVertice = new Vertice("root", null);
+						allVertices.add(newVertice);
+						rootVertice = newVertice;
+					}
+				}
+
+				/*
 				if(insertChild && !pointExists(e.getX(), e.getY())){
 					System.out.println("insert Child");
 					Vertice newVertice = new Vertice("test", currentVertice, e.getX(), e.getY());
@@ -101,7 +124,7 @@ public class Gui extends JPanel{
 					System.out.println("insert root : coord("+e.getX()+" , "+e.getY()+")");
 					rootVertice = new Vertice("test", null, e.getX(), e.getY());
 					allVertices.add(rootVertice);
-				}
+				}*/
 
 				repaint();
 			}
@@ -164,15 +187,16 @@ public class Gui extends JPanel{
 		if(currentVertice != null){
 			g.drawRect(currentVertice.getX(), currentVertice.getY(), currentVertice.getWidth(), currentVertice.getHeight());
 		}
-		//draw all vertices
-		for(Vertice vertice : allVertices){
-			vertice.drawVertice(g);
+		//draw all vertices recursively
+		if(rootVertice instanceof Vertice){
+			rootVertice.drawSubtree(g,10,10,780);
 		}
 
 	}
 
 	private boolean pointExists(int x, int y){
 		for(Vertice vertice : allVertices){
+			System.out.println("Comparing to "+vertice);
 			if(vertice.isSamePoint(x, y)){
 				return true;
 			}
