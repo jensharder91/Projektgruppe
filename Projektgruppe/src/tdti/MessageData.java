@@ -4,9 +4,9 @@ public class MessageData{
 
 	private int a;
 	private int c;
-	private Vertice sender;
+	private TDTIVertice sender;
 
-	public MessageData(int a, int c, Vertice sender){
+	public MessageData(int a, int c, TDTIVertice sender){
 		this.a = a;
 		this.c = c;
 		this.sender = sender;
@@ -23,7 +23,7 @@ public class MessageData{
 	public int getC(){
 		return c;
 	}
-	public Vertice getSender(){
+	public TDTIVertice getSender(){
 		return sender;
 	}
 }

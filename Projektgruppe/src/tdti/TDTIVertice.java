@@ -4,73 +4,22 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.*;
 
-public class Vertice {
+import Tree.Vertice;
+
+public class TDTIVertice extends Vertice{
+
+	public TDTIVertice(String name, TDTIVertice parent) {
+		super(name, parent);
+	}
 
 	public enum states{
 		READY, COMPUTING, DONE
 	}
 
-	private String name;
 	private states state = states.READY;
 	private int psi = 0;
-	private Vertice parent;
-	private List<Vertice> children = new ArrayList<Vertice>();
 	private List<MessageData> dataReceived = new ArrayList<MessageData>();
 
-	//Gui
-	private int xMittel;
-	private int yMittel;
-	private int width = 20;
-	private int height = width;
-
-	public Vertice(String name, Vertice parent){
-		this.name = name;
-		if(parent instanceof Vertice){
-			this.parent = parent;
-			this.parent.addChild(this);
-		}
-
-
-		System.out.println("new Vertice created : "+name);
-	}
-
-	public String getName(){
-		return this.name;
-	}
-
-	private void deleteChild(Vertice child){
-		children.remove(child);
-	}
-
-	/**
-	 * Appends a child to the list of children
-	 * @param child child to append
-	 */
-	private void addChild(Vertice child){
-		this.children.add(child);
-	}
-
-	/**
-	 * Calculates the number of neighbors
-	 * @return int
-	 */
-	private int numberOfNeighbors(){
-		int count = this.children.size();
-		if(this.parent instanceof Vertice){
-			count++;
-		}
-		return count;
-	}
-
-	/**
-	 * Logs the subtree rooted at the current Vertice to System.out recursively.
-	 */
-	public void logSubtree(){
-		System.out.println(this);
-		for(Vertice child : children){
-			child.logSubtree();
-		}
-	}
 
 	public void algorithmus(){
 		reset();
@@ -81,7 +30,9 @@ public class Vertice {
 		this.state = states.READY;
 		this.dataReceived = new ArrayList<MessageData>();
 		for(Vertice child : this.children){
-			child.reset();
+			if(checkVerticeType(child)){
+				((TDTIVertice) child).reset();
+			}
 		}
 	}
 
@@ -89,9 +40,11 @@ public class Vertice {
 		if((this.state == states.READY) && (this.children.size() == 0)){
 			// this is a ready leaf, we should send (1,1)
 			MessageData data = new MessageData(1, 1, this);
-			if(this.parent instanceof Vertice){
+			if(this.parent != null){
 				// this is a leaf, only neighbor we can send to is the parent
-				this.parent.receive(data);
+				if(checkVerticeType(this.parent)){
+					((TDTIVertice) this.parent).receive(data);
+				}
 				this.state = states.COMPUTING;
 				// should not wait for data, if they are already received
 				checkDataAlreadyReceived();
@@ -102,7 +55,9 @@ public class Vertice {
 			}
 		} else {
 			for(Vertice child : this.children){
-				child.init();
+				if(checkVerticeType(child)){
+					((TDTIVertice) child).init();
+				}
 			}
 		}
 	}
@@ -134,20 +89,20 @@ public class Vertice {
 	private void sendToRemainingNeighbor(MessageData data){
 		// find out which neighbor didn’t send any data yet
 		for(Vertice neighbor : this.children){
-			if(!didSendData(neighbor)){
+			if(checkVerticeType(neighbor) && !didSendData((TDTIVertice) neighbor)){
 				// this neighbor didn’t send any data
 				System.out.println("-- Sending to "+neighbor);
-				neighbor.receive(data);
+				((TDTIVertice) neighbor).receive(data);
 				return;
 			}
 		}
-		if(this.parent instanceof Vertice && !didSendData(this.parent)){
+		if(this.parent != null && checkVerticeType(this.parent) && !didSendData((TDTIVertice) this.parent)){
 			System.out.println("-- Sending to "+this.parent);
-			this.parent.receive(data);
+			((TDTIVertice) this.parent).receive(data);
 		}
 	}
 
-	private boolean didSendData(Vertice neighbor){
+	private boolean didSendData(TDTIVertice neighbor){
 		for(MessageData data : this.dataReceived){
 			if(data.getSender() == neighbor){
 				return true;
@@ -209,24 +164,26 @@ public class Vertice {
 		}
 	}
 
-	private void redirectReceivedDataExceptTo(Vertice exceptTo){
+	private void redirectReceivedDataExceptTo(TDTIVertice exceptTo){
 		List<Vertice> neighbors = new ArrayList<Vertice>();
 		for(Vertice child : this.children){
 			neighbors.add( child );
 		}
-		if(this.parent instanceof Vertice){
+		if(this.parent instanceof TDTIVertice){
 			neighbors.add( this.parent );
 		}
 
 		for(Vertice neighbor : neighbors){
 			if(neighbor != exceptTo){
 				// send this neighbor the data computed from the other neighbors
-				neighbor.receive(this.computeDataExceptFromNeighbor(neighbor));
+				if(checkVerticeType(neighbor)){
+					((TDTIVertice) neighbor).receive(this.computeDataExceptFromNeighbor((TDTIVertice) neighbor));
+				}
 			}
 		}
 	}
 
-	private MessageData computeDataExceptFromNeighbor(Vertice exceptTo){
+	private MessageData computeDataExceptFromNeighbor(TDTIVertice exceptTo){
 		// sort dataReceived to get the maximum values:
 		Collections.sort(this.dataReceived, new MessageDataComparator());
 		List<MessageData> maximums = new ArrayList<MessageData>();
@@ -251,83 +208,22 @@ public class Vertice {
 		}
 	}
 
-	public void drawTree(Graphics g, int areaX, int areaY, int areaWidth){
-		calcPoints(areaX, areaY, areaWidth);
-		drawAllTreeLines(g);
-		drawAllVertice(g);
-	}
-
-	private void calcPoints(int areaX, int areaY, int areaWidth){
-		int pointX = areaX + areaWidth/2;
-		this.xMittel = pointX + width/2;
-		this.yMittel = areaY + height/2;
-
-		int numberOfChildren = this.children.size();
-		if(numberOfChildren == 0){ numberOfChildren = 1; }
-		int subtreeAreaWidth = areaWidth / numberOfChildren;
-		int subtreeAreaX = areaX;
-		int subtreeAreaY = areaY + 50;
-		int childrenCounter = 0;
-
-		for(Vertice child : this.children){
-			subtreeAreaX = areaX + childrenCounter * subtreeAreaWidth;
-			child.calcPoints(subtreeAreaX,subtreeAreaY,subtreeAreaWidth);
-			childrenCounter++;
-		}
-	}
-	private void drawAllTreeLines(Graphics g){
-		if(parent != null){
-			g.setColor(new Color(0x33,0x44,0x55));
-			g.drawLine(xMittel, yMittel, parent.getMittelX(), parent.getMittelY());
-		}
-		for(Vertice child : children){
-			child.drawAllTreeLines(g);
-		}
-	}
-
-	private void drawAllVertice(Graphics g){
-
-		g.setColor(Color.white);
-		g.fillOval(xMittel - width/2, yMittel - height/2, width, height);
-		g.setColor(new Color(0x33,0x44,0x55));
-		g.drawOval(xMittel - width/2, yMittel - height/2, width, height);
+	protected void drawAllVertice(Graphics g){
+		
+		super.drawAllVertice(g);
 
 		String string = String.valueOf(psi);
 		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
 		g.drawString(string, xMittel - stringWidth/2, yMittel+height/4);
 
-		for(Vertice child : children){
-			child.drawAllVertice(g);;
-		}
 	}
-
-	public boolean isSamePoint(int x, int y){
-		System.out.println("Comparing to "+this.xMittel+","+this.yMittel);
-		if((Math.abs(this.xMittel - x) <= width/2) && (Math.abs(this.yMittel - y) < height/2)){
-			return true;
+	
+	private boolean checkVerticeType(Vertice vertice) {
+		if(!(vertice instanceof TDTIVertice)){
+			System.out.println("wrong VerticeType!!! FATAL ERROR");
+			return false;
 		}
-		return false;
-	}
-
-	public Vertice pointExists(int x, int y){
-
-		if(isSamePoint(x, y)){
-			return this;
-		}
-		for(Vertice child : children){
-			Vertice vertice = child.pointExists(x, y);
-			if(vertice != null){
-				return vertice;
-			}
-		}
-		return null;
-	}
-
-	public void delete(){
-		if(parent == null){
-			return;
-		}
-		parent.deleteChild(this);
+		return true;
 	}
 
 	@Override
@@ -335,28 +231,7 @@ public class Vertice {
 		return "Vertice ("+this.name+") ("+this.children.size()+" children) ("+this.state+") ("+this.psi+" minAgents)";
 	}
 
-	public Vertice getParent(){
-		return parent;
-	}
 	public int getPsi(){
 		return psi;
-	}
-	public int getMittelX(){
-		return xMittel;
-	}
-	public int getMittelY(){
-		return yMittel;
-	}
-	public int getX(){
-		return xMittel - width/2;
-	}
-	public int getY(){
-		return yMittel - height/2;
-	}
-	public int getWidth(){
-		return width;
-	}
-	public int getHeight(){
-		return height;
 	}
 }
