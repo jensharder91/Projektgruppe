@@ -29,8 +29,14 @@ public class CIMAGui extends Gui{
 
 	@Override
 	protected void calcAlgorithmus(boolean repaintBool) {
-		// TODO Auto-generated method stub
 		
+		if(rootVertice instanceof CIMAVertice){
+			((CIMAVertice) rootVertice).algorithmus();
+		}
+		
+		if(repaintBool){
+			repaint();
+		}
 	}
 
 	@Override
