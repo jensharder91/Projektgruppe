@@ -1,7 +1,5 @@
-package tdti;
+package cima;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -10,70 +8,29 @@ import javax.swing.SwingUtilities;
 import Gui.Gui;
 import Tree.Vertice;
 
-public class TDTIGui extends Gui{
+public class CIMAGui extends Gui{
 
 	private static final long serialVersionUID = 1L;
-	private static TDTIGui gui;
+	private static CIMAGui gui;
 
-	/**  */
-	private Vertice rootVertice = null;
-	private Vertice currentVertice = null;
-	/** */
 
-	private TDTIGui(){
+	private CIMAGui(){
 		super();
 	}
 
-	public static TDTIGui getGui(){
+	public static CIMAGui getGui(){
 		if(gui == null){
-			gui = new TDTIGui();
+			gui = new CIMAGui();
 		}
 		return gui;
 	}
 	
-	@Override
-	public void paintComponent(Graphics g) {
 
-		if(rootVertice != null && autoAlgo && rootVertice instanceof TDTIVertice){
-			((TDTIVertice) rootVertice).algorithmus();
-		}
-
-		super.paintComponent(g);
-
-		//mark current point
-		g.setColor(Color.blue);
-		if(currentVertice != null){
-			g.drawRect(currentVertice.getX(), currentVertice.getY(), currentVertice.getWidth(), currentVertice.getHeight());
-		}
-
-		//draw all vertices recursively
-		if(rootVertice instanceof TDTIVertice){
-			rootVertice.drawTree(g,10,10,780);
-		}
-	}
-
-	public Vertice getRoot(){
-		return rootVertice;
-	}
 
 	@Override
-	protected void calcAlgorithmus() {
-		if(rootVertice instanceof TDTIVertice){
-			((TDTIVertice) rootVertice).algorithmus();
-			rootVertice.logSubtree();
-
-			repaint();
-		} else {
-			System.out.println("No root available");
-		}
-	}
-
-	@Override
-	protected void clearGui() {
-		rootVertice = null;
-		currentVertice = null;
-		//				allVertices = new ArrayList<Vertice>();
-		repaint();
+	protected void calcAlgorithmus(boolean repaintBool) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -121,16 +78,16 @@ public class TDTIGui extends Gui{
 				}else{
 
 					if(rootVertice == null){
-						rootVertice = new TDTIVertice("root", null);
+						rootVertice = new CIMAVertice("root", null);
 					}else if(rootVertice.pointExists(e.getX(), e.getY()) != null){
 						// add a child to this point
-						TDTIVertice parent = null;
-						parent = (TDTIVertice) rootVertice.pointExists(e.getX(), e.getY());
+						CIMAVertice parent = null;
+						parent = (CIMAVertice) rootVertice.pointExists(e.getX(), e.getY());
 						if(parent != null){
 							System.out.println("Add new Child to "+parent);
 						}
-						if(parent instanceof TDTIVertice){
-							new TDTIVertice("test", parent);
+						if(parent instanceof CIMAVertice){
+							new CIMAVertice("test", parent);
 						}
 					}
 				}
@@ -139,4 +96,5 @@ public class TDTIGui extends Gui{
 			}
 		});
 	}
+
 }
