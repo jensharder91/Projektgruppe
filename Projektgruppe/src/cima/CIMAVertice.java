@@ -13,6 +13,7 @@ public class CIMAVertice extends Vertice{
 	
 	private int edgeWeightToParent;
 	private int verticeWeight;
+	private int mu;
 	private states state;
 	private List<MessageData> lamdas = new ArrayList<MessageData>();
 	
@@ -49,7 +50,7 @@ public class CIMAVertice extends Vertice{
 		System.out.println("starting algo....");
 		reset();
 		startAlgo();
-		
+		calcMu();
 		logSubtree();
 	}
 	
@@ -188,9 +189,28 @@ public class CIMAVertice extends Vertice{
 		return false;
 	}
 	
+	private void calcMu(){
+		Collections.sort(lamdas, new MessageDataComparator());
+		MessageData max1 = lamdas.get(0);
+		MessageData max2 = new MessageData(0, null);
+		if(lamdas.size() >= 2){
+			max2 = lamdas.get(1);
+		}
+		
+		mu = Math.max(max1.getLamdaValue(), max2.getLamdaValue() + verticeWeight);
+		
+		for(Vertice child : children){
+			if(!(child instanceof CIMAVertice)){
+				System.out.println("ERROR... wrong Verticetype!!");
+				return;
+			}
+			((CIMAVertice) child).calcMu();
+		}
+	}
+	
 	@Override
 	public String toString(){
-		return "##Vertice ("+this.name+") ("+this.children.size()+" children) ("+this.state+")\n"
+		return "##Vertice ("+this.name+") ("+this.children.size()+" children) ("+this.mu+")\n"
 				+ "		all lamda: "+getAlllamda();
 	}
 	
