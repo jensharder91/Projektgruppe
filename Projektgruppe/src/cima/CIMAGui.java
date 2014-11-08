@@ -13,6 +13,7 @@ public class CIMAGui extends Gui{
 	private static final long serialVersionUID = 1L;
 	private static CIMAGui gui;
 
+	private int verticeCoutner = 0;
 
 	private CIMAGui(){
 		super();
@@ -84,7 +85,9 @@ public class CIMAGui extends Gui{
 				}else{
 
 					if(rootVertice == null){
-						rootVertice = new CIMAVertice("root", null);
+						verticeCoutner  = 1;
+						rootVertice = new CIMAVertice(""+verticeCoutner, null);
+						verticeCoutner++;
 					}else if(rootVertice.pointExists(e.getX(), e.getY()) != null){
 						// add a child to this point
 						CIMAVertice parent = null;
@@ -93,7 +96,8 @@ public class CIMAGui extends Gui{
 							System.out.println("Add new Child to "+parent);
 						}
 						if(parent instanceof CIMAVertice){
-							new CIMAVertice("test", parent);
+							new CIMAVertice(""+verticeCoutner, parent);
+							verticeCoutner++;
 						}
 					}
 				}

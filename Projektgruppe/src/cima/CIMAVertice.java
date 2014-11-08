@@ -2,8 +2,9 @@ package cima;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 
 import Tree.Vertice;
@@ -48,11 +49,13 @@ public class CIMAVertice extends Vertice{
 		System.out.println("starting algo....");
 		reset();
 		startAlgo();
+		
+		logSubtree();
 	}
 	
 	private void reset(){
 		state = states.READY;
-		lamdas.clear();
+		lamdas.clear(); 
 		
 		//calc the verticeWeight
 		verticeWeight = edgeWeightToParent;
@@ -80,7 +83,7 @@ public class CIMAVertice extends Vertice{
 	private void startAlgo(){
 		if(children.size() == 0 && state == states.READY && parent != null){
 			//got a ready leaf -> send message
-			((CIMAVertice) parent).receive(new MessageData(edgeWeightToParent, this));
+			((CIMAVertice) parent).receive(new MessageData(verticeWeight, this));
 			state = states.ACTIVE;
 		}else{
 			for(Vertice child : children){
@@ -96,15 +99,109 @@ public class CIMAVertice extends Vertice{
 	private void receive(MessageData data){
 		this.lamdas.add(data);
 		
-		System.out.println("received msg : "+data);
+//		System.out.println("received msg : "+data);
 		
 		if(lamdas.size() == numberOfNeighbors() -1){
-			System.out.println("YEAH");
+			//TODO *
+			computeLamdasAndSendTo(getMissingNeightbour());
 			state = states.ACTIVE;
 		}else if(lamdas.size() == numberOfNeighbors()){
-			
+			//TODO **
+			computeAllLamdasExeptFor(data.getSender());
 			state = states.DONE;
 		}
+	}
+	
+	private void computeAllLamdasExeptFor(CIMAVertice exeptVertice){
+		for(Vertice child : children){
+			if(!(child instanceof CIMAVertice)){
+				System.out.println("ERROR... wrong Verticetype!!");
+				return;
+			}
+			if(((CIMAVertice) child) != exeptVertice){
+				computeLamdasAndSendTo((CIMAVertice) child);
+			}
+		}
+		if(parent != null){
+			if(!(parent instanceof CIMAVertice)){
+				System.out.println("ERROR... wrong Verticetype!!");
+				return;
+			}
+			if(((CIMAVertice)parent) != exeptVertice){
+				computeLamdasAndSendTo((CIMAVertice) parent);
+			}
+		}
+	}
+	
+	private void computeLamdasAndSendTo(CIMAVertice receiverNode){
+		
+		Collections.sort(lamdas, new MessageDataComparator());
+		List<MessageData> maximums = new ArrayList<MessageData>();
+		for(MessageData data : lamdas){
+			if(data.getSender() != receiverNode){
+				maximums.add(data);
+			}
+			if(maximums.size() == 2){
+				break;
+			}
+		}
+		MessageData max1 = maximums.get(0);
+		MessageData max2 = new MessageData(0, null);
+		if(maximums.size() >= 2){
+			max2 = maximums.get(1);
+		}
+		
+		int maxValue = Math.max(max1.getLamdaValue(), max2.getLamdaValue() + verticeWeight);
+		
+		receiverNode.receive(new MessageData(maxValue, this));
+	}
+	
+	private CIMAVertice getMissingNeightbour(){
+		for(Vertice neighbor : children){
+			if(!(neighbor instanceof CIMAVertice)){
+				System.out.println("ERROR... wrong Verticetype!!");
+				return null;
+			}
+			if(! didSendData((CIMAVertice) neighbor)){
+				return (CIMAVertice) neighbor;
+			}
+		}
+		if(parent != null){
+			if(!(parent instanceof CIMAVertice)){
+				System.out.println("ERROR... wrong Verticetype!!");
+				return null;
+			}
+			if(!didSendData((CIMAVertice) parent)){
+				return (CIMAVertice) parent;
+			}
+		}
+		System.out.println("ERROR : no missing neighbor?");
+		return null;
+	}
+
+	private boolean didSendData(CIMAVertice neighbor){
+		for(MessageData data : lamdas){
+			if(data.getSender() == neighbor){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Override
+	public String toString(){
+		return "##Vertice ("+this.name+") ("+this.children.size()+" children) ("+this.state+")\n"
+				+ "		all lamda: "+getAlllamda();
+	}
+	
+	private String getAlllamda(){
+		
+		String alllamda = "   ";
+		for(MessageData msgData : lamdas){
+			alllamda += msgData.toString() + "  /  ";
+		}
+		
+		return alllamda;
 	}
 	
 	

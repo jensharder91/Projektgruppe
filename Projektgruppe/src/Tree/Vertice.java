@@ -106,6 +106,8 @@ public class Vertice {
 		g.fillOval(xMittel - width/2, yMittel - height/2, width, height);
 		g.setColor(new Color(0x33,0x44,0x55));
 		g.drawOval(xMittel - width/2, yMittel - height/2, width, height);
+		
+		g.drawString(name, xMittel, yMittel);
 
 		for(Vertice child : children){
 			child.drawAllVertice(g);;

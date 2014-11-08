@@ -2,21 +2,21 @@ package cima;
 
 public class MessageData {
 	
-	private int edgeWeightToParent;
+	private int lamdaValue;
 	private CIMAVertice sender;
 
-	public MessageData(int edgeWeightToParent, CIMAVertice sender){
-		this.edgeWeightToParent = edgeWeightToParent;
+	public MessageData(int lamdaValue, CIMAVertice sender){
+		this.lamdaValue = lamdaValue;
 		this.sender = sender;
 	}
 	
 	@Override
 	public String toString() {
-		return "Sender : "+sender+"  edgeWeighttoParent: "+edgeWeightToParent;
+		return "Sender : "+sender.getName()+"  edgeWeighttoParent: "+lamdaValue;
 	}
 	
-	public int getEdgeWeightToParent(){
-		return edgeWeightToParent;
+	public int getLamdaValue(){
+		return lamdaValue;
 	}
 	public CIMAVertice getSender(){
 		return sender;
