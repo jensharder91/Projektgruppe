@@ -81,7 +81,7 @@ public class CIMAVertice extends Vertice{
 	}
 	
 	private void startAlgo(){
-		if(children.size() == 0 && state == states.READY && parent != null){
+		if(children.size() == 0 && parent != null){
 			//got a ready leaf -> send message
 			((CIMAVertice) parent).receive(new MessageData(verticeWeight, this));
 			state = states.ACTIVE;
