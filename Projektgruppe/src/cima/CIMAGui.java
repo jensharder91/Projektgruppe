@@ -1,8 +1,15 @@
 package cima;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 
 import Gui.Gui;
@@ -13,9 +20,33 @@ public class CIMAGui extends Gui{
 	private static final long serialVersionUID = 1L;
 	private static CIMAGui gui;
 
+	private int verticeCoutner = 0;
+	private boolean editWeight = false;
+	
+	protected JToggleButton buttonAddWeight = new JToggleButton("Gewicht hinzufügen");
+	protected JTextField tf_weight = new JTextField();
 
 	private CIMAGui(){
 		super();
+		
+		tf_weight.setText(1+"");
+		tf_weight.setSize(25, 10);
+		buttonBar.add(tf_weight);
+		
+		buttonAddWeight.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED){
+					editWeight = true;
+				}else if(e.getStateChange() == ItemEvent.DESELECTED){
+					editWeight = false;
+				}
+			}
+		});
+		buttonBar.add(buttonAddWeight);
+		
+		
 	}
 
 	public static CIMAGui getGui(){
@@ -29,8 +60,14 @@ public class CIMAGui extends Gui{
 
 	@Override
 	protected void calcAlgorithmus(boolean repaintBool) {
-		// TODO Auto-generated method stub
 		
+		if(rootVertice instanceof CIMAVertice){
+			((CIMAVertice) rootVertice).algorithmus();
+		}
+		
+		if(repaintBool){
+			repaint();
+		}
 	}
 
 	@Override
@@ -63,8 +100,17 @@ public class CIMAGui extends Gui{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				System.out.println(e.getX() +" / "+e.getY());
-
-				if(SwingUtilities.isRightMouseButton(e)){
+				
+				// füge ein Gewicht ein
+				if(editWeight){
+					CIMAVertice editVertice = (CIMAVertice) rootVertice.pointExists(e.getX(), e.getY());
+					if(editVertice != null){
+						if(editVertice.getParent() != null){
+							editVertice.setEdgeWeightToParent(Integer.valueOf(tf_weight.getText()));
+						}
+					}
+				//rechtsklick -> LÖSCHEN
+				}else if(SwingUtilities.isRightMouseButton(e)){
 					if(rootVertice != null){
 						Vertice selectedVertice = rootVertice.pointExists(e.getX(), e.getY());
 						if(selectedVertice != null){
@@ -75,10 +121,13 @@ public class CIMAGui extends Gui{
 							}
 						}
 					}
+				//linksklick -> neues Kind
 				}else{
 
 					if(rootVertice == null){
-						rootVertice = new CIMAVertice("root", null);
+						verticeCoutner  = 1;
+						rootVertice = new CIMAVertice(""+verticeCoutner, null);
+						verticeCoutner++;
 					}else if(rootVertice.pointExists(e.getX(), e.getY()) != null){
 						// add a child to this point
 						CIMAVertice parent = null;
@@ -87,7 +136,8 @@ public class CIMAGui extends Gui{
 							System.out.println("Add new Child to "+parent);
 						}
 						if(parent instanceof CIMAVertice){
-							new CIMAVertice("test", parent);
+							new CIMAVertice(""+verticeCoutner, parent);
+							verticeCoutner++;
 						}
 					}
 				}
