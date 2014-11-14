@@ -22,17 +22,17 @@ public class CIMAGui extends Gui{
 
 	private int verticeCoutner = 0;
 	private boolean editWeight = false;
-	
-	protected JToggleButton buttonAddWeight = new JToggleButton("Gewicht hinzufügen");
+
+	protected JToggleButton buttonAddWeight = new JToggleButton("Gewicht hinzufÃ¼gen");
 	protected JTextField tf_weight = new JTextField();
 
 	private CIMAGui(){
 		super();
-		
+
 		tf_weight.setText(1+"");
 		tf_weight.setSize(25, 10);
 		buttonBar.add(tf_weight);
-		
+
 		buttonAddWeight.addItemListener(new ItemListener() {
 
 			@Override
@@ -45,8 +45,8 @@ public class CIMAGui extends Gui{
 			}
 		});
 		buttonBar.add(buttonAddWeight);
-		
-		
+
+
 	}
 
 	public static CIMAGui getGui(){
@@ -55,16 +55,16 @@ public class CIMAGui extends Gui{
 		}
 		return gui;
 	}
-	
+
 
 
 	@Override
 	protected void calcAlgorithmus(boolean repaintBool) {
-		
+
 		if(rootVertice instanceof CIMAVertice){
 			((CIMAVertice) rootVertice).algorithmus();
 		}
-		
+
 		if(repaintBool){
 			repaint();
 		}
@@ -100,8 +100,8 @@ public class CIMAGui extends Gui{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				System.out.println(e.getX() +" / "+e.getY());
-				
-				// füge ein Gewicht ein
+
+				// fÃ¼ge ein Gewicht ein
 				if(editWeight){
 					CIMAVertice editVertice = (CIMAVertice) rootVertice.pointExists(e.getX(), e.getY());
 					if(editVertice != null){
@@ -109,7 +109,7 @@ public class CIMAGui extends Gui{
 							editVertice.setEdgeWeightToParent(Integer.valueOf(tf_weight.getText()));
 						}
 					}
-				//rechtsklick -> LÖSCHEN
+				//rechtsklick -> LÃ–SCHEN
 				}else if(SwingUtilities.isRightMouseButton(e)){
 					if(rootVertice != null){
 						Vertice selectedVertice = rootVertice.pointExists(e.getX(), e.getY());
