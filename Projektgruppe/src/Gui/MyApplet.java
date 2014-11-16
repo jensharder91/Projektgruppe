@@ -14,7 +14,7 @@ public class MyApplet {
 
 	public MyApplet(Component panel, String title) {
 		this.title = title;
-		
+
 		JApplet applet = new JApplet();
 		applet.add(panel, "Center");
 

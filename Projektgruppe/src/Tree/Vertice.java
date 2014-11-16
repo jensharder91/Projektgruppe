@@ -6,17 +6,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Vertice {
-	
+
 	//Gui
 	protected int xMittel;
 	protected int yMittel;
 	protected int width = 20;
 	protected int height = width;
-	
+
 	protected Vertice parent;
 	protected List<Vertice> children = new ArrayList<Vertice>();
 	protected String name;
-	
+
 	public Vertice(String name, Vertice parent){
 		this.name = name;
 		if(parent instanceof Vertice){
@@ -27,15 +27,27 @@ public class Vertice {
 
 		System.out.println("new Vertice created : "+name);
 	}
-	
+
 	public String getName(){
 		return this.name;
+	}
+
+	protected int getSubtreeHeight(){
+		if(this.children.size() == 0){
+			return 0;
+		}
+
+		int maxSubtreeHeight = 0;
+		for(Vertice child : this.children){
+			maxSubtreeHeight = Math.max(maxSubtreeHeight,child.getSubtreeHeight());
+		}
+		return maxSubtreeHeight+1;
 	}
 
 	protected void deleteChild(Vertice child){
 		children.remove(child);
 	}
-	
+
 	/**
 	 * Appends a child to the list of children
 	 * @param child child to append
@@ -65,14 +77,16 @@ public class Vertice {
 			child.logSubtree();
 		}
 	}
-	
-	public void drawTree(Graphics g, int areaX, int areaY, int areaWidth){
-		calcPoints(areaX, areaY, areaWidth);
+
+	public void drawTree(Graphics g, int areaX, int areaY, int areaWidth, int areaHeight){
+		int levelHeight = (areaHeight-areaY) / (this.getSubtreeHeight()+1);
+		levelHeight = Math.min(100,levelHeight); // maximum Level Height: 100
+		calcPoints(areaX, areaY, areaWidth, levelHeight);
 		drawAllTreeLines(g);
 		drawAllVertice(g);
 	}
 
-	protected void calcPoints(int areaX, int areaY, int areaWidth){
+	protected void calcPoints(int areaX, int areaY, int areaWidth, int levelHeight){
 		int pointX = areaX + areaWidth/2;
 		this.xMittel = pointX + width/2;
 		this.yMittel = areaY + height/2;
@@ -81,12 +95,12 @@ public class Vertice {
 		if(numberOfChildren == 0){ numberOfChildren = 1; }
 		int subtreeAreaWidth = areaWidth / numberOfChildren;
 		int subtreeAreaX = areaX;
-		int subtreeAreaY = areaY + 50;
+		int subtreeAreaY = areaY + levelHeight;
 		int childrenCounter = 0;
 
 		for(Vertice child : this.children){
 			subtreeAreaX = areaX + childrenCounter * subtreeAreaWidth;
-			child.calcPoints(subtreeAreaX,subtreeAreaY,subtreeAreaWidth);
+			child.calcPoints(subtreeAreaX,subtreeAreaY,subtreeAreaWidth,levelHeight);
 			childrenCounter++;
 		}
 	}
