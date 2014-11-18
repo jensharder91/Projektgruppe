@@ -21,7 +21,7 @@ import Tree.Vertice;
 public abstract class Gui extends JPanel{
 
 	protected static final long serialVersionUID = 1L;
-	
+
 	protected Vertice rootVertice = null;
 	protected Vertice currentVertice = null;
 
@@ -33,7 +33,6 @@ public abstract class Gui extends JPanel{
 	protected JToggleButton toggleAutoAlgo = new JToggleButton("AutoCalc");
 
 	protected boolean autoAlgo = false;
-	/** */
 
 	protected Gui(){
 
@@ -51,7 +50,7 @@ public abstract class Gui extends JPanel{
 			public void actionPerformed(ActionEvent e){
 
 				clearGui();
-				
+
 			}
 		});
 
@@ -83,14 +82,14 @@ public abstract class Gui extends JPanel{
 		buttonBar.add(toggleAutoAlgo);
 		this.add(buttonBar, "South");
 	}
-	
+
 	public Vertice getRoot(){
 		return rootVertice;
 	}
 
 	@Override
 	public void paintComponent(Graphics g) {
-		
+
 		if(rootVertice != null && autoAlgo){
 			calcAlgorithmus(false);
 		}
@@ -100,7 +99,7 @@ public abstract class Gui extends JPanel{
 		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		g2.setStroke(new BasicStroke(2));
 		super.paintComponent(g);
-		
+
 		//mark current point
 		g.setColor(Color.blue);
 		if(currentVertice != null){
@@ -109,16 +108,16 @@ public abstract class Gui extends JPanel{
 
 		//draw all vertices recursively
 		if(rootVertice != null){
-			rootVertice.drawTree(g,10,10,780);
+			rootVertice.drawTree(g,10,10,getWidth()-20,getHeight()-50);
 		}
 	}
-	
+
 	protected void clearGui(){
 		rootVertice = null;
 		currentVertice = null;
 		repaint();
 	}
-	
+
 	protected abstract void calcAlgorithmus(boolean repaintBool);
 	protected abstract void addGuiMouseListener();
 
