@@ -2,11 +2,11 @@ package cima;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import Gui.Gui;
 import Tree.Vertice;
 
 public class CIMAVertice extends Vertice{
@@ -14,21 +14,14 @@ public class CIMAVertice extends Vertice{
 	private int edgeWeightToParent;
 	private int verticeWeight;
 	private int mu;
-	private states state;
 	private List<MessageData> lamdas = new ArrayList<MessageData>();
 	
-	private enum states{
-		READY,
-		ACTIVE,
-		DONE
-	};
-	
-	public CIMAVertice(String name, Vertice parent){
-		this(name, parent, 1);
+	public CIMAVertice(String name, Vertice parent, Gui gui){
+		this(name, parent, 1, gui);
 	}
 	
-	public CIMAVertice(String name, Vertice parent, int edgeWeightToParent) {
-		super(name, parent);
+	public CIMAVertice(String name, Vertice parent, int edgeWeightToParent, Gui gui) {
+		super(name, parent, gui);
 		if(parent != null){
 			this.edgeWeightToParent = edgeWeightToParent;
 		}else{
@@ -55,7 +48,6 @@ public class CIMAVertice extends Vertice{
 	}
 	
 	private void reset(){
-		state = states.READY;
 		lamdas.clear(); 
 		
 		//calc the verticeWeight
@@ -85,7 +77,6 @@ public class CIMAVertice extends Vertice{
 		if(children.size() == 0 && parent != null){
 			//got a ready leaf -> send message
 			((CIMAVertice) parent).receive(new MessageData(verticeWeight, this));
-			state = states.ACTIVE;
 		}else{
 			for(Vertice child : children){
 				if(!(child instanceof CIMAVertice)){
@@ -105,11 +96,9 @@ public class CIMAVertice extends Vertice{
 		if(lamdas.size() == numberOfNeighbors() -1){
 			//TODO *
 			computeLamdasAndSendTo(getMissingNeightbour());
-			state = states.ACTIVE;
 		}else if(lamdas.size() == numberOfNeighbors()){
 			//TODO **
 			computeAllLamdasExeptFor(data.getSender());
-			state = states.DONE;
 		}
 	}
 	

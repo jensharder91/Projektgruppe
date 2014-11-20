@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+import Gui.Gui;
+
 public class Vertice {
 
 	//Gui
@@ -12,17 +14,25 @@ public class Vertice {
 	protected int yMittel;
 	protected int width = 20;
 	protected int height = width;
+	
+    //animation
+    protected Gui gui;
+    protected double xMittelAnimation;
+    protected double yMittelAnimation;
+    protected boolean activeAnimation = false;
+
 
 	protected Vertice parent;
 	protected List<Vertice> children = new ArrayList<Vertice>();
 	protected String name;
 
-	public Vertice(String name, Vertice parent){
+	public Vertice(String name, Vertice parent, Gui gui){
 		this.name = name;
 		if(parent instanceof Vertice){
 			this.parent = parent;
 			this.parent.addChild(this);
 		}
+		this.gui = gui;
 
 
 		System.out.println("new Vertice created : "+name);
@@ -84,6 +94,10 @@ public class Vertice {
 		calcPoints(areaX, areaY, areaWidth, levelHeight);
 		drawAllTreeLines(g);
 		drawAllVertice(g);
+		
+		if(activeAnimation){
+			drawAnimation(g);
+		}
 	}
 
 	protected void calcPoints(int areaX, int areaY, int areaWidth, int levelHeight){
@@ -127,6 +141,13 @@ public class Vertice {
 			child.drawAllVertice(g);;
 		}
 	}
+	
+    protected void drawAnimation(Graphics g) {
+    	System.out.println("drawing.....");
+        g.setColor(Color.darkGray);
+        g.fillOval((int)(xMittelAnimation - width/2), (int)(yMittelAnimation - height/2), width, height);
+    }
+
 
 	public boolean isSamePoint(int x, int y){
 		System.out.println("Comparing to "+this.xMittel+","+this.yMittel);
@@ -182,6 +203,63 @@ public class Vertice {
 	}
 	public int getHeight(){
 		return height;
+	}
+	public List<Vertice> getChildren(){
+		return children;
+	}
+	
+	public void animation(Vertice destVertice){
+		AnimationTimer timer = new AnimationTimer(destVertice);
+		timer.start();
+	}
+	
+	class AnimationTimer extends Thread{
+		
+		Vertice destVertice;
+		int animationSpeed;
+		
+		public AnimationTimer(Vertice destVertice) {
+			this.destVertice = destVertice;
+		}
+		 
+		@Override
+		public void run() {
+			
+			xMittelAnimation = xMittel;
+			yMittelAnimation = yMittel;
+			
+			animationSpeed = 2;
+			
+			activeAnimation = true;
+			
+			while(isInterrupted() == false){
+				
+				double vektorX = destVertice.getMittelX() - xMittelAnimation;
+				double vektorY = destVertice.getMittelY() - yMittelAnimation;
+				
+				double vektorLength = Math.sqrt(vektorX*vektorX + vektorY*vektorY);
+				
+				xMittelAnimation += animationSpeed * vektorX/vektorLength;
+				yMittelAnimation += animationSpeed * vektorY/vektorLength;
+				
+				
+				gui.repaint();
+								
+				try {
+					Thread.sleep(20);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					return;
+				}
+				
+				if(vektorLength < 2*animationSpeed){
+					this.interrupt();
+				}
+			}
+			
+			activeAnimation = false;
+			gui.repaint();
+		}
 	}
 
 }
