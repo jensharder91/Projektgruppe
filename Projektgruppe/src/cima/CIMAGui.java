@@ -21,33 +21,7 @@ public class CIMAGui extends Gui{
 	private static CIMAGui gui;
 
 	private int verticeCoutner = 0;
-	private boolean editWeight = false;
 
-	protected JToggleButton buttonAddWeight = new JToggleButton("Gewicht hinzufügen");
-	protected JTextField tf_weight = new JTextField();
-
-	private CIMAGui(){
-		super();
-
-		tf_weight.setText(1+"");
-		tf_weight.setSize(25, 10);
-		buttonBar.add(tf_weight);
-
-		buttonAddWeight.addItemListener(new ItemListener() {
-
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if(e.getStateChange() == ItemEvent.SELECTED){
-					editWeight = true;
-				}else if(e.getStateChange() == ItemEvent.DESELECTED){
-					editWeight = false;
-				}
-			}
-		});
-		buttonBar.add(buttonAddWeight);
-
-
-	}
 
 	public static CIMAGui getGui(){
 		if(gui == null){
@@ -101,17 +75,9 @@ public class CIMAGui extends Gui{
 			public void mouseClicked(MouseEvent e) {
 				System.out.println(e.getX() +" / "+e.getY());
 
-				// füge ein Gewicht ein
-				if(editWeight){
-					CIMAVertice editVertice = (CIMAVertice) rootVertice.pointExists(e.getX(), e.getY());
-					if(editVertice != null){
-						if(editVertice.getParent() != null){
-							editVertice.setEdgeWeightToParent(Integer.valueOf(tf_weight.getText()));
-						}
-					}
-				//rechtsklick -> LÖSCHEN
-				}else if(SwingUtilities.isRightMouseButton(e)){
+				if(SwingUtilities.isRightMouseButton(e)){
 					if(rootVertice != null){
+						//check if its a vertice  -> LÖSCHEN
 						Vertice selectedVertice = rootVertice.pointExists(e.getX(), e.getY());
 						if(selectedVertice != null){
 							if(selectedVertice == rootVertice){
@@ -120,14 +86,22 @@ public class CIMAGui extends Gui{
 								selectedVertice.delete();
 							}
 						}
+						
+						//check if its a edgeWeightOval ->edgeWeight -1
+						Vertice edgeWeigthOwner = ((CIMAVertice) rootVertice).edgeWeightOvalExists(e.getX(), e.getY());
+						if(edgeWeigthOwner != null){
+							((CIMAVertice) edgeWeigthOwner).edgeWeightDepress();
+						}
 					}
-				//linksklick -> neues Kind
+				//linksklick
 				}else{
 
+					// kein root ?  -> neues Kind
 					if(rootVertice == null){
 						verticeCoutner  = 1;
 						rootVertice = new CIMAVertice(""+verticeCoutner, null);
 						verticeCoutner++;
+					//add child
 					}else if(rootVertice.pointExists(e.getX(), e.getY()) != null){
 						// add a child to this point
 						CIMAVertice parent = null;
@@ -138,6 +112,13 @@ public class CIMAGui extends Gui{
 						if(parent instanceof CIMAVertice){
 							new CIMAVertice(""+verticeCoutner, parent);
 							verticeCoutner++;
+						}
+					
+					}else {
+						//check if its a edgeWeightOval ->edgeWeight +1
+						Vertice edgeWeigthOwner = ((CIMAVertice) rootVertice).edgeWeightOvalExists(e.getX(), e.getY());
+						if(edgeWeigthOwner != null){
+							((CIMAVertice) edgeWeigthOwner).edgeWeightIncrease();;
 						}
 					}
 				}

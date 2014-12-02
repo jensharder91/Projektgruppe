@@ -17,6 +17,11 @@ public class CIMAVertice extends Vertice{
 	private states state;
 	private List<MessageData> lamdas = new ArrayList<MessageData>();
 	
+	//weightField
+	int ovalWidth = 17;
+	int ovalMittelX = -1;
+	int ovalMittelY = -1;
+	
 	private enum states{
 		READY,
 		ACTIVE,
@@ -41,8 +46,18 @@ public class CIMAVertice extends Vertice{
 		super.drawAllTreeLines(g);
 		
 		if(parent != null){
-			g.setColor(Color.red);
-			g.drawString(""+edgeWeightToParent, Math.min(xMittel, parent.getMittelX()) + Math.abs(xMittel - parent.getMittelX()) / 2, Math.min(yMittel, parent.getMittelY()) + Math.abs(yMittel - parent.getMittelY()) / 2);
+			g.setColor(Color.lightGray);
+			ovalMittelX = Math.min(xMittel, parent.getMittelX()) + Math.abs(xMittel - parent.getMittelX()) / 2;
+			ovalMittelY = Math.min(yMittel, parent.getMittelY()) + Math.abs(yMittel - parent.getMittelY()) / 2;
+			g.fillOval(ovalMittelX - ovalWidth/2, ovalMittelY - ovalWidth/2, ovalWidth, ovalWidth);
+			
+			g.setColor(Color.black);
+			String string = String.valueOf(edgeWeightToParent);
+			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
+			g.drawString(string, ovalMittelX - stringWidth/2, ovalMittelY+height/4);
+
+			
+//			g.drawString(""+edgeWeightToParent, Math.min(xMittel, parent.getMittelX()) + Math.abs(xMittel - parent.getMittelX()) / 2, Math.min(yMittel, parent.getMittelY()) + Math.abs(yMittel - parent.getMittelY()) / 2);
 		}
 	}
 	
@@ -224,7 +239,36 @@ public class CIMAVertice extends Vertice{
 		return alllamda;
 	}
 	
+	public boolean onEdgeWeightClick(int x, int y){
+		System.out.println("Check EdgeWeight : "+this.ovalMittelX+","+this.ovalMittelY);
+		if((Math.abs(this.ovalMittelX - x) <= ovalWidth/2) && (Math.abs(this.ovalMittelY - y) < ovalWidth/2)){
+			return true;
+		}
+		return false;
+	}
+	public Vertice edgeWeightOvalExists(int x, int y){
+
+		if(onEdgeWeightClick(x, y)){
+			return this;
+		}
+		for(Vertice child : children){
+			Vertice vertice = ((CIMAVertice) child).edgeWeightOvalExists(x, y);
+			if(vertice != null){
+				return vertice;
+			}
+		}
+		return null;
+	}
 	
+	public void edgeWeightIncrease(){
+		this.edgeWeightToParent++;
+	}
+	public void edgeWeightDepress(){
+		this.edgeWeightToParent--;
+		if(this.edgeWeightToParent <= 0){
+			this.edgeWeightToParent = 1;
+		}
+	}
 	public void setEdgeWeightToParent(int edgeWeight){
 		this.edgeWeightToParent = edgeWeight;
 	}
