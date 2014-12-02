@@ -42,6 +42,17 @@ public class CIMAVertice extends Vertice{
 	}
 	
 	@Override
+	protected void drawAllVertice(Graphics g){
+		
+		super.drawAllVertice(g);
+
+		String string = String.valueOf(mu);
+		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
+		g.drawString(string, xMittel - stringWidth/2, yMittel+height/4);
+
+	}
+	
+	@Override
 	protected void drawAllTreeLines(Graphics g) {
 		super.drawAllTreeLines(g);
 		

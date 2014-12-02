@@ -1,15 +1,8 @@
 package cima;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.JButton;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 
 import Gui.Gui;
@@ -86,7 +79,8 @@ public class CIMAGui extends Gui{
 								selectedVertice.delete();
 							}
 						}
-						
+					}
+					if(rootVertice != null){
 						//check if its a edgeWeightOval ->edgeWeight -1
 						Vertice edgeWeigthOwner = ((CIMAVertice) rootVertice).edgeWeightOvalExists(e.getX(), e.getY());
 						if(edgeWeigthOwner != null){
