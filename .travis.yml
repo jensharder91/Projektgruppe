@@ -1,3 +1,6 @@
 language: java
 
-script: "cd Projektgruppe/src; javac tdti/TDTI.java;"
+script: "cd Projektgruppe/src; ./runTDTI.sh; ./runCIMA.sh;"
+
+notifications:
+  slack: unibn:5KBFpn0eCNXCXKPxWOI1gGYo
