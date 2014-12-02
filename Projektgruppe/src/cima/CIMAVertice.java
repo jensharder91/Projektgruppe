@@ -14,19 +14,13 @@ public class CIMAVertice extends Vertice{
 	private int edgeWeightToParent;
 	private int verticeWeight;
 	private int mu;
-	private states state;
 	private List<MessageData> lamdas = new ArrayList<MessageData>();
 	
 	//weightField
 	int ovalWidth = 17;
 	int ovalMittelX = -1;
 	int ovalMittelY = -1;
-	
-	private enum states{
-		READY,
-		ACTIVE,
-		DONE
-	};
+
 	
 	public CIMAVertice(String name, Vertice parent){
 		this(name, parent, 1);
@@ -81,7 +75,6 @@ public class CIMAVertice extends Vertice{
 	}
 	
 	private void reset(){
-		state = states.READY;
 		lamdas.clear(); 
 		
 		//calc the verticeWeight
@@ -111,7 +104,6 @@ public class CIMAVertice extends Vertice{
 		if(children.size() == 0 && parent != null){
 			//got a ready leaf -> send message
 			((CIMAVertice) parent).receive(new MessageData(verticeWeight, this));
-			state = states.ACTIVE;
 		}else{
 			for(Vertice child : children){
 				if(!(child instanceof CIMAVertice)){
@@ -131,11 +123,13 @@ public class CIMAVertice extends Vertice{
 		if(lamdas.size() == numberOfNeighbors() -1){
 			//TODO *
 			computeLamdasAndSendTo(getMissingNeightbour());
-			state = states.ACTIVE;
 		}else if(lamdas.size() == numberOfNeighbors()){
 			//TODO **
-			computeAllLamdasExeptFor(data.getSender());
-			state = states.DONE;
+			if(lamdas.size() == 1){
+				computeLamdasAndSendTo(data.getSender());
+			}else{
+				computeAllLamdasExeptFor(data.getSender());
+			}
 		}
 	}
 	
@@ -172,8 +166,11 @@ public class CIMAVertice extends Vertice{
 				break;
 			}
 		}
-		MessageData max1 = maximums.get(0);
+		MessageData max1 = new MessageData(0, null);
 		MessageData max2 = new MessageData(0, null);
+		if(maximums.size() >= 1){
+			max1 = maximums.get(0);
+		}
 		if(maximums.size() >= 2){
 			max2 = maximums.get(1);
 		}
@@ -217,8 +214,11 @@ public class CIMAVertice extends Vertice{
 	
 	private void calcMu(){
 		Collections.sort(lamdas, new MessageDataComparator());
-		MessageData max1 = lamdas.get(0);
+		MessageData max1 = new MessageData(0, null);
 		MessageData max2 = new MessageData(0, null);
+		if(lamdas.size() >= 1){
+			max1 = lamdas.get(0);
+		}
 		if(lamdas.size() >= 2){
 			max2 = lamdas.get(1);
 		}
