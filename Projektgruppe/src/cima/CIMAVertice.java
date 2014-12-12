@@ -244,6 +244,12 @@ public class CIMAVertice extends Vertice{
 	
 	/////////////////////////////////
 	
+	public void calcAgentsMove(){
+		agentWayList.clear();
+		CIMAVertice homeBase = findHomeBase();
+		homeBase.moveAgents(null, 0);
+	}
+	
 	public CIMAVertice findHomeBase(){
 		CIMAVertice currentHomeBase = this;
 		for(Vertice child : children){
@@ -255,7 +261,7 @@ public class CIMAVertice extends Vertice{
 		return currentHomeBase;
 	}
 	
-	public int moveAgents(CIMAVertice sender, int agentNumber){
+	private int moveAgents(CIMAVertice sender, int agentNumber){
 		
 		if(sender == null){
 			System.out.println("###################");
