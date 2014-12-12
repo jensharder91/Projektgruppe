@@ -95,6 +95,8 @@ public class Vertice {
 		drawAllTreeLines(g);
 		drawAllVertice(g);
 		
+//		System.out.println(activeAnimation);
+		
 		if(activeAnimation){
 			drawAnimation(g);
 		}
@@ -208,12 +210,13 @@ public class Vertice {
 		return children;
 	}
 	
-	public void animation(Vertice destVertice){
+	public AnimationTimer animation(Vertice destVertice){
 		AnimationTimer timer = new AnimationTimer(destVertice);
 		timer.start();
+		return timer;
 	}
 	
-	class AnimationTimer extends Thread{
+	public class AnimationTimer extends Thread{
 		
 		Vertice destVertice;
 		int animationSpeed;
@@ -230,7 +233,9 @@ public class Vertice {
 			
 			animationSpeed = 2;
 			
+			System.out.println(activeAnimation);
 			activeAnimation = true;
+			System.out.println(activeAnimation);
 			
 			while(isInterrupted() == false){
 				
@@ -242,6 +247,7 @@ public class Vertice {
 				xMittelAnimation += animationSpeed * vektorX/vektorLength;
 				yMittelAnimation += animationSpeed * vektorY/vektorLength;
 				
+//				System.out.println(xMittelAnimation +" / "+yMittelAnimation);
 				
 				gui.repaint();
 								
@@ -257,7 +263,10 @@ public class Vertice {
 				}
 			}
 			
+			System.out.println(activeAnimation);
 			activeAnimation = false;
+			System.out.println(activeAnimation);
+			System.out.println("~~~~~~~~~~~");
 			gui.repaint();
 		}
 	}

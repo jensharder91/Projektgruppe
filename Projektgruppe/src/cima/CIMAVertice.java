@@ -248,6 +248,9 @@ public class CIMAVertice extends Vertice{
 		agentWayList.clear();
 		CIMAVertice homeBase = findHomeBase();
 		homeBase.moveAgents(null, 0);
+		
+//		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
+//		animation.startAnimation(agentWayList);
 	}
 	
 	public CIMAVertice findHomeBase(){
