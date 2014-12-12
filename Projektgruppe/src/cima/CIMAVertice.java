@@ -20,6 +20,9 @@ public class CIMAVertice extends Vertice{
 	int ovalWidth = 17;
 	int ovalMittelX = -1;
 	int ovalMittelY = -1;
+	
+	//agentWaayList
+	public static List<AgentWayData> agentWayList = new ArrayList<AgentWayData>();
 
 	
 	public CIMAVertice(String name, Vertice parent, Gui gui){
@@ -65,6 +68,11 @@ public class CIMAVertice extends Vertice{
 //			g.drawString(""+edgeWeightToParent, Math.min(xMittel, parent.getMittelX()) + Math.abs(xMittel - parent.getMittelX()) / 2, Math.min(yMittel, parent.getMittelY()) + Math.abs(yMittel - parent.getMittelY()) / 2);
 		}
 	}
+	
+	
+	/************************************************************************************/
+	/**********************************ALGORITHMUS***************************************/
+	/************************************************************************************/
 	
 	public void algorithmus(){
 		System.out.println("starting algo....");
@@ -234,10 +242,66 @@ public class CIMAVertice extends Vertice{
 		}
 	}
 	
+	/////////////////////////////////
+	
+	public CIMAVertice findHomeBase(){
+		CIMAVertice currentHomeBase = this;
+		for(Vertice child : children){
+			CIMAVertice testVertice = ((CIMAVertice) child).findHomeBase();
+			if(testVertice.getMu() < currentHomeBase.getMu()){
+				currentHomeBase = testVertice;
+			}
+		}
+		return currentHomeBase;
+	}
+	
+	public int moveAgents(CIMAVertice sender, int agentNumber){
+		
+		if(sender == null){
+			System.out.println("###################");
+			System.out.println("sender := null -> start?");
+		}else{
+			System.out.println("sende >"+agentNumber +"< agent from "+sender.getName()+" zu "+this.getName());
+		}
+		
+		Collections.sort(lamdas, new MessageDataComparator());
+		for(int i = lamdas.size() - 1; i >= 0; i--){
+			
+//			System.out.println("##### lamdaMessage from _ "+lamdas.get(i).getSender().getName());
+			
+			if(sender == null  || !(lamdas.get(i).getSender().equals(sender))){
+				System.out.println("call " + this.getName() +" -> "+lamdas.get(i).getSender().getName());
+				agentWayList.add(new AgentWayData(this, lamdas.get(i).getSender(), lamdas.get(i).getLamdaValue()));
+				lamdas.get(i).getSender().moveAgents(this, lamdas.get(i).getLamdaValue());
+			}
+		}
+		
+		
+		if(sender == null){
+			System.out.println("## fertig?");
+			System.out.println("###################");
+		}else{
+			System.out.println("## sende >"+agentNumber +"< agent #ZURÜCK# von "+this.getName()+" zu "+sender.getName());
+		}
+		return agentNumber;
+	}
+	
+	
+	
 	@Override
 	public String toString(){
 		return "##Vertice ("+this.name+") ("+this.children.size()+" children) ("+this.mu+")\n"
 				+ "		all lamda: "+getAlllamda();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof CIMAVertice){
+			if(this.getName().equals(((CIMAVertice) obj).getName())){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	private String getAlllamda(){
@@ -285,6 +349,9 @@ public class CIMAVertice extends Vertice{
 	}
 	public int getEdgeWeightToParent(){
 		return edgeWeightToParent;
+	}
+	public int getMu(){
+		return mu;
 	}
 
 }

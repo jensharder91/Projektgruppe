@@ -1,12 +1,7 @@
 package cima;
 
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
 
 import javax.swing.SwingUtilities;
 
@@ -35,9 +30,12 @@ public class CIMAGui extends Gui{
 
 		if(rootVertice instanceof CIMAVertice){
 			((CIMAVertice) rootVertice).algorithmus();
-			if(rootVertice.getChildren().size() > 0){
-				rootVertice.animation(rootVertice.getChildren().get(0));
-			}
+			homeBase = ((CIMAVertice) rootVertice).findHomeBase();
+			((CIMAVertice) homeBase).moveAgents(null, 0);
+			
+//			if(rootVertice.getChildren().size() > 0){
+//				rootVertice.animation(rootVertice.getChildren().get(0));
+//			}
 		}
 
 		if(repaintBool){

@@ -135,7 +135,7 @@ public class Vertice {
 		g.setColor(new Color(0x33,0x44,0x55));
 		g.drawOval(xMittel - width/2, yMittel - height/2, width, height);
 		
-//		g.drawString(name, xMittel, yMittel);
+		g.drawString(name, xMittel, yMittel);
 
 		for(Vertice child : children){
 			child.drawAllVertice(g);;
@@ -143,7 +143,7 @@ public class Vertice {
 	}
 	
     protected void drawAnimation(Graphics g) {
-    	System.out.println("drawing.....");
+//    	System.out.println("drawing.....");
         g.setColor(Color.darkGray);
         g.fillOval((int)(xMittelAnimation - width/2), (int)(yMittelAnimation - height/2), width, height);
     }

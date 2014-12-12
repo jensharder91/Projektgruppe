@@ -23,6 +23,7 @@ public abstract class Gui extends JPanel{
 	protected static final long serialVersionUID = 1L;
 
 	protected Vertice rootVertice = null;
+	protected Vertice homeBase = null;
 	protected Vertice currentVertice = null;
 
 	protected JPanel buttonBar = new JPanel();
@@ -104,6 +105,12 @@ public abstract class Gui extends JPanel{
 		g.setColor(Color.blue);
 		if(currentVertice != null){
 			g.drawRect(currentVertice.getX(), currentVertice.getY(), currentVertice.getWidth(), currentVertice.getHeight());
+		}
+		
+		//mark homebase
+		g.setColor(Color.RED);
+		if(homeBase != null){
+			g.drawRect(homeBase.getX(), homeBase.getY(), homeBase.getWidth(), homeBase.getHeight());
 		}
 
 		//draw all vertices recursively
