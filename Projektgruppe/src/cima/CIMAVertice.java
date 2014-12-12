@@ -15,6 +15,12 @@ public class CIMAVertice extends Vertice{
 	private int verticeWeight;
 	private int mu;
 	private List<MessageData> lamdas = new ArrayList<MessageData>();
+
+	//weightField
+	int ovalWidth = 17;
+	int ovalMittelX = -1;
+	int ovalMittelY = -1;
+
 	
 	public CIMAVertice(String name, Vertice parent, Gui gui){
 		this(name, parent, 1, gui);
@@ -30,12 +36,33 @@ public class CIMAVertice extends Vertice{
 	}
 	
 	@Override
+	protected void drawAllVertice(Graphics g){
+		
+		super.drawAllVertice(g);
+
+		String string = String.valueOf(mu);
+		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
+		g.drawString(string, xMittel - stringWidth/2, yMittel+height/4);
+
+	}
+	
+	@Override
 	protected void drawAllTreeLines(Graphics g) {
 		super.drawAllTreeLines(g);
 		
 		if(parent != null){
-			g.setColor(Color.red);
-			g.drawString(""+edgeWeightToParent, Math.min(xMittel, parent.getMittelX()) + Math.abs(xMittel - parent.getMittelX()) / 2, Math.min(yMittel, parent.getMittelY()) + Math.abs(yMittel - parent.getMittelY()) / 2);
+			g.setColor(Color.lightGray);
+			ovalMittelX = Math.min(xMittel, parent.getMittelX()) + Math.abs(xMittel - parent.getMittelX()) / 2;
+			ovalMittelY = Math.min(yMittel, parent.getMittelY()) + Math.abs(yMittel - parent.getMittelY()) / 2;
+			g.fillOval(ovalMittelX - ovalWidth/2, ovalMittelY - ovalWidth/2, ovalWidth, ovalWidth);
+			
+			g.setColor(Color.black);
+			String string = String.valueOf(edgeWeightToParent);
+			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
+			g.drawString(string, ovalMittelX - stringWidth/2, ovalMittelY+height/4);
+
+			
+//			g.drawString(""+edgeWeightToParent, Math.min(xMittel, parent.getMittelX()) + Math.abs(xMittel - parent.getMittelX()) / 2, Math.min(yMittel, parent.getMittelY()) + Math.abs(yMittel - parent.getMittelY()) / 2);
 		}
 	}
 	
@@ -98,7 +125,11 @@ public class CIMAVertice extends Vertice{
 			computeLamdasAndSendTo(getMissingNeightbour());
 		}else if(lamdas.size() == numberOfNeighbors()){
 			//TODO **
-			computeAllLamdasExeptFor(data.getSender());
+			if(lamdas.size() == 1){
+				computeLamdasAndSendTo(data.getSender());
+			}else{
+				computeAllLamdasExeptFor(data.getSender());
+			}
 		}
 	}
 	
@@ -135,8 +166,11 @@ public class CIMAVertice extends Vertice{
 				break;
 			}
 		}
-		MessageData max1 = maximums.get(0);
+		MessageData max1 = new MessageData(0, null);
 		MessageData max2 = new MessageData(0, null);
+		if(maximums.size() >= 1){
+			max1 = maximums.get(0);
+		}
 		if(maximums.size() >= 2){
 			max2 = maximums.get(1);
 		}
@@ -180,8 +214,11 @@ public class CIMAVertice extends Vertice{
 	
 	private void calcMu(){
 		Collections.sort(lamdas, new MessageDataComparator());
-		MessageData max1 = lamdas.get(0);
+		MessageData max1 = new MessageData(0, null);
 		MessageData max2 = new MessageData(0, null);
+		if(lamdas.size() >= 1){
+			max1 = lamdas.get(0);
+		}
 		if(lamdas.size() >= 2){
 			max2 = lamdas.get(1);
 		}
@@ -213,7 +250,36 @@ public class CIMAVertice extends Vertice{
 		return alllamda;
 	}
 	
+	public boolean onEdgeWeightClick(int x, int y){
+		System.out.println("Check EdgeWeight : "+this.ovalMittelX+","+this.ovalMittelY);
+		if((Math.abs(this.ovalMittelX - x) <= ovalWidth/2) && (Math.abs(this.ovalMittelY - y) < ovalWidth/2)){
+			return true;
+		}
+		return false;
+	}
+	public Vertice edgeWeightOvalExists(int x, int y){
+
+		if(onEdgeWeightClick(x, y)){
+			return this;
+		}
+		for(Vertice child : children){
+			Vertice vertice = ((CIMAVertice) child).edgeWeightOvalExists(x, y);
+			if(vertice != null){
+				return vertice;
+			}
+		}
+		return null;
+	}
 	
+	public void edgeWeightIncrease(){
+		this.edgeWeightToParent++;
+	}
+	public void edgeWeightDepress(){
+		this.edgeWeightToParent--;
+		if(this.edgeWeightToParent <= 0){
+			this.edgeWeightToParent = 1;
+		}
+	}
 	public void setEdgeWeightToParent(int edgeWeight){
 		this.edgeWeightToParent = edgeWeight;
 	}
