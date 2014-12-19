@@ -8,6 +8,7 @@ import Tree.Vertice.AnimationTimer;
 public class CIMAAnimation {
 	
 	private static CIMAAnimation animation = null;
+	private boolean breakThread = false;
 	
 	public static CIMAAnimation getCIMAAnimation(){
 		
@@ -28,6 +29,10 @@ public class CIMAAnimation {
 		
 	}
 	
+	public void stopAnimation(){
+		breakThread = true;
+	}
+	
 	
 	public class AnimationLoop extends Thread{
 
@@ -41,9 +46,15 @@ public class CIMAAnimation {
 		public void run() {
 			
 			Vertice.activeAnimation = true;
+			breakThread = false;
 			
 			//bis size - 1 weil der letzte schritt die animation null -> homebase ist und übersprungen werden muss
 			for(int i = 0; i < agentsWayList.size() -1; i++){
+				
+				//breche bei bedarf die animation ab!
+				if(breakThread){
+					break;
+				}
 				
 				System.out.println("make animation from "+agentsWayList.get(i).getSender().getName()+" to "+agentsWayList.get(i).getReceiver().getName());
 				
