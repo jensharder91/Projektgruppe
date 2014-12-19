@@ -32,11 +32,6 @@ public class CIMAGui extends Gui{
 			((CIMAVertice) rootVertice).algorithmus();
 			homeBase = ((CIMAVertice) rootVertice).findHomeBase();
 			((CIMAVertice) homeBase).calcAgentsMove();
-			
-//			if(rootVertice.getChildren().size() > 0){
-//				rootVertice.animation(rootVertice.getChildren().get(0));
-//			}
-			rootVertice.getChildren().get(0).animation(rootVertice.getChildren().get(0).getChildren().get(0));
 		}
 
 		if(repaintBool){

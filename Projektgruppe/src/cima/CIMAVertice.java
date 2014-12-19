@@ -43,9 +43,17 @@ public class CIMAVertice extends Vertice{
 		
 		super.drawAllVertice(g);
 
-		String string = String.valueOf(mu);
-		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
-		g.drawString(string, xMittel - stringWidth/2, yMittel+height/4);
+		if(activeAnimation){
+			g.setColor(Color.white);
+			String string = String.valueOf(currentAgents);
+			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
+			g.drawString(string, xMittel - stringWidth/2, yMittel+height/4);
+		}else{
+			g.setColor(Color.black);
+			String string = String.valueOf(mu);
+			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
+			g.drawString(string, xMittel - stringWidth/2, yMittel+height/4);
+		}
 
 	}
 	
@@ -245,12 +253,21 @@ public class CIMAVertice extends Vertice{
 	/////////////////////////////////
 	
 	public void calcAgentsMove(){
+		
+		//animation läuft schon.... breche neue animation ab
+		if(activeAnimation){
+			return;
+		}
+		
 		agentWayList.clear();
 		CIMAVertice homeBase = findHomeBase();
+		homeBase.resetCurrentAgents();
+		homeBase.changeCurrentAgents(homeBase.getMu());
 		homeBase.moveAgents(null, 0);
 		
-//		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
-//		animation.startAnimation(agentWayList);
+		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
+		animation.startAnimation(agentWayList);
+		
 	}
 	
 	public CIMAVertice findHomeBase(){
@@ -292,6 +309,7 @@ public class CIMAVertice extends Vertice{
 		}else{
 			System.out.println("## sende >"+agentNumber +"< agent #ZURÜCK# von "+this.getName()+" zu "+sender.getName());
 		}
+		agentWayList.add(new AgentWayData(this, sender, agentNumber));
 		return agentNumber;
 	}
 	

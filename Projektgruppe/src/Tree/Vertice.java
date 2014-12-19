@@ -19,7 +19,11 @@ public class Vertice {
     protected Gui gui;
     protected double xMittelAnimation;
     protected double yMittelAnimation;
-    protected boolean activeAnimation = false;
+    protected boolean activeAgent = false;
+    public static boolean activeAnimation = false;
+    
+    protected int currentAgents = 0;
+    protected int moveAgentCounter = 0;
 
 
 	protected Vertice parent;
@@ -94,12 +98,11 @@ public class Vertice {
 		calcPoints(areaX, areaY, areaWidth, levelHeight);
 		drawAllTreeLines(g);
 		drawAllVertice(g);
+		drawAnimation(g);
 		
 //		System.out.println(activeAnimation);
 		
-		if(activeAnimation){
-			drawAnimation(g);
-		}
+	
 	}
 
 	protected void calcPoints(int areaX, int areaY, int areaWidth, int levelHeight){
@@ -132,10 +135,15 @@ public class Vertice {
 
 	protected void drawAllVertice(Graphics g){
 
-		g.setColor(Color.white);
-		g.fillOval(xMittel - width/2, yMittel - height/2, width, height);
-		g.setColor(new Color(0x33,0x44,0x55));
-		g.drawOval(xMittel - width/2, yMittel - height/2, width, height);
+		if(activeAnimation){
+			g.setColor(Color.black);
+			g.fillOval(xMittel - width/2, yMittel - height/2, width, height);
+		}else{
+			g.setColor(Color.white);
+			g.fillOval(xMittel - width/2, yMittel - height/2, width, height);
+			g.setColor(new Color(0x33,0x44,0x55));
+			g.drawOval(xMittel - width/2, yMittel - height/2, width, height);
+		}
 		
 		g.drawString(name, xMittel, yMittel);
 
@@ -146,8 +154,19 @@ public class Vertice {
 	
     protected void drawAnimation(Graphics g) {
 //    	System.out.println("drawing.....");
-        g.setColor(Color.darkGray);
-        g.fillOval((int)(xMittelAnimation - width/2), (int)(yMittelAnimation - height/2), width, height);
+    	
+    	if(activeAgent){
+	        g.setColor(Color.black);
+	        g.fillOval((int)(xMittelAnimation - width/2), (int)(yMittelAnimation - height/2), width, height);
+			g.setColor(Color.white);
+			String string = String.valueOf(moveAgentCounter);
+			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
+			g.drawString(string, (int)(xMittelAnimation - stringWidth/2), (int)(yMittelAnimation + height/4));
+    	}
+	        
+		for(Vertice child : children){
+			child.drawAnimation(g);;
+		}
     }
 
 
@@ -209,8 +228,15 @@ public class Vertice {
 	public List<Vertice> getChildren(){
 		return children;
 	}
+	public void resetCurrentAgents(){
+		this.currentAgents = 0;
+	}
+	public void changeCurrentAgents(int number){
+		this.currentAgents += number;
+	}
 	
-	public AnimationTimer animation(Vertice destVertice){
+	public AnimationTimer animation(Vertice destVertice, int moveAgentCounter){
+		this.moveAgentCounter = moveAgentCounter;
 		AnimationTimer timer = new AnimationTimer(destVertice);
 		timer.start();
 		return timer;
@@ -231,11 +257,11 @@ public class Vertice {
 			xMittelAnimation = xMittel;
 			yMittelAnimation = yMittel;
 			
-			animationSpeed = 2;
+			animationSpeed = 3;
 			
-			System.out.println(activeAnimation);
-			activeAnimation = true;
-			System.out.println(activeAnimation);
+			System.out.println(activeAgent);
+			activeAgent = true;
+			System.out.println(activeAgent);
 			
 			while(isInterrupted() == false){
 				
@@ -263,9 +289,9 @@ public class Vertice {
 				}
 			}
 			
-			System.out.println(activeAnimation);
-			activeAnimation = false;
-			System.out.println(activeAnimation);
+			System.out.println(activeAgent);
+			activeAgent = false;
+			System.out.println(activeAgent);
 			System.out.println("~~~~~~~~~~~");
 			gui.repaint();
 		}

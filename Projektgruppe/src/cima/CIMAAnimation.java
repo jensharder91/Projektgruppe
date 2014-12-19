@@ -40,11 +40,16 @@ public class CIMAAnimation {
 		@Override
 		public void run() {
 			
-			for(int i = 0; i < agentsWayList.size(); i++){
+			Vertice.activeAnimation = true;
+			
+			//bis size - 1 weil der letzte schritt die animation null -> homebase ist und übersprungen werden muss
+			for(int i = 0; i < agentsWayList.size() -1; i++){
 				
 				System.out.println("make animation from "+agentsWayList.get(i).getSender().getName()+" to "+agentsWayList.get(i).getReceiver().getName());
 				
-				AnimationTimer timer = agentsWayList.get(i).getSender().animation(agentsWayList.get(i).getReceiver());
+				agentsWayList.get(i).getSender().changeCurrentAgents(- agentsWayList.get(i).getAgentNumber());
+				
+				AnimationTimer timer = agentsWayList.get(i).getSender().animation(agentsWayList.get(i).getReceiver(), agentsWayList.get(i).getAgentNumber());
 				
 //		        synchronized(timer){
 					try {
@@ -55,8 +60,18 @@ public class CIMAAnimation {
 						e.printStackTrace();
 					}
 //		        }
+				agentsWayList.get(i).getReceiver().changeCurrentAgents(agentsWayList.get(i).getAgentNumber());
+				
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 			}
+			
+			Vertice.activeAnimation = false;
 		}
 	}
 
