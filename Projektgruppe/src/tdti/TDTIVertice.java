@@ -138,6 +138,11 @@ public class TDTIVertice extends Vertice{
 					sendToRemainingNeighbor(new MessageData(max1.getA(), Math.max(max1.getC(), max2.getC()) + 1, this));
 				}
 				this.state = states.COMPUTING;
+			} else if(neighborCount == 1 && dataCount == 1) {
+				// received only message from only neighbor
+				// send back (1|1), since it was the only neighbor
+				data.getSender().receive(new MessageData(1,1,this));
+				this.state = states.COMPUTING;
 			} else {
 				// waiting for more data
 				System.out.println("- Waiting for more data.");
@@ -208,7 +213,7 @@ public class TDTIVertice extends Vertice{
 	}
 
 	protected void drawAllVertice(Graphics g){
-		
+
 		super.drawAllVertice(g);
 
 		String string = String.valueOf(psi);
@@ -216,7 +221,7 @@ public class TDTIVertice extends Vertice{
 		g.drawString(string, xMittel - stringWidth/2, yMittel+height/4);
 
 	}
-	
+
 	private boolean checkVerticeType(Vertice vertice) {
 		if(!(vertice instanceof TDTIVertice)){
 			System.out.println("wrong VerticeType!!! FATAL ERROR");
