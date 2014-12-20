@@ -2,6 +2,7 @@ package cima;
 
 import java.util.List;
 
+import Gui.Gui;
 import Tree.Vertice;
 import Tree.Vertice.AnimationTimer;
 
@@ -9,9 +10,11 @@ public class CIMAAnimation {
 	
 	private static CIMAAnimation animation = null;
 	private boolean breakThread = false;
+	private static Gui gui;
 	
-	public static CIMAAnimation getCIMAAnimation(){
+	public static CIMAAnimation getCIMAAnimation(Gui gui){
 		
+		CIMAAnimation.gui = gui;
 		if(animation == null){
 			animation = new CIMAAnimation();
 		}
@@ -48,12 +51,21 @@ public class CIMAAnimation {
 			Vertice.activeAnimation = true;
 			breakThread = false;
 			
+			gui.repaint();
+			
 			//bis size - 1 weil der letzte schritt die animation null -> homebase ist und übersprungen werden muss
 			for(int i = 0; i < agentsWayList.size() -1; i++){
 				
 				//breche bei bedarf die animation ab!
 				if(breakThread){
 					break;
+				}
+				
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				
 				System.out.println("make animation from "+agentsWayList.get(i).getSender().getName()+" to "+agentsWayList.get(i).getReceiver().getName());
@@ -72,17 +84,12 @@ public class CIMAAnimation {
 					}
 //		        }
 				agentsWayList.get(i).getReceiver().changeCurrentAgents(agentsWayList.get(i).getAgentNumber());
-				
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 
 			}
 			
 			Vertice.activeAnimation = false;
+			gui.repaint();
+			
 		}
 	}
 

@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
+import cima.CIMAVertice;
 import Tree.Vertice;
 
 public abstract class Gui extends JPanel{
@@ -30,6 +31,7 @@ public abstract class Gui extends JPanel{
 
 	/** Buttons */
 	protected JButton buttonCalculate = new JButton("Berechnung starten");
+	protected JButton buttonAnimation = new JButton("Animation starten");
 	protected JButton buttonClear = new JButton("Clear");
 	protected JToggleButton toggleAutoAlgo = new JToggleButton("AutoCalc");
 
@@ -64,6 +66,17 @@ public abstract class Gui extends JPanel{
 
 			}
 		});
+		
+		buttonAnimation.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				homeBase = ((CIMAVertice) rootVertice).findHomeBase();
+				((CIMAVertice) homeBase).calcAgentsMove();
+
+			}
+		});
 
 		toggleAutoAlgo.addItemListener(new ItemListener() {
 
@@ -79,6 +92,7 @@ public abstract class Gui extends JPanel{
 		});
 
 		buttonBar.add(buttonCalculate);
+		buttonBar.add(buttonAnimation);
 		buttonBar.add(buttonClear);
 		buttonBar.add(toggleAutoAlgo);
 		this.add(buttonBar, "South");
@@ -122,6 +136,7 @@ public abstract class Gui extends JPanel{
 	protected void clearGui(){
 		rootVertice = null;
 		currentVertice = null;
+		homeBase = null;
 		repaint();
 	}
 
