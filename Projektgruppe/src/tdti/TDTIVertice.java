@@ -7,8 +7,11 @@ import Tree.Vertice;
 
 public class TDTIVertice extends Vertice{
 
-	public TDTIVertice(String name, TDTIVertice parent) {
+	private TDTIGui algo;
+
+	public TDTIVertice(String name, TDTIVertice parent, TDTIGui algorithm) {
 		super(name, parent);
+		this.algo = algorithm;
 	}
 
 	public enum states{
@@ -76,7 +79,7 @@ public class TDTIVertice extends Vertice{
 
 			// having data from all neighbors, send data to all neighbors except last sender
 			System.out.println("- All data received, computing and sending data");
-			if((max1.getA() == max2.getA()) && max2.getC() > TDTI.IMMUNITY_TIME/2){
+			if((max1.getA() == max2.getA()) && max2.getC() > algo.IMMUNITY_TIME/2){
 				this.psi = max1.getA()+1;
 			} else {
 				this.psi = max1.getA();
@@ -121,7 +124,7 @@ public class TDTIVertice extends Vertice{
 		if(dataReceived.size() >= 2){
 			max2 = dataReceived.get(1);
 		}
-		boolean case1Boolaen = (max1.getA() == max2.getA()) && max2.getC() > TDTI.IMMUNITY_TIME/2;
+		boolean case1Boolaen = (max1.getA() == max2.getA()) && max2.getC() > algo.IMMUNITY_TIME/2;
 
 		if((this.state == states.READY) && (this.children.size() > 0)){
 			// it’s a ready non-leaf
@@ -205,7 +208,7 @@ public class TDTIVertice extends Vertice{
 			max2 = maximums.get(1);
 		}
 
-		if((max1.getA() == max2.getA()) && max2.getC() > TDTI.IMMUNITY_TIME/2){
+		if((max1.getA() == max2.getA()) && max2.getC() > algo.IMMUNITY_TIME/2){
 			return new MessageData(max1.getA()+1,1,this);
 		} else {
 			return new MessageData(max1.getA(),max1.getC()+1,this);

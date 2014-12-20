@@ -13,6 +13,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.JButton;
+import javax.swing.JTextField;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
@@ -81,6 +82,10 @@ public abstract class Gui extends JPanel{
 		buttonBar.add(buttonClear);
 		buttonBar.add(toggleAutoAlgo);
 		this.add(buttonBar, "South");
+	}
+
+	public void addFieldToBar(JTextField tf){
+		buttonBar.add(tf);
 	}
 
 	public Vertice getRoot(){

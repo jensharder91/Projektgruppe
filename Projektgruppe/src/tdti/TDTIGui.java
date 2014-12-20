@@ -2,20 +2,39 @@ package tdti;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.SwingUtilities;
+import javax.swing.JTextField;
 
 import Gui.Gui;
 import Tree.Vertice;
 
 public class TDTIGui extends Gui{
 
+	public int IMMUNITY_TIME = 0;
 	private static final long serialVersionUID = 1L;
 	private static TDTIGui gui;
-
+	private static JTextField textField = new JTextField("0",2);
+	private TDTIGui algo;
 
 	private TDTIGui(){
 		super();
+		algo = this;
+		textField.setText(String.valueOf(algo.IMMUNITY_TIME));
+		textField.setHorizontalAlignment(JTextField.CENTER);
+		textField.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int newImmunityTime = Integer.parseInt(textField.getText());
+				// TODO: set Immunity Time
+				IMMUNITY_TIME = newImmunityTime;
+				System.out.println("Immunity Time set to "+newImmunityTime);
+				gui.calcAlgorithmus(true);
+			}
+		});
+		addFieldToBar(textField);
 	}
 
 	public static TDTIGui getGui(){
@@ -24,7 +43,6 @@ public class TDTIGui extends Gui{
 		}
 		return gui;
 	}
-	
 
 	@Override
 	protected void calcAlgorithmus(boolean repaintBool) {
@@ -85,7 +103,7 @@ public class TDTIGui extends Gui{
 				}else{
 
 					if(rootVertice == null){
-						rootVertice = new TDTIVertice("root", null);
+						rootVertice = new TDTIVertice("root", null, algo);
 					}else if(rootVertice.pointExists(e.getX(), e.getY()) != null){
 						// add a child to this point
 						TDTIVertice parent = null;
@@ -94,7 +112,7 @@ public class TDTIGui extends Gui{
 							System.out.println("Add new Child to "+parent);
 						}
 						if(parent instanceof TDTIVertice){
-							new TDTIVertice("test", parent);
+							new TDTIVertice("test", parent, algo);
 						}
 					}
 				}
