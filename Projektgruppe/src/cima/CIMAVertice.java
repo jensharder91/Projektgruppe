@@ -44,7 +44,8 @@ public class CIMAVertice extends Vertice{
 		super.drawAllVertice(g);
 
 		if(activeAnimation){
-			g.setColor(Color.white);
+//			g.setColor(Color.white);
+			g.setColor(Color.black);
 			String string = String.valueOf(currentAgents);
 			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
 			g.drawString(string, xMittel - stringWidth/2, yMittel+height/4);
@@ -293,7 +294,7 @@ public class CIMAVertice extends Vertice{
 		
 		agentWayList.clear();
 		CIMAVertice homeBase = findHomeBase();
-		homeBase.resetCurrentAgents();
+		homeBase.resetAllVerticeAnimation();
 		homeBase.changeCurrentAgents(homeBase.getMu());
 		homeBase.moveAgents(null, 0);
 		

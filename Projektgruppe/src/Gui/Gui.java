@@ -141,6 +141,20 @@ public abstract class Gui extends JPanel{
 		if(rootVertice != null){
 			rootVertice.drawTree(g,10,10,getWidth()-20,getHeight()-50);
 		}
+		
+		
+		//disable / enable buttons
+		if(CIMAVertice.activeAnimation){
+			buttonCalculate.setVisible(false);
+			buttonClear.setVisible(false);
+			toggleAutoAlgo.setVisible(false);
+			buttonAnimation.setText("Animation abbrechen");
+		}else{
+			buttonCalculate.setVisible(true);
+			buttonClear.setVisible(true);
+			toggleAutoAlgo.setVisible(true);
+			buttonAnimation.setText("Animation starten");
+		}
 	}
 
 	protected void clearGui(){

@@ -24,6 +24,7 @@ public class Vertice {
     
     protected int currentAgents = 0;
     protected int moveAgentCounter = 0;
+    protected boolean decontaminated = false;
 
 
 	protected Vertice parent;
@@ -136,7 +137,12 @@ public class Vertice {
 	protected void drawAllVertice(Graphics g){
 
 		if(activeAnimation){
-			g.setColor(Color.black);
+//			g.setColor(Color.black);
+			if(decontaminated){
+				g.setColor(Color.GREEN);
+			}else{
+				g.setColor(Color.RED);
+			}
 			g.fillOval(xMittel - width/2, yMittel - height/2, width, height);
 		}else{
 			g.setColor(Color.white);
@@ -200,6 +206,30 @@ public class Vertice {
 		}
 		parent.deleteChild(this);
 	}
+	
+	public void resetAllVerticeAnimation(){
+		resetCurrentAgents();
+		
+		for(Vertice vertice : children){
+			if(vertice.isDecontaminated()){
+				vertice.resetAllVerticeAnimation();
+			}
+		}
+		if(parent != null){
+			if(parent.isDecontaminated()){
+				parent.resetAllVerticeAnimation();
+			}
+		}
+	}
+	
+	public void resetCurrentAgents(){
+		this.currentAgents = 0;
+		decontaminated = false;
+	}
+	public void changeCurrentAgents(int number){
+		this.currentAgents += number;
+		decontaminated = true;
+	}
 
 	@Override
 	public String toString(){
@@ -230,12 +260,10 @@ public class Vertice {
 	public List<Vertice> getChildren(){
 		return children;
 	}
-	public void resetCurrentAgents(){
-		this.currentAgents = 0;
+	public boolean isDecontaminated(){
+		return decontaminated;
 	}
-	public void changeCurrentAgents(int number){
-		this.currentAgents += number;
-	}
+
 	
 	public AnimationTimer animation(Vertice destVertice, int moveAgentCounter){
 		this.moveAgentCounter = moveAgentCounter;

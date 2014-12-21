@@ -88,7 +88,9 @@ public class CIMAAnimation {
 
 			}
 			
-			pauseAnimation();
+			if(!breakThread){
+				pauseAnimation();
+			}
 			Vertice.activeAnimation = false;
 			gui.repaint();
 			
