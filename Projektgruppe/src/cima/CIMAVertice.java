@@ -281,6 +281,23 @@ public class CIMAVertice extends Vertice{
 	
 	public void calcAgentsMove(){
 		
+		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui);
+		
+		//animation läuft schon.... breche neue animation ab
+		if(activeAnimation){
+			animation.stopAnimation();
+			return;
+		}
+				
+		agentWayList.clear();
+		CIMAVertice homeBase = findHomeBase();
+		homeBase.resetAllVerticeAnimation();
+		homeBase.changeCurrentAgents(homeBase.getMu());
+		homeBase.moveAgents(null, 0);
+		
+	}
+	
+	public void doCompleteAnimation(){
 		//make sure the algo is calced //TODO
 //		algorithmus();
 		
@@ -292,14 +309,21 @@ public class CIMAVertice extends Vertice{
 			return;
 		}
 		
-		agentWayList.clear();
-		CIMAVertice homeBase = findHomeBase();
-		homeBase.resetAllVerticeAnimation();
-		homeBase.changeCurrentAgents(homeBase.getMu());
-		homeBase.moveAgents(null, 0);
-		
+		calcAgentsMove();
 		animation.startAnimation(agentWayList);
+	}
+	
+	public void doStepAnimation(boolean nextStep){
 		
+		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui);
+		
+		if(nextStep){
+			//nextStep
+			animation.nextStepAnimation(agentWayList, nextStep);
+		}else{
+			//prevStep
+//			animation.nextStepAnimation(agentWayList, nextStep);
+		}
 	}
 	
 	public CIMAVertice findHomeBase(){

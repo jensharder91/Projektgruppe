@@ -3,6 +3,7 @@ package Gui;
 
 import java.awt.BorderLayout;
 import java.awt.BasicStroke;
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -11,10 +12,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
+import cima.CIMAAnimation;
 import cima.CIMAVertice;
 import Tree.Vertice;
 
@@ -31,11 +34,15 @@ public abstract class Gui extends JPanel{
 
 	/** Buttons */
 	protected JButton buttonCalculate = new JButton("Berechnung starten");
-	protected JButton buttonAnimation = new JButton("Animation starten");
+	protected JButton buttonAnimation = new JButton("Animation berechnen");
 	protected JButton buttonClear = new JButton("Clear");
 	protected JToggleButton toggleAutoAlgo = new JToggleButton("AutoCalc");
+	private JButton buttonNext = new JButton("\u25BA");//RightArrow
+//	private JButton buttonPrev = new JButton("\u25c4");//LeftArro
+	protected JButton buttonCompleteAnimation = new JButton("Komplette Animation");
 
 	protected boolean autoAlgo = false;
+	public static boolean calcAgentMovesReady = false;
 
 	protected Gui(){
 //		super(true);
@@ -78,9 +85,46 @@ public abstract class Gui extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				homeBase = ((CIMAVertice) rootVertice).findHomeBase();
+//				homeBase = ((CIMAVertice) rootVertice).findHomeBase();
 				((CIMAVertice) homeBase).calcAgentsMove();
+				
+				if(calcAgentMovesReady){
+					calcAgentMovesReady = false;
+				}else{
+					calcAgentMovesReady = true;
+				}
+				repaint();
 
+			}
+		});
+		
+		buttonCompleteAnimation.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				((CIMAVertice) homeBase).doCompleteAnimation();
+				
+			}
+		});
+		
+//		buttonPrev.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//
+//				((CIMAVertice) homeBase).doStepAnimation(false);
+//
+//			}
+//		});
+		
+		buttonNext.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				((CIMAVertice) homeBase).doStepAnimation(true);
+				
 			}
 		});
 
@@ -99,6 +143,9 @@ public abstract class Gui extends JPanel{
 
 		buttonBar.add(buttonCalculate);
 		buttonBar.add(buttonAnimation);
+		buttonBar.add(buttonCompleteAnimation);
+//		buttonBar.add(buttonPrev);
+		buttonBar.add(buttonNext);
 		buttonBar.add(buttonClear);
 		buttonBar.add(toggleAutoAlgo);
 		this.add(buttonBar, "South");
@@ -144,16 +191,39 @@ public abstract class Gui extends JPanel{
 		
 		
 		//disable / enable buttons
-		if(CIMAVertice.activeAnimation){
+
+		buttonCalculate.setVisible(true);
+		buttonClear.setVisible(true);
+		toggleAutoAlgo.setVisible(true);
+		buttonNext.setVisible(false);
+//		buttonPrev.setVisible(false);
+		buttonCompleteAnimation.setVisible(false);
+		buttonAnimation.setText("Animation berechnen");
+				
+		if(calcAgentMovesReady){
+			buttonNext.setVisible(true);
+//			buttonPrev.setVisible(true);
+			buttonCompleteAnimation.setVisible(true);
 			buttonCalculate.setVisible(false);
 			buttonClear.setVisible(false);
 			toggleAutoAlgo.setVisible(false);
 			buttonAnimation.setText("Animation abbrechen");
-		}else{
-			buttonCalculate.setVisible(true);
-			buttonClear.setVisible(true);
-			toggleAutoAlgo.setVisible(true);
-			buttonAnimation.setText("Animation starten");
+		}
+		
+		if(CIMAVertice.activeAnimation){
+			buttonCalculate.setVisible(false);
+			buttonClear.setVisible(false);
+			toggleAutoAlgo.setVisible(false);
+			buttonNext.setVisible(false);
+//			buttonPrev.setVisible(false);
+			buttonCompleteAnimation.setVisible(false);
+			buttonAnimation.setText("Animation abbrechen");
+			
+			if(CIMAAnimation.singeAnimationModus){
+				buttonNext.setVisible(true);
+//				buttonPrev.setVisible(true);
+//				buttonCompleteAnimation.setVisible(true);//TODO let the complete animation finish the step by step modus
+			}
 		}
 	}
 
