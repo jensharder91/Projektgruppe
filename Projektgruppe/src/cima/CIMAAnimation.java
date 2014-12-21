@@ -51,22 +51,21 @@ public class CIMAAnimation {
 			Vertice.activeAnimation = true;
 			breakThread = false;
 			
+			System.out.println("##### start animation #####");
+			
 			gui.repaint();
 			
 			//bis size - 1 weil der letzte schritt die animation null -> homebase ist und übersprungen werden muss
 			for(int i = 0; i < agentsWayList.size() -1; i++){
+				
+//				Gui.rootVertice.logSubtree();
 				
 				//breche bei bedarf die animation ab!
 				if(breakThread){
 					break;
 				}
 				
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				pauseAnimation();
 				
 				System.out.println("make animation from "+agentsWayList.get(i).getSender().getName()+" to "+agentsWayList.get(i).getReceiver().getName());
 				
@@ -84,12 +83,24 @@ public class CIMAAnimation {
 					}
 //		        }
 				agentsWayList.get(i).getReceiver().changeCurrentAgents(agentsWayList.get(i).getAgentNumber());
+				
+				gui.repaint();
 
 			}
 			
+			pauseAnimation();
 			Vertice.activeAnimation = false;
 			gui.repaint();
 			
+		}
+		
+		private void pauseAnimation(){
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

@@ -152,8 +152,12 @@ public class CIMAVertice extends Vertice{
 			computeLamdasAndSendTo(getMissingNeightbour());
 		}else if(lamdas.size() == numberOfNeighbors()){
 			//TODO **
-			if(lamdas.size() == 1){
+			if(lamdas.size() == 1 && children.size() == 0){
+				//leaf, dont send aganin
 //				computeLamdasAndSendTo(data.getSender());
+			}else if(lamdas.size() == 1 && children.size() > 0){
+				//root with just one child
+				computeLamdasAndSendTo(data.getSender());
 			}else{
 				computeAllLamdasExeptFor(data.getSender());
 			}
@@ -344,7 +348,7 @@ public class CIMAVertice extends Vertice{
 	
 	@Override
 	public String toString(){
-		return "##Vertice ("+this.name+") ("+this.children.size()+" children) ("+this.mu+")\n"
+		return "##Vertice "+this.name+"; "+this.children.size()+" children; mu: "+this.mu+"; currentAgents: "+currentAgents+"\n"
 				+ "		all lamda: "+getAlllamda();
 	}
 	

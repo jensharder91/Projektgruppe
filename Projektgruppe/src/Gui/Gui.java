@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
@@ -23,7 +22,8 @@ public abstract class Gui extends JPanel{
 
 	protected static final long serialVersionUID = 1L;
 
-	protected Vertice rootVertice = null;
+//	protected Vertice rootVertice = null;
+	public static Vertice rootVertice = null;
 	protected Vertice homeBase = null;
 	protected Vertice currentVertice = null;
 
@@ -38,11 +38,17 @@ public abstract class Gui extends JPanel{
 	protected boolean autoAlgo = false;
 
 	protected Gui(){
+//		super(true);
 
 		createGui();
 
 		addGuiMouseListener();
 	}
+	
+//	public void makeStrate(){
+//		this.createBufferStrategy(2);
+//		strat = getBufferStrategy();
+//	}
 
 	protected void createGui(){
 
@@ -114,6 +120,10 @@ public abstract class Gui extends JPanel{
 		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		g2.setStroke(new BasicStroke(2));
 		super.paintComponent(g);
+		
+		//background
+		g.setColor(Color.white);
+		g.fillRect(0, 0, (int)getSize().getWidth(), (int)getSize().getHeight());
 
 		//mark current point
 		g.setColor(Color.blue);

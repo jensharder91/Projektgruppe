@@ -145,7 +145,7 @@ public class Vertice {
 			g.drawOval(xMittel - width/2, yMittel - height/2, width, height);
 		}
 		
-		g.drawString(name, xMittel, yMittel);
+//		g.drawString(name, xMittel, yMittel);
 
 		for(Vertice child : children){
 			child.drawAllVertice(g);;
@@ -162,6 +162,8 @@ public class Vertice {
 			String string = String.valueOf(moveAgentCounter);
 			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
 			g.drawString(string, (int)(xMittelAnimation - stringWidth/2), (int)(yMittelAnimation + height/4));
+			
+//			System.out.println("~~~~~~~~~~~~ moveAgentCoutner: "+moveAgentCounter);
     	}
 	        
 		for(Vertice child : children){
@@ -259,9 +261,9 @@ public class Vertice {
 			
 			animationSpeed = 3;
 			
-			System.out.println(activeAgent);
+//			System.out.println(activeAgent);
 			activeAgent = true;
-			System.out.println(activeAgent);
+//			System.out.println(activeAgent);
 			
 			while(isInterrupted() == false){
 				
@@ -289,10 +291,10 @@ public class Vertice {
 				}
 			}
 			
-			System.out.println(activeAgent);
+//			System.out.println(activeAgent);
 			activeAgent = false;
-			System.out.println(activeAgent);
-			System.out.println("~~~~~~~~~~~");
+//			System.out.println(activeAgent);
+//			System.out.println("~~~~~~~~~~~");
 			gui.repaint();
 		}
 	}
