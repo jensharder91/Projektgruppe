@@ -304,18 +304,25 @@ public class CIMAVertice extends Vertice{
 		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui);
 		
 		//animation läuft schon.... breche neue animation ab
-		if(activeAnimation){
+		if(activeAnimation && !CIMAAnimation.singeAnimationModus){
 			animation.stopAnimation();
 			return;
 		}
+		if(!activeAnimation){
+			calcAgentsMove();
+		}
 		
-		calcAgentsMove();
+//		calcAgentsMove();
 		animation.startAnimation(agentWayList);
 	}
 	
 	public void doStepAnimation(boolean nextStep){
 		
 		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui);
+		
+		if(!activeAnimation){
+			calcAgentsMove();
+		}
 		
 		if(nextStep){
 			//nextStep

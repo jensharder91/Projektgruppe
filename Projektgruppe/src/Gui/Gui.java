@@ -222,7 +222,7 @@ public abstract class Gui extends JPanel{
 			if(CIMAAnimation.singeAnimationModus){
 				buttonNext.setVisible(true);
 //				buttonPrev.setVisible(true);
-//				buttonCompleteAnimation.setVisible(true);//TODO let the complete animation finish the step by step modus
+				buttonCompleteAnimation.setVisible(true);//TODO let the complete animation finish the step by step modus
 			}
 		}
 	}

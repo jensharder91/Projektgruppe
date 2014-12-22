@@ -124,6 +124,7 @@ public class CIMAAnimation {
 					pauseAnimation();
 				}
 				Vertice.activeAnimation = false;
+				index = 0;
 			}
 			
 			gui.repaint();
