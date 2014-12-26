@@ -76,7 +76,7 @@ public class CIMAGui extends Gui{
 						Vertice selectedVertice = rootVertice.pointExists(e.getX(), e.getY());
 						if(selectedVertice != null){
 							if(selectedVertice == rootVertice){
-								rootVertice = null;
+								clearGui();
 							}else{
 								selectedVertice.delete();
 							}

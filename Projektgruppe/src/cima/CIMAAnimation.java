@@ -16,6 +16,7 @@ public class CIMAAnimation {
 	private boolean activeAgent = false;
 	public static boolean singeAnimationModus = false;
 	
+	/**Singleton*/
 	public static CIMAAnimation getCIMAAnimation(Gui gui){
 		
 		CIMAAnimation.gui = gui;

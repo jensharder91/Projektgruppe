@@ -19,6 +19,7 @@ import javax.swing.JToggleButton;
 
 import cima.CIMAAnimation;
 import cima.CIMAVertice;
+import cima.MessageData;
 import Tree.Vertice;
 
 public abstract class Gui extends JPanel{
@@ -189,9 +190,14 @@ public abstract class Gui extends JPanel{
 			rootVertice.drawTree(g,10,10,getWidth()-20,getHeight()-50);
 		}
 		
+		//messageData
+		for(MessageData msgData : CIMAVertice.messageDataList){
+			
+			msgData.draw(g); //TODO
+			
+		}
 		
 		//disable / enable buttons
-
 		buttonCalculate.setVisible(true);
 		buttonClear.setVisible(true);
 		toggleAutoAlgo.setVisible(true);

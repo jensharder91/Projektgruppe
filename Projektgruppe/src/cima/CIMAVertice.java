@@ -23,6 +23,7 @@ public class CIMAVertice extends Vertice{
 	
 	//agentWaayList
 	public static List<AgentWayData> agentWayList = new ArrayList<AgentWayData>();
+	public static List<MessageData> messageDataList = new ArrayList<MessageData>();
 
 	
 	public CIMAVertice(String name, Vertice parent, Gui gui){
@@ -92,10 +93,17 @@ public class CIMAVertice extends Vertice{
 		
 		calcMu();
 		logSubtree();
+		
+		System.out.println("////////////////////////////////////////////");
+		for(MessageData msgData : messageDataList){
+			System.out.println("  "+msgData.toString());
+		}
+		System.out.println("////////////////////////////////////////////");
 	}
 	
 	private void reset(){
 		lamdas.clear(); 
+		messageDataList.clear();
 		resetCurrentAgents();
 		
 		//calc the verticeWeight
@@ -124,7 +132,7 @@ public class CIMAVertice extends Vertice{
 	private void startAlgo(){
 		if(children.size() == 0 && parent != null){
 			//got a ready leaf -> send message
-			((CIMAVertice) parent).receive(new MessageData(verticeWeight, this));
+			((CIMAVertice) parent).receive(new MessageData(verticeWeight, this, (CIMAVertice) parent));
 		}else{
 			for(Vertice child : children){
 				if(!(child instanceof CIMAVertice)){
@@ -145,6 +153,7 @@ public class CIMAVertice extends Vertice{
 	
 	private void receive(MessageData data){
 		this.lamdas.add(data);
+		messageDataList.add(data);
 		
 		System.out.println("++++++++ received msg in: "+this.getName()+ "msg: "+data);
 		
@@ -198,8 +207,8 @@ public class CIMAVertice extends Vertice{
 				break;
 			}
 		}
-		MessageData max1 = new MessageData(0, null);
-		MessageData max2 = new MessageData(0, null);
+		MessageData max1 = new MessageData(0, null, null);
+		MessageData max2 = new MessageData(0, null, null);
 //		int otherVerticeWeight = 0; 
 		if(maximums.size() >= 1){
 			max1 = maximums.get(0);
@@ -216,7 +225,7 @@ public class CIMAVertice extends Vertice{
 //		System.out.println("++++ sende VON "+ this.name+" nach "+ receiverNode.getName() + " value: "+maxValue +"           // verticeWeight : "+verticeWeight);
 //		System.out.println("+++++++++++++++++++++  max1.getLamdaValue() : "+max1.getLamdaValue()+" max2.getLamdaValue(): "+max2.getLamdaValue());
 		
-		receiverNode.receive(new MessageData(maxValue, this));
+		receiverNode.receive(new MessageData(maxValue, this, receiverNode));
 	}
 	
 	private CIMAVertice getMissingNeightbour(){
@@ -253,8 +262,8 @@ public class CIMAVertice extends Vertice{
 	
 	private void calcMu(){
 		Collections.sort(lamdas, new MessageDataComparator());
-		MessageData max1 = new MessageData(0, null);
-		MessageData max2 = new MessageData(0, null);
+		MessageData max1 = new MessageData(0, null, null);
+		MessageData max2 = new MessageData(0, null, null);
 		if(lamdas.size() >= 1){
 			max1 = lamdas.get(0);
 		}
