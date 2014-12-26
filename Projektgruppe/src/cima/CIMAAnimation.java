@@ -1,25 +1,31 @@
 package cima;
 
+import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.List;
 
+import cima.MessageData.SendMessageAnimationTimer;
 import Gui.Gui;
 import Tree.Vertice;
-import Tree.Vertice.AnimationTimer;
+import Tree.Vertice.AgentAnimationTimer;
 
 public class CIMAAnimation {
 	
 	private static CIMAAnimation animation = null;
 	private boolean breakThread = false;
 	private static Gui gui;
+	private static Graphics g;
 	private static int index = 0;
 	
 	private boolean activeAgent = false;
 	public static boolean singeAnimationModus = false;
 	
 	/**Singleton*/
-	public static CIMAAnimation getCIMAAnimation(Gui gui){
+	public static CIMAAnimation getCIMAAnimation(Gui gui, Graphics g){
 		
 		CIMAAnimation.gui = gui;
+		CIMAAnimation.g = g;
+		
 		if(animation == null){
 			animation = new CIMAAnimation();
 		}
@@ -30,42 +36,69 @@ public class CIMAAnimation {
 		
 	}
 	
-	public void startAnimation(List<AgentWayData> agentsWayList){
+	/*
+	 * 
+	 *  Agent Animation....
+	 *  
+	 */
+	
+	public void startAgentAnimation(List<AgentWayData> agentsWayList){
 		
 		singeAnimationModus = false;
-		AnimationLoop animationLoop = new AnimationLoop(agentsWayList);
+		AnimationAgentLoop animationLoop = new AnimationAgentLoop(agentsWayList);
 		animationLoop.start();
 		
 	}
 	
-	public void stopAnimation(){
+	public void stopAgentAnimation(){
 		breakThread = true;
 		Vertice.activeAnimation = false;
 		gui.repaint();
 	}
 	
-	public void nextStepAnimation(List<AgentWayData> agentsWayList, boolean nextStep){
+	public void nextStepAgentAnimation(List<AgentWayData> agentsWayList, boolean nextStep){
 		
 		if(activeAgent){
 			return;
 		}
 		
 		singeAnimationModus  = true;
-		AnimationLoop animationLoop = new AnimationLoop(agentsWayList, singeAnimationModus, nextStep);
+		AnimationAgentLoop animationLoop = new AnimationAgentLoop(agentsWayList, singeAnimationModus, nextStep);
 		animationLoop.start();
 	}
 	
+	/*
+	 * 
+	 * SendMessage Animation
+	 *
+	 */
 	
-	public class AnimationLoop extends Thread{
+	public void startSendMessageAnimation(List<MessageData> messageDataList){
+		
+		System.out.println("in start sendMessage ANIMATION");
+		
+		singeAnimationModus = false;
+		AnimationSendMessageLoop animationLoop = new AnimationSendMessageLoop(messageDataList);
+		animationLoop.start();
+		
+	}
+	
+	/*
+	 * 
+	 * Animation Loop Threads.....
+	 *
+	 */
+	
+	public class AnimationAgentLoop extends Thread{
 
 		private List<AgentWayData> agentsWayList;
 		private boolean singleStepAnimation = false;
 		private boolean nextStep = false;
 		
-		public AnimationLoop(List<AgentWayData> agentsWayList) {
+		public AnimationAgentLoop(List<AgentWayData> agentsWayList) {
 			this(agentsWayList, false, false);
 		}
-		public AnimationLoop(List<AgentWayData> agentsWayList, boolean singeStepAnimation, boolean nextStep) {
+		public AnimationAgentLoop(List<AgentWayData> agentsWayList, boolean singeStepAnimation, boolean nextStep) {
 			this.agentsWayList = agentsWayList;
 			this.singleStepAnimation = singeStepAnimation;
 			this.nextStep = nextStep;
@@ -133,13 +166,13 @@ public class CIMAAnimation {
 			
 		}
 		
-		private AnimationTimer doAnimation(int i){
+		private AgentAnimationTimer doAnimation(int i){
 			
 			System.out.println("make animation from "+agentsWayList.get(i).getSender().getName()+" to "+agentsWayList.get(i).getReceiver().getName());
 			
 			agentsWayList.get(i).getSender().changeCurrentAgents(- agentsWayList.get(i).getAgentNumber());
 			
-			AnimationTimer timer = agentsWayList.get(i).getSender().animation(agentsWayList.get(i).getReceiver(), agentsWayList.get(i).getAgentNumber());
+			AgentAnimationTimer timer = agentsWayList.get(i).getSender().animation(agentsWayList.get(i).getReceiver(), agentsWayList.get(i).getAgentNumber());
 			
 //	        synchronized(timer){
 				try {
@@ -164,6 +197,50 @@ public class CIMAAnimation {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public class AnimationSendMessageLoop extends Thread{
+		
+		List<MessageData> messageDataList = new ArrayList<MessageData>();
+		
+		public AnimationSendMessageLoop(List<MessageData> messageDataList) {
+			this.messageDataList = messageDataList;
+		}
+		
+		@Override
+		public void run() {
+			
+			System.out.println("start animation :)");
+			MessageData.animationInProgress = true;
+			
+			for(int j  = 0; j < messageDataList.size(); j++){
+				System.out.println("for loop.... j:"+j);
+				messageDataList.get(j).prepareForAnimation();
+			}
+			
+			for(int i = 0; i < messageDataList.size(); i++){
+				System.out.println("for loop.... i:"+i);
+				
+//				gui.repaint();
+				
+				for(int j  = 0; j < i; j++){
+					System.out.println("for loop.... j:"+j);
+					messageDataList.get(j).animationFinished();
+				}
+				
+				SendMessageAnimationTimer timer = messageDataList.get(i).animation(gui, g);
+				try {
+					timer.join();
+//					timer.wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			MessageData.animationInProgress = false;
+
+		}
+		
 	}
 
 }

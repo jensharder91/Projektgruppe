@@ -3,7 +3,6 @@ package Gui;
 
 import java.awt.BorderLayout;
 import java.awt.BasicStroke;
-import java.awt.Button;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -41,6 +40,8 @@ public abstract class Gui extends JPanel{
 	private JButton buttonNext = new JButton("\u25BA");//RightArrow
 //	private JButton buttonPrev = new JButton("\u25c4");//LeftArro
 	protected JButton buttonCompleteAnimation = new JButton("Komplette Animation");
+	
+	Graphics g;
 
 	protected boolean autoAlgo = false;
 	public static boolean calcAgentMovesReady = false;
@@ -76,7 +77,7 @@ public abstract class Gui extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				calcAlgorithmus(true);
+				calcAlgorithmus(true, g);
 
 			}
 		});
@@ -87,7 +88,7 @@ public abstract class Gui extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 
 //				homeBase = ((CIMAVertice) rootVertice).findHomeBase();
-				((CIMAVertice) homeBase).calcAgentsMove();
+				((CIMAVertice) homeBase).calcAgentsMove(g);
 				
 				if(calcAgentMovesReady){
 					calcAgentMovesReady = false;
@@ -104,7 +105,7 @@ public abstract class Gui extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				((CIMAVertice) homeBase).doCompleteAnimation();
+				((CIMAVertice) homeBase).doCompleteAnimation(g);
 				
 			}
 		});
@@ -124,7 +125,7 @@ public abstract class Gui extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				((CIMAVertice) homeBase).doStepAnimation(true);
+				((CIMAVertice) homeBase).doStepAnimation(true, g);
 				
 			}
 		});
@@ -135,7 +136,7 @@ public abstract class Gui extends JPanel{
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED){
 					autoAlgo = true;
-					calcAlgorithmus(true);
+					calcAlgorithmus(true, g);
 				}else if(e.getStateChange() == ItemEvent.DESELECTED){
 					autoAlgo = false;
 				}
@@ -150,6 +151,9 @@ public abstract class Gui extends JPanel{
 		buttonBar.add(buttonClear);
 		buttonBar.add(toggleAutoAlgo);
 		this.add(buttonBar, "South");
+		
+		
+		repaint();
 	}
 
 	public Vertice getRoot(){
@@ -158,9 +162,11 @@ public abstract class Gui extends JPanel{
 
 	@Override
 	public void paintComponent(Graphics g) {
+		
+		this.g = g;
 
 		if(rootVertice != null && autoAlgo){
-			calcAlgorithmus(false);
+			calcAlgorithmus(false, g);
 		}
 
 		Graphics2D g2 = (Graphics2D) g;
@@ -184,18 +190,17 @@ public abstract class Gui extends JPanel{
 		if(homeBase != null){
 			g.drawRect(homeBase.getX(), homeBase.getY(), homeBase.getWidth(), homeBase.getHeight());
 		}
+		
+		//messageData
+		for(MessageData msgData : CIMAVertice.messageDataList){
+			msgData.draw(g); //TODO
+		}
 
 		//draw all vertices recursively
 		if(rootVertice != null){
 			rootVertice.drawTree(g,10,10,getWidth()-20,getHeight()-50);
 		}
 		
-		//messageData
-		for(MessageData msgData : CIMAVertice.messageDataList){
-			
-			msgData.draw(g); //TODO
-			
-		}
 		
 		//disable / enable buttons
 		buttonCalculate.setVisible(true);
@@ -240,7 +245,7 @@ public abstract class Gui extends JPanel{
 		repaint();
 	}
 
-	protected abstract void calcAlgorithmus(boolean repaintBool);
+	protected abstract void calcAlgorithmus(boolean repaintBool, Graphics g);
 	protected abstract void addGuiMouseListener();
 
 }

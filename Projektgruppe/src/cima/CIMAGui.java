@@ -1,5 +1,6 @@
 package cima;
 
+import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -26,10 +27,10 @@ public class CIMAGui extends Gui{
 
 
 	@Override
-	protected void calcAlgorithmus(boolean repaintBool) {
+	protected void calcAlgorithmus(boolean repaintBool, Graphics g) {
 
 		if(rootVertice instanceof CIMAVertice){
-			((CIMAVertice) rootVertice).algorithmus();
+			((CIMAVertice) rootVertice).algorithmus(g);
 			homeBase = ((CIMAVertice) rootVertice).findHomeBase();
 //			((CIMAVertice) homeBase).calcAgentsMove();
 		}

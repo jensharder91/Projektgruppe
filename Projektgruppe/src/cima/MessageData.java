@@ -3,24 +3,39 @@ package cima;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import Gui.Gui;
+import Tree.Vertice;
+import Tree.Vertice.AgentAnimationTimer;
+
 public class MessageData {
 	
 	private int lamdaValue;
 	private CIMAVertice sender;
 	private CIMAVertice receiver;
+	
+	private int angleSender;
+	private int angleReceiver;
+	private int radius;
+	private int mittelpunktKreisX;
+	private int mittelpunktKreisY;
+	
+	private int animationAngle;
+	private boolean activeAnimation = false;
+	public static boolean animationInProgress = false;
+	private boolean animationFinished = true;
+	
 
 	public MessageData(int lamdaValue, CIMAVertice sender, CIMAVertice receiver){
 		this.lamdaValue = lamdaValue;
 		this.sender = sender;
 		this.receiver = receiver;
+		
+		if(getSender() != null && getReceiver() != null){
+			calcArc();
+		}
 	}
 	
-	public void draw(Graphics g){
-		
-		
-		g.setColor(Color.orange);
-//		g.drawLine(getSender().getMittelX(), getSender().getMittelY(), getReceiver().getMittelX(), getReceiver().getMittelY());
-		
+	private void calcArc(){
 		int mittelpunktX = Math.min(getSender().getMittelX(), getReceiver().getMittelX()) + Math.abs(getSender().getMittelX() - getReceiver().getMittelX()) / 2;
 		int mittelpunktY = Math.min(getSender().getMittelY(), getReceiver().getMittelY()) + Math.abs(getSender().getMittelY() - getReceiver().getMittelY()) / 2;
 				
@@ -30,8 +45,8 @@ public class MessageData {
 		int orthVektorX = vektorY;
 		int orthVektorY = -vektorX;
 		
-		int mittelpunktKreisX = mittelpunktX + orthVektorX;
-		int mittelpunktKreisY = mittelpunktY + orthVektorY;
+		mittelpunktKreisX = mittelpunktX + orthVektorX;
+		mittelpunktKreisY = mittelpunktY + orthVektorY;
 		
 //		g.drawLine(mittelpunktX, mittelpunktY, startOrthVektorX, startOrthVektorY);
 		
@@ -40,19 +55,40 @@ public class MessageData {
 		int vektorKreisMitteReceiverX = getReceiver().getMittelX() - mittelpunktKreisX;
 		int vektorKreisMitteReiciverY = getReceiver().getMittelY() - mittelpunktKreisY;
 		
-		int radius = (int) Math.sqrt((vektorKreisMitteSenderX) * (vektorKreisMitteSenderX)
+		radius = (int) Math.sqrt((vektorKreisMitteSenderX) * (vektorKreisMitteSenderX)
 										+ (vektorKreisMitteSenderY) * (vektorKreisMitteSenderY));
 		
 		
-		int angleSender = getAngle(vektorKreisMitteSenderX, vektorKreisMitteSenderY);
-		int angleReceiver = getAngle(vektorKreisMitteReceiverX, vektorKreisMitteReiciverY);
+		angleSender = getAngle(vektorKreisMitteSenderX, vektorKreisMitteSenderY);
+		angleReceiver = getAngle(vektorKreisMitteReceiverX, vektorKreisMitteReiciverY);
 		
 		if(angleReceiver < angleSender){
 			angleReceiver += 360;
 		}
+	}
+
+	public void draw(Graphics g){
 		
-		g.drawArc(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, angleSender, angleReceiver - angleSender);
+//		System.out.println("##### which animation:");
 		
+		if(activeAnimation){
+			drawAnimation(g);
+		}else{
+			if((animationInProgress && animationFinished) || !animationInProgress){
+//				System.out.println("##### normal draw (MessageData)");
+				g.setColor(Color.orange);
+				g.drawArc(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, angleSender, angleReceiver - angleSender);
+			}
+		}
+		
+	}
+	
+	public void drawAnimation(Graphics g){
+		
+//		System.out.println("##### animation (MessageData)");
+		
+		g.setColor(Color.orange);
+		g.drawArc(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, angleSender, animationAngle);
 	}
 	
 	private int getAngle(int x, int y){
@@ -80,6 +116,68 @@ public class MessageData {
 	public CIMAVertice getReceiver(){
 		return receiver;
 	}
+	public void animationFinished(){
+		animationFinished = true;
+	}
+	public void prepareForAnimation(){
+		animationFinished = false;
+	}
 	
+		
+	public SendMessageAnimationTimer animation(Gui gui, Graphics g){
+		SendMessageAnimationTimer timer = new SendMessageAnimationTimer(gui, g);
+		timer.start();
+		return timer;
+	}
+	
+	public class SendMessageAnimationTimer extends Thread{
+		
+		Gui gui;
+		Graphics g;
+		int animationSpeed;
+		
+		public SendMessageAnimationTimer(Gui gui, Graphics g) {
+			this.gui = gui;
+			this.g = g;
+		}
+		 
+		@Override
+		public void run() {
+			
+			animationSpeed = 3;
+			
+//			System.out.println(activeAgent);
+			activeAnimation = true;
+//			System.out.println(activeAgent);
+			animationAngle = 0;
+			
+			while(isInterrupted() == false){
+
+				animationAngle += 1;
+				
+//				System.out.println(xMittelAnimation +" / "+yMittelAnimation);
+				
+				gui.repaint();
+								
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					return;
+				}
+				
+				if(animationAngle >= angleReceiver - angleSender){
+					this.interrupt();
+					break;
+				}
+			}
+			
+//			System.out.println(activeAgent);
+			activeAnimation = false;
+//			System.out.println(activeAgent);
+//			System.out.println("~~~~~~~~~~~");
+			gui.repaint();
+		}
+	}
 	
 }

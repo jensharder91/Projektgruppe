@@ -265,19 +265,19 @@ public class Vertice {
 	}
 
 	
-	public AnimationTimer animation(Vertice destVertice, int moveAgentCounter){
+	public AgentAnimationTimer animation(Vertice destVertice, int moveAgentCounter){
 		this.moveAgentCounter = moveAgentCounter;
-		AnimationTimer timer = new AnimationTimer(destVertice);
+		AgentAnimationTimer timer = new AgentAnimationTimer(destVertice);
 		timer.start();
 		return timer;
 	}
 	
-	public class AnimationTimer extends Thread{
+	public class AgentAnimationTimer extends Thread{
 		
 		Vertice destVertice;
 		int animationSpeed;
 		
-		public AnimationTimer(Vertice destVertice) {
+		public AgentAnimationTimer(Vertice destVertice) {
 			this.destVertice = destVertice;
 		}
 		 
