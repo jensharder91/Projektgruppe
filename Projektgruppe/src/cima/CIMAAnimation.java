@@ -1,6 +1,5 @@
 package cima;
 
-import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,17 +13,15 @@ public class CIMAAnimation {
 	private static CIMAAnimation animation = null;
 	private boolean breakThread = false;
 	private static Gui gui;
-	private static Graphics g;
 	private static int index = 0;
 	
 	private boolean activeAgent = false;
 	public static boolean singeAnimationModus = false;
 	
 	/**Singleton*/
-	public static CIMAAnimation getCIMAAnimation(Gui gui, Graphics g){
+	public static CIMAAnimation getCIMAAnimation(Gui gui){
 		
 		CIMAAnimation.gui = gui;
-		CIMAAnimation.g = g;
 		
 		if(animation == null){
 			animation = new CIMAAnimation();
@@ -214,21 +211,21 @@ public class CIMAAnimation {
 			MessageData.animationInProgress = true;
 			
 			for(int j  = 0; j < messageDataList.size(); j++){
-				System.out.println("for loop.... j:"+j);
+//				System.out.println("for loop.... j:"+j);
 				messageDataList.get(j).prepareForAnimation();
 			}
 			
 			for(int i = 0; i < messageDataList.size(); i++){
-				System.out.println("for loop.... i:"+i);
+//				System.out.println("for loop.... i:"+i);
 				
 //				gui.repaint();
 				
 				for(int j  = 0; j < i; j++){
-					System.out.println("for loop.... j:"+j);
+//					System.out.println("for loop.... j:"+j);
 					messageDataList.get(j).animationFinished();
 				}
 				
-				SendMessageAnimationTimer timer = messageDataList.get(i).animation(gui, g);
+				SendMessageAnimationTimer timer = messageDataList.get(i).animation(gui);
 				try {
 					timer.join();
 //					timer.wait();

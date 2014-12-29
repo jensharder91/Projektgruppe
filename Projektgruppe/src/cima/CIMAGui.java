@@ -27,10 +27,10 @@ public class CIMAGui extends Gui{
 
 
 	@Override
-	protected void calcAlgorithmus(boolean repaintBool, Graphics g) {
+	protected void calcAlgorithmus(boolean repaintBool) {
 
 		if(rootVertice instanceof CIMAVertice){
-			((CIMAVertice) rootVertice).algorithmus(g);
+			((CIMAVertice) rootVertice).algorithmus();
 			homeBase = ((CIMAVertice) rootVertice).findHomeBase();
 //			((CIMAVertice) homeBase).calcAgentsMove();
 		}

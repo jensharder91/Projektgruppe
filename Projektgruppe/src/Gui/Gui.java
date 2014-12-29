@@ -41,8 +41,6 @@ public abstract class Gui extends JPanel{
 //	private JButton buttonPrev = new JButton("\u25c4");//LeftArro
 	protected JButton buttonCompleteAnimation = new JButton("Komplette Animation");
 	
-	Graphics g;
-
 	protected boolean autoAlgo = false;
 	public static boolean calcAgentMovesReady = false;
 
@@ -77,7 +75,7 @@ public abstract class Gui extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				calcAlgorithmus(true, g);
+				calcAlgorithmus(true);
 
 			}
 		});
@@ -88,7 +86,7 @@ public abstract class Gui extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 
 //				homeBase = ((CIMAVertice) rootVertice).findHomeBase();
-				((CIMAVertice) homeBase).calcAgentsMove(g);
+				((CIMAVertice) homeBase).calcAgentsMove();
 				
 				if(calcAgentMovesReady){
 					calcAgentMovesReady = false;
@@ -105,7 +103,7 @@ public abstract class Gui extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				((CIMAVertice) homeBase).doCompleteAnimation(g);
+				((CIMAVertice) homeBase).doCompleteAnimation();
 				
 			}
 		});
@@ -125,7 +123,7 @@ public abstract class Gui extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				((CIMAVertice) homeBase).doStepAnimation(true, g);
+				((CIMAVertice) homeBase).doStepAnimation(true);
 				
 			}
 		});
@@ -136,7 +134,7 @@ public abstract class Gui extends JPanel{
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED){
 					autoAlgo = true;
-					calcAlgorithmus(true, g);
+					calcAlgorithmus(true);
 				}else if(e.getStateChange() == ItemEvent.DESELECTED){
 					autoAlgo = false;
 				}
@@ -162,11 +160,9 @@ public abstract class Gui extends JPanel{
 
 	@Override
 	public void paintComponent(Graphics g) {
-		
-		this.g = g;
 
 		if(rootVertice != null && autoAlgo){
-			calcAlgorithmus(false, g);
+			calcAlgorithmus(false);
 		}
 
 		Graphics2D g2 = (Graphics2D) g;
@@ -245,7 +241,7 @@ public abstract class Gui extends JPanel{
 		repaint();
 	}
 
-	protected abstract void calcAlgorithmus(boolean repaintBool, Graphics g);
+	protected abstract void calcAlgorithmus(boolean repaintBool);
 	protected abstract void addGuiMouseListener();
 
 }

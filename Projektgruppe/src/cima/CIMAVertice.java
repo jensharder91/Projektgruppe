@@ -84,7 +84,7 @@ public class CIMAVertice extends Vertice{
 	/**********************************ALGORITHMUS***************************************/
 	/************************************************************************************/
 	
-	public void algorithmus(Graphics g){
+	public void algorithmus(){
 		System.out.println("starting algo....");
 		reset();
 		startAlgo();
@@ -100,7 +100,7 @@ public class CIMAVertice extends Vertice{
 		}
 		System.out.println("////////////////////////////////////////////");
 		
-		CIMAAnimation.getCIMAAnimation(gui, g).startSendMessageAnimation(messageDataList);
+		CIMAAnimation.getCIMAAnimation(gui).startSendMessageAnimation(messageDataList);
 	}
 	
 	private void reset(){
@@ -290,9 +290,9 @@ public class CIMAVertice extends Vertice{
 	
 	/////////////////////////////////
 	
-	public void calcAgentsMove(Graphics g){
+	public void calcAgentsMove(){
 		
-		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui, g);
+		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui);
 		
 		//animation läuft schon.... breche neue animation ab
 		if(activeAnimation){
@@ -308,11 +308,11 @@ public class CIMAVertice extends Vertice{
 		
 	}
 	
-	public void doCompleteAnimation(Graphics g){
+	public void doCompleteAnimation(){
 		//make sure the algo is calced //TODO
 //		algorithmus();
 		
-		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui, g);
+		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui);
 		
 		//animation läuft schon.... breche neue animation ab
 		if(activeAnimation && !CIMAAnimation.singeAnimationModus){
@@ -320,19 +320,19 @@ public class CIMAVertice extends Vertice{
 			return;
 		}
 		if(!activeAnimation){
-			calcAgentsMove(g);
+			calcAgentsMove();
 		}
 		
 //		calcAgentsMove();
 		animation.startAgentAnimation(agentWayList);
 	}
 	
-	public void doStepAnimation(boolean nextStep, Graphics g){
+	public void doStepAnimation(boolean nextStep){
 		
-		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui, g);
+		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui);
 		
 		if(!activeAnimation){
-			calcAgentsMove(g);
+			calcAgentsMove();
 		}
 		
 		if(nextStep){

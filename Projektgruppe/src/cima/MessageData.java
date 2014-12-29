@@ -18,7 +18,12 @@ public class MessageData {
 	private int radius;
 	private int mittelpunktKreisX;
 	private int mittelpunktKreisY;
+	private int ovalWidth = 17;
+	private int segmentMitteX;
+	private int segmentMitteY;
 	
+	private int animationOvalMitteX;
+	private int animationOvalMitteY;
 	private int animationAngle;
 	private boolean activeAnimation = false;
 	public static boolean animationInProgress = false;
@@ -65,10 +70,20 @@ public class MessageData {
 		if(angleReceiver < angleSender){
 			angleReceiver += 360;
 		}
+		
+		
+		int vektorKreisMitteMitteLinieX = mittelpunktX - mittelpunktKreisX;
+		int vektorKreisMitteMitteLinieY = mittelpunktY - mittelpunktKreisY;
+		double längeVektorKreisMitteMitteLinie = Math.sqrt(vektorKreisMitteMitteLinieX*vektorKreisMitteMitteLinieX + vektorKreisMitteMitteLinieY*vektorKreisMitteMitteLinieY);
+		int vektorKreisMitteSegmentMitteX = (int) (vektorKreisMitteMitteLinieX/längeVektorKreisMitteMitteLinie * radius);
+		int vektorKreisMitteSegmentMitteY = (int) (vektorKreisMitteMitteLinieY/längeVektorKreisMitteMitteLinie * radius);
+		segmentMitteX = mittelpunktKreisX + vektorKreisMitteSegmentMitteX;
+		segmentMitteY = mittelpunktKreisY + vektorKreisMitteSegmentMitteY;
 	}
 
 	public void draw(Graphics g){
 		
+//		g.drawOval(segmentMitteX -10, mittelpunktKreisY + segmentMitteY - 10, 20, 20);
 //		System.out.println("##### which animation:");
 		
 		if(activeAnimation){
@@ -78,9 +93,11 @@ public class MessageData {
 //				System.out.println("##### normal draw (MessageData)");
 				g.setColor(Color.orange);
 				g.drawArc(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, angleSender, angleReceiver - angleSender);
+				drawArrow(g);
+				drawMessageInfo(g, segmentMitteX, segmentMitteY);
 			}
 		}
-		
+
 	}
 	
 	public void drawAnimation(Graphics g){
@@ -89,6 +106,32 @@ public class MessageData {
 		
 		g.setColor(Color.orange);
 		g.drawArc(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, angleSender, animationAngle);
+		
+		if(animationAngle >= (angleReceiver - angleSender)/2){
+			g.setColor(Color.orange);
+			drawArrow(g);
+			drawMessageInfo(g, animationOvalMitteX, animationOvalMitteY);
+		}
+	}
+	
+	private void drawMessageInfo(Graphics g, int ovalMitteX, int ovalMitteY){
+		g.setColor(Color.orange);
+		g.fillOval(ovalMitteX - ovalWidth/2, ovalMitteY - ovalWidth/2, ovalWidth, ovalWidth);
+		
+		g.setColor(Color.black);
+		String string = String.valueOf(lamdaValue);
+		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
+		g.drawString(string, ovalMitteX - stringWidth/2, ovalMitteY+ovalWidth/4);
+	}
+	
+	private void drawArrow(Graphics g){
+		//TODO pfeilspitze muss verbessert werden
+		int pfeillänge = 10;
+		double a = (int) (Math.PI/4 - Math.atan2((segmentMitteY - getSender().getMittelY()),(segmentMitteX - getSender().getMittelX()))); 
+		int c = (int) (Math.cos(a)*pfeillänge); 
+		int s = (int) (Math.sin(a)*pfeillänge); 
+		g.drawLine(segmentMitteX, segmentMitteY, segmentMitteX-s, segmentMitteY-c); 
+		g.drawLine(segmentMitteX, segmentMitteY, segmentMitteX-c, segmentMitteY+s);
 	}
 	
 	private int getAngle(int x, int y){
@@ -99,7 +142,6 @@ public class MessageData {
 		}
 		
 		return (int) (calc * 180/Math.PI);
-		
 	}
 	
 	@Override
@@ -124,8 +166,8 @@ public class MessageData {
 	}
 	
 		
-	public SendMessageAnimationTimer animation(Gui gui, Graphics g){
-		SendMessageAnimationTimer timer = new SendMessageAnimationTimer(gui, g);
+	public SendMessageAnimationTimer animation(Gui gui){
+		SendMessageAnimationTimer timer = new SendMessageAnimationTimer(gui);
 		timer.start();
 		return timer;
 	}
@@ -133,12 +175,10 @@ public class MessageData {
 	public class SendMessageAnimationTimer extends Thread{
 		
 		Gui gui;
-		Graphics g;
 		int animationSpeed;
 		
-		public SendMessageAnimationTimer(Gui gui, Graphics g) {
+		public SendMessageAnimationTimer(Gui gui) {
 			this.gui = gui;
-			this.g = g;
 		}
 		 
 		@Override
@@ -154,6 +194,11 @@ public class MessageData {
 			while(isInterrupted() == false){
 
 				animationAngle += 1;
+				
+				//TODO calc the animationOvalMitteX btw ...Y
+				animationOvalMitteX = segmentMitteX;
+				animationOvalMitteY = segmentMitteY;
+		
 				
 //				System.out.println(xMittelAnimation +" / "+yMittelAnimation);
 				
