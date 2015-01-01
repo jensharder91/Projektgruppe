@@ -10,7 +10,7 @@ import Gui.Gui;
 import Tree.Vertice;
 
 public class CIMAVertice extends Vertice{
-	
+
 	private int edgeWeightToParent;
 	private int verticeWeight;
 	private int mu;
@@ -20,16 +20,16 @@ public class CIMAVertice extends Vertice{
 	int ovalWidth = 17;
 	int ovalMittelX = -1;
 	int ovalMittelY = -1;
-	
+
 	//agentWaayList
 	public static List<AgentWayData> agentWayList = new ArrayList<AgentWayData>();
 	public static List<MessageData> messageDataList = new ArrayList<MessageData>();
 
-	
+
 	public CIMAVertice(String name, Vertice parent, Gui gui){
 		this(name, parent, 1, gui);
 	}
-	
+
 	public CIMAVertice(String name, Vertice parent, int edgeWeightToParent, Gui gui) {
 		super(name, parent, gui);
 		if(parent != null){
@@ -38,10 +38,10 @@ public class CIMAVertice extends Vertice{
 			this.edgeWeightToParent = 0;
 		}
 	}
-	
+
 	@Override
 	protected void drawAllVertice(Graphics g){
-		
+
 		super.drawAllVertice(g);
 
 		if(activeAnimation){
@@ -58,56 +58,56 @@ public class CIMAVertice extends Vertice{
 		}
 
 	}
-	
+
 	@Override
 	protected void drawAllTreeLines(Graphics g) {
 		super.drawAllTreeLines(g);
-		
+
 		if(parent != null){
 			g.setColor(Color.lightGray);
 			ovalMittelX = Math.min(xMittel, parent.getMittelX()) + Math.abs(xMittel - parent.getMittelX()) / 2;
 			ovalMittelY = Math.min(yMittel, parent.getMittelY()) + Math.abs(yMittel - parent.getMittelY()) / 2;
 			g.fillOval(ovalMittelX - ovalWidth/2, ovalMittelY - ovalWidth/2, ovalWidth, ovalWidth);
-			
+
 			g.setColor(Color.black);
 			String string = String.valueOf(edgeWeightToParent);
 			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
 			g.drawString(string, ovalMittelX - stringWidth/2, ovalMittelY+height/4);
 
-			
+
 //			g.drawString(""+edgeWeightToParent, Math.min(xMittel, parent.getMittelX()) + Math.abs(xMittel - parent.getMittelX()) / 2, Math.min(yMittel, parent.getMittelY()) + Math.abs(yMittel - parent.getMittelY()) / 2);
 		}
 	}
-	
-	
+
+
 	/************************************************************************************/
 	/**********************************ALGORITHMUS***************************************/
 	/************************************************************************************/
-	
+
 	public void algorithmus(){
 		System.out.println("starting algo....");
 		reset();
 		startAlgo();
-		
+
 		System.out.println("##################################\n###############################\n######################");
-		
+
 		calcMu();
 		logSubtree();
-		
+
 		System.out.println("////////////////////////////////////////////");
 		for(MessageData msgData : messageDataList){
 			System.out.println("  "+msgData.toString());
 		}
 		System.out.println("////////////////////////////////////////////");
-		
+
 		CIMAAnimation.getCIMAAnimation(gui).startSendMessageAnimation(messageDataList);
 	}
-	
+
 	private void reset(){
-		lamdas.clear(); 
+		lamdas.clear();
 		messageDataList.clear();
 		resetCurrentAgents();
-		
+
 		//calc the verticeWeight
 		verticeWeight = edgeWeightToParent;
 		for(Vertice child : children){
@@ -115,12 +115,12 @@ public class CIMAVertice extends Vertice{
 				System.out.println("ERROR... wrong Verticetype!!");
 				return;
 			}
-			
+
 			if(((CIMAVertice) child).getEdgeWeightToParent() > verticeWeight){
 				verticeWeight = ((CIMAVertice) child).getEdgeWeightToParent();
 			}
 		}
-		
+
 		//call reset() recursive to all children
 		for(Vertice child : children){
 			if(!(child instanceof CIMAVertice)){
@@ -130,7 +130,7 @@ public class CIMAVertice extends Vertice{
 			((CIMAVertice) child).reset();
 		}
 	}
-	
+
 	private void startAlgo(){
 		if(children.size() == 0 && parent != null){
 			//got a ready leaf -> send message
@@ -144,7 +144,7 @@ public class CIMAVertice extends Vertice{
 				((CIMAVertice) child).startAlgo();
 			}
 		}
-		
+
 //		if(children.size() == 0 && parent != null){
 //			//got a ready leaf -> send message
 //			((CIMAVertice) parent).receive(new MessageData(verticeWeight, this));
@@ -152,13 +152,13 @@ public class CIMAVertice extends Vertice{
 //			((CIMAVertice) children.get(0)).startAlgo();
 //		}
 	}
-	
+
 	private void receive(MessageData data){
 		this.lamdas.add(data);
 		messageDataList.add(data);
-		
+
 		System.out.println("++++++++ received msg in: "+this.getName()+ "msg: "+data);
-		
+
 		if(lamdas.size() == numberOfNeighbors() -1){
 			//TODO *
 			computeLamdasAndSendTo(getMissingNeightbour());
@@ -175,7 +175,7 @@ public class CIMAVertice extends Vertice{
 			}
 		}
 	}
-	
+
 	private void computeAllLamdasExeptFor(CIMAVertice exeptVertice){
 		for(Vertice child : children){
 			if(!(child instanceof CIMAVertice)){
@@ -196,9 +196,9 @@ public class CIMAVertice extends Vertice{
 			}
 		}
 	}
-	
+
 	private void computeLamdasAndSendTo(CIMAVertice receiverNode){
-		
+
 		Collections.sort(lamdas, new MessageDataComparator());
 		List<MessageData> maximums = new ArrayList<MessageData>();
 		for(MessageData data : lamdas){
@@ -211,7 +211,7 @@ public class CIMAVertice extends Vertice{
 		}
 		MessageData max1 = new MessageData(0, null, null);
 		MessageData max2 = new MessageData(0, null, null);
-//		int otherVerticeWeight = 0; 
+//		int otherVerticeWeight = 0;
 		if(maximums.size() >= 1){
 			max1 = maximums.get(0);
 		}
@@ -219,17 +219,17 @@ public class CIMAVertice extends Vertice{
 			max2 = maximums.get(1);
 //			otherVerticeWeight = maximums.get(1).getSender().getVerticeWeight();
 		}
-		
+
 //		System.out.println("otherVerticeWeight: "+otherVerticeWeight);
-		
+
 		int maxValue = Math.max(max1.getLamdaValue(), max2.getLamdaValue() + verticeWeight);//TODO get verticeWeight from other vertice
-		
+
 //		System.out.println("++++ sende VON "+ this.name+" nach "+ receiverNode.getName() + " value: "+maxValue +"           // verticeWeight : "+verticeWeight);
 //		System.out.println("+++++++++++++++++++++  max1.getLamdaValue() : "+max1.getLamdaValue()+" max2.getLamdaValue(): "+max2.getLamdaValue());
-		
+
 		receiverNode.receive(new MessageData(maxValue, this, receiverNode));
 	}
-	
+
 	private CIMAVertice getMissingNeightbour(){
 		for(Vertice neighbor : children){
 			if(!(neighbor instanceof CIMAVertice)){
@@ -261,7 +261,7 @@ public class CIMAVertice extends Vertice{
 		}
 		return false;
 	}
-	
+
 	private void calcMu(){
 		Collections.sort(lamdas, new MessageDataComparator());
 		MessageData max1 = new MessageData(0, null, null);
@@ -272,13 +272,13 @@ public class CIMAVertice extends Vertice{
 		if(lamdas.size() >= 2){
 			max2 = lamdas.get(1);
 		}
-		
+
 		mu = Math.max(max1.getLamdaValue(), max2.getLamdaValue() + verticeWeight);
-		
+
 //		System.out.println("++++ bin in "+ this.name+"   value (mu) : "+mu +"           // verticeWeight : "+verticeWeight);
 //		System.out.println("+++++++++++++++++++++  max1.getLamdaValue() : "+max1.getLamdaValue()+" max2.getLamdaValue(): "+max2.getLamdaValue());
-		
-		
+
+
 		for(Vertice child : children){
 			if(!(child instanceof CIMAVertice)){
 				System.out.println("ERROR... wrong Verticetype!!");
@@ -287,34 +287,34 @@ public class CIMAVertice extends Vertice{
 			((CIMAVertice) child).calcMu();
 		}
 	}
-	
+
 	/////////////////////////////////
-	
+
 	public void calcAgentsMove(){
-		
+
 		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui);
-		
-		//animation läuft schon.... breche neue animation ab
+
+		//animation lÃ¤uft schon.... breche neue animation ab
 		if(activeAnimation){
 			animation.stopAgentAnimation();
 			return;
 		}
-				
+
 		agentWayList.clear();
 		CIMAVertice homeBase = findHomeBase();
 		homeBase.resetAllVerticeAnimation();
 		homeBase.changeCurrentAgents(homeBase.getMu());
 		homeBase.moveAgents(null, 0);
-		
+
 	}
-	
+
 	public void doCompleteAnimation(){
 		//make sure the algo is calced //TODO
 //		algorithmus();
-		
+
 		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui);
-		
-		//animation läuft schon.... breche neue animation ab
+
+		//animation lÃ¤uft schon.... breche neue animation ab
 		if(activeAnimation && !CIMAAnimation.singeAnimationModus){
 			animation.stopAgentAnimation();
 			return;
@@ -322,19 +322,19 @@ public class CIMAVertice extends Vertice{
 		if(!activeAnimation){
 			calcAgentsMove();
 		}
-		
+
 //		calcAgentsMove();
 		animation.startAgentAnimation(agentWayList);
 	}
-	
+
 	public void doStepAnimation(boolean nextStep){
-		
+
 		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui);
-		
+
 		if(!activeAnimation){
 			calcAgentsMove();
 		}
-		
+
 		if(nextStep){
 			//nextStep
 			animation.nextStepAgentAnimation(agentWayList, nextStep);
@@ -343,7 +343,7 @@ public class CIMAVertice extends Vertice{
 //			animation.nextStepAnimation(agentWayList, nextStep);
 		}
 	}
-	
+
 	public CIMAVertice findHomeBase(){
 		CIMAVertice currentHomeBase = this;
 		for(Vertice child : children){
@@ -354,47 +354,47 @@ public class CIMAVertice extends Vertice{
 		}
 		return currentHomeBase;
 	}
-	
+
 	private int moveAgents(CIMAVertice sender, int agentNumber){
-		
+
 		if(sender == null){
 			System.out.println("###################");
 			System.out.println("sender := null -> start?");
 		}else{
 			System.out.println("sende >"+agentNumber +"< agent from "+sender.getName()+" zu "+this.getName());
 		}
-		
+
 		Collections.sort(lamdas, new MessageDataComparator());
 		for(int i = lamdas.size() - 1; i >= 0; i--){
-			
+
 //			System.out.println("##### lamdaMessage from _ "+lamdas.get(i).getSender().getName());
-			
+
 			if(sender == null  || !(lamdas.get(i).getSender().equals(sender))){
 				System.out.println("call " + this.getName() +" -> "+lamdas.get(i).getSender().getName());
 				agentWayList.add(new AgentWayData(this, lamdas.get(i).getSender(), lamdas.get(i).getLamdaValue()));
 				lamdas.get(i).getSender().moveAgents(this, lamdas.get(i).getLamdaValue());
 			}
 		}
-		
-		
+
+
 		if(sender == null){
 			System.out.println("## fertig?");
 			System.out.println("###################");
 		}else{
-			System.out.println("## sende >"+agentNumber +"< agent #ZURÜCK# von "+this.getName()+" zu "+sender.getName());
+			System.out.println("## sende >"+agentNumber +"< agent #ZURÃœCK# von "+this.getName()+" zu "+sender.getName());
 		}
 		agentWayList.add(new AgentWayData(this, sender, agentNumber));
 		return agentNumber;
 	}
-	
-	
-	
+
+
+
 	@Override
 	public String toString(){
 		return "##Vertice "+this.name+"; "+this.children.size()+" children; mu: "+this.mu+"; currentAgents: "+currentAgents+"\n"
 				+ "		all lamda: "+getAlllamda();
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof CIMAVertice){
@@ -404,17 +404,17 @@ public class CIMAVertice extends Vertice{
 		}
 		return false;
 	}
-	
+
 	private String getAlllamda(){
-		
+
 		String alllamda = "   ";
 		for(MessageData msgData : lamdas){
 			alllamda += msgData.toString() + "  /  ";
 		}
-		
+
 		return alllamda;
 	}
-	
+
 	public boolean onEdgeWeightClick(int x, int y){
 		System.out.println("Check EdgeWeight : "+this.ovalMittelX+","+this.ovalMittelY);
 		if((Math.abs(this.ovalMittelX - x) <= ovalWidth/2) && (Math.abs(this.ovalMittelY - y) < ovalWidth/2)){
@@ -435,7 +435,7 @@ public class CIMAVertice extends Vertice{
 		}
 		return null;
 	}
-	
+
 	public void edgeWeightIncrease(){
 		this.edgeWeightToParent++;
 	}
