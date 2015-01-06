@@ -1,6 +1,6 @@
 language: java
 
-script: "cd Projektgruppe/src; javac tdti/TDIT.java; javac cima/CIMA.java;"
+script: "cd Projektgruppe/src; javac tdti/TDTI.java; javac cima/CIMA.java;"
 
 notifications:
   slack: unibn:5KBFpn0eCNXCXKPxWOI1gGYo
