@@ -9,11 +9,8 @@ import Tree.Vertice;
 public class TDTIVertice extends Vertice{
 
 	private TDTIGui gui;
-
-	public TDTIVertice(String name, TDTIVertice parent, TDTIGui gui) {
-		super(name, parent);
-		this.gui = gui;
-	}
+	protected Color computingColor = new Color(250,220,100);
+	protected Color doneColor = new Color(140,240,100);
 
 	public enum states{
 		READY, COMPUTING, DONE
@@ -23,6 +20,11 @@ public class TDTIVertice extends Vertice{
 	private int psi = 0;
 	private List<MessageData> dataReceived = new ArrayList<MessageData>();
 
+
+	public TDTIVertice(String name, TDTIVertice parent, TDTIGui gui) {
+		super(name, parent);
+		this.gui = gui;
+	}
 
 	public void algorithmus(){
 		reset();
@@ -40,6 +42,10 @@ public class TDTIVertice extends Vertice{
 	}
 
 	private void init(){
+		if(gui.STEPS == 0){
+			return;
+		}
+
 		if((this.state == states.READY) && (this.children.size() == 0)){
 			// this is a ready leaf, we should send (1,1)
 			MessageData data = new MessageData(1, 1, this);
@@ -115,6 +121,11 @@ public class TDTIVertice extends Vertice{
 	}
 
 	private void receive(MessageData data){
+		if(gui.STEPS == 0){
+			return;
+		}
+		gui.STEPS--;
+
 		this.dataReceived.add(data);
 		System.out.println("Vertice "+this.name+" received "+data+" (message "+this.dataReceived.size()+" of "+this.numberOfNeighbors()+")");
 
@@ -216,8 +227,20 @@ public class TDTIVertice extends Vertice{
 		}
 	}
 
+	protected Color getColor(){
+		if(this.state == states.COMPUTING){
+			return computingColor;
+		}
+		if(this.state == states.DONE){
+			return doneColor;
+		}
+		return Color.white;
+	}
+
 	protected void drawAllVertice(Graphics g){
-		super.drawAllVertice(g);
+		Color fillColor = getColor();
+
+		super.drawAllVertice(g,fillColor);
 
 		String string = String.valueOf(psi);
 		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
@@ -231,8 +254,8 @@ public class TDTIVertice extends Vertice{
 			TDTIVertice sender = data.getSender();
 			String message = data.guiString();
 			int messageWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(message,g).getWidth());
-			int msgX = (sender.getMittelX()*2 + this.getMittelX())/3 - messageWidth/2;
-			int msgY = (sender.getMittelY()*2 + this.getMittelY())/3;
+			int msgX = (sender.getMittelX() + this.getMittelX()*2)/3 - messageWidth/2;
+			int msgY = (sender.getMittelY() + this.getMittelY()*2)/3;
 			g.setColor(new Color(255,255,255,200));
 			g.fillRect(msgX-2,msgY-14,messageWidth+4,18);
 			g.setColor(new Color(0x33,0x44,0x55));

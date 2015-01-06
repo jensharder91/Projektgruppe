@@ -29,8 +29,8 @@ public abstract class Gui extends JPanel{
 	protected JPanel buttonBar = new JPanel();
 
 	/** Buttons */
-	protected JButton buttonCalculate = new JButton("Berechnung starten");
-	protected JButton buttonClear = new JButton("Clear");
+	//protected JButton buttonCalculate = new JButton("Berechnung starten");
+	protected JButton buttonClear = new JButton("Restart");
 	protected JToggleButton toggleAutoAlgo = new JToggleButton("AutoCalc");
 
 	protected boolean autoAlgo = false;
@@ -49,16 +49,18 @@ public abstract class Gui extends JPanel{
 		buttonClear.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				clearGui();
+				reset();
 			}
 		});
 
+		/*
 		buttonCalculate.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				calcAlgorithmus(true);
 			}
 		});
+		*/
 
 		/*
 		toggleAutoAlgo.addItemListener(new ItemListener() {
@@ -74,7 +76,7 @@ public abstract class Gui extends JPanel{
 		});
 		*/
 
-		buttonBar.add(buttonCalculate);
+		//buttonBar.add(buttonCalculate);
 		buttonBar.add(buttonClear);
 		//buttonBar.add(toggleAutoAlgo);
 		this.add(buttonBar, "South");
@@ -117,12 +119,7 @@ public abstract class Gui extends JPanel{
 		}
 	}
 
-	protected void clearGui(){
-		rootVertice = null;
-		currentVertice = null;
-		repaint();
-	}
-
+	protected abstract void reset();
 	protected abstract void calcAlgorithmus(boolean repaintBool);
 	protected abstract void addGuiMouseListener();
 

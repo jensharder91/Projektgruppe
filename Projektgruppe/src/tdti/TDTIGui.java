@@ -15,6 +15,9 @@ import Tree.Vertice;
 public class TDTIGui extends Gui{
 
 	public int IMMUNITY_TIME = 0;
+	public int MAX_STEPS = 0;
+	public int STEPS = MAX_STEPS;
+
 	private static final long serialVersionUID = 1L;
 	private static TDTIGui gui;
 	private static JTextField textField = new JTextField("0",2);
@@ -38,9 +41,23 @@ public class TDTIGui extends Gui{
 		addFieldToBar(textField);
 
 		JButton btnPrev = new JButton("Zurück");
+		btnPrev.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				MAX_STEPS--;
+				calcAlgorithmus(true);
+			}
+		});
 		addButtonToBar(btnPrev);
 
 		JButton btnNext = new JButton("Weiter");
+		btnNext.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				MAX_STEPS++;
+				calcAlgorithmus(true);
+			}
+		});
 		addButtonToBar(btnNext);
 	}
 
@@ -53,6 +70,7 @@ public class TDTIGui extends Gui{
 
 	@Override
 	protected void calcAlgorithmus(boolean repaintBool) {
+		STEPS = MAX_STEPS;
 		if(rootVertice instanceof TDTIVertice){
 			((TDTIVertice) rootVertice).algorithmus();
 			rootVertice.logSubtree();
@@ -63,6 +81,13 @@ public class TDTIGui extends Gui{
 		} else {
 			System.out.println("No root available");
 		}
+	}
+
+	@Override
+	protected void reset(){
+		MAX_STEPS = 0;
+		STEPS = MAX_STEPS;
+		calcAlgorithmus(true);
 	}
 
 	@Override

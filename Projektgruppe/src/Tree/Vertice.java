@@ -97,7 +97,11 @@ public class Vertice {
 	}
 
 	protected void drawAllVertice(Graphics g){
-		g.setColor(Color.white);
+		drawAllVertice(g,Color.white);
+	}
+
+	protected void drawAllVertice(Graphics g, Color fillColor){
+		g.setColor(fillColor);
 		g.fillOval(xMittel - width/2, yMittel - height/2, width, height);
 		g.setColor(new Color(0x33,0x44,0x55));
 		g.drawOval(xMittel - width/2, yMittel - height/2, width, height);
