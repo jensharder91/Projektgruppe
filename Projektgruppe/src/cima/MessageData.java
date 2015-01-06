@@ -107,11 +107,22 @@ public class MessageData {
 		g.setColor(Color.orange);
 		g.drawArc(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, angleSender, animationAngle);
 
-		if(animationAngle >= (angleReceiver - angleSender)/2){
-			g.setColor(Color.orange);
-			drawArrow(g);
-			drawMessageInfo(g, animationOvalMitteX, animationOvalMitteY);
+		//teste: messageInfo wird im kreissegment verschoben TODO 
+		int kreisSegmentEndeAngle = angleSender + animationAngle;
+		int kreisSegmentEndeX = (int) (mittelpunktKreisX + Math.cos(kreisSegmentEndeAngle*Math.PI/180) * radius);
+		if(kreisSegmentEndeAngle > 180){
+			kreisSegmentEndeAngle -= 180;
 		}
+		int kreisSegmentEndeY = (int) (mittelpunktKreisY + Math.sin(kreisSegmentEndeAngle*Math.PI/180) * radius);
+//		drawMessageInfo(g, kreisSegmentEndeX, 100);
+		drawMessageInfo(g, kreisSegmentEndeX, kreisSegmentEndeY);
+		
+//		//falls schon über die hälfte des kreissegment gezeichnet wurde:
+//		if(animationAngle >= (angleReceiver - angleSender)/2){
+//			g.setColor(Color.orange);
+//			drawArrow(g);
+//			drawMessageInfo(g, animationOvalMitteX, animationOvalMitteY);
+//		}
 	}
 
 	private void drawMessageInfo(Graphics g, int ovalMitteX, int ovalMitteY){
