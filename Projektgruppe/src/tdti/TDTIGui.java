@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.SwingUtilities;
 import javax.swing.JTextField;
+import javax.swing.JButton;
 
 import Gui.Gui;
 import Tree.Vertice;
@@ -35,6 +36,12 @@ public class TDTIGui extends Gui{
 			}
 		});
 		addFieldToBar(textField);
+
+		JButton btnPrev = new JButton("Zurück");
+		addButtonToBar(btnPrev);
+
+		JButton btnNext = new JButton("Weiter");
+		addButtonToBar(btnNext);
 	}
 
 	public static TDTIGui getGui(){
@@ -76,13 +83,11 @@ public class TDTIGui extends Gui{
 			@Override
 			public void mouseExited(MouseEvent e) {
 				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				// TODO Auto-generated method stub
-
 			}
 
 			@Override
@@ -95,16 +100,16 @@ public class TDTIGui extends Gui{
 						if(selectedVertice != null){
 							if(selectedVertice == rootVertice){
 								rootVertice = null;
-							}else{
+							} else {
 								selectedVertice.delete();
 							}
 						}
 					}
-				}else{
+				} else {
 
 					if(rootVertice == null){
 						rootVertice = new TDTIVertice("root", null, algo);
-					}else if(rootVertice.pointExists(e.getX(), e.getY()) != null){
+					} else if(rootVertice.pointExists(e.getX(), e.getY()) != null){
 						// add a child to this point
 						TDTIVertice parent = null;
 						parent = (TDTIVertice) rootVertice.pointExists(e.getX(), e.getY());

@@ -1,5 +1,6 @@
 package tdti;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.*;
 
@@ -7,11 +8,11 @@ import Tree.Vertice;
 
 public class TDTIVertice extends Vertice{
 
-	private TDTIGui algo;
+	private TDTIGui gui;
 
-	public TDTIVertice(String name, TDTIVertice parent, TDTIGui algorithm) {
+	public TDTIVertice(String name, TDTIVertice parent, TDTIGui gui) {
 		super(name, parent);
-		this.algo = algorithm;
+		this.gui = gui;
 	}
 
 	public enum states{
@@ -79,7 +80,7 @@ public class TDTIVertice extends Vertice{
 
 			// having data from all neighbors, send data to all neighbors except last sender
 			System.out.println("- All data received, computing and sending data");
-			if((max1.getA() == max2.getA()) && max2.getC() > algo.IMMUNITY_TIME/2){
+			if((max1.getA() == max2.getA()) && max2.getC() > gui.IMMUNITY_TIME/2){
 				this.psi = max1.getA()+1;
 			} else {
 				this.psi = max1.getA();
@@ -124,7 +125,7 @@ public class TDTIVertice extends Vertice{
 		if(dataReceived.size() >= 2){
 			max2 = dataReceived.get(1);
 		}
-		boolean case1Boolaen = (max1.getA() == max2.getA()) && max2.getC() > algo.IMMUNITY_TIME/2;
+		boolean case1Boolaen = (max1.getA() == max2.getA()) && max2.getC() > gui.IMMUNITY_TIME/2;
 
 		if((this.state == states.READY) && (this.children.size() > 0)){
 			// it’s a ready non-leaf
@@ -208,7 +209,7 @@ public class TDTIVertice extends Vertice{
 			max2 = maximums.get(1);
 		}
 
-		if((max1.getA() == max2.getA()) && max2.getC() > algo.IMMUNITY_TIME/2){
+		if((max1.getA() == max2.getA()) && max2.getC() > gui.IMMUNITY_TIME/2){
 			return new MessageData(max1.getA()+1,1,this);
 		} else {
 			return new MessageData(max1.getA(),max1.getC()+1,this);
@@ -216,13 +217,27 @@ public class TDTIVertice extends Vertice{
 	}
 
 	protected void drawAllVertice(Graphics g){
-
 		super.drawAllVertice(g);
 
 		String string = String.valueOf(psi);
 		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
 		g.drawString(string, xMittel - stringWidth/2, yMittel+height/4);
 
+		drawMessages(g);
+	}
+
+	protected void drawMessages(Graphics g){
+		for(MessageData data : dataReceived){
+			TDTIVertice sender = data.getSender();
+			String message = data.guiString();
+			int messageWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(message,g).getWidth());
+			int msgX = (sender.getMittelX()*2 + this.getMittelX())/3 - messageWidth/2;
+			int msgY = (sender.getMittelY()*2 + this.getMittelY())/3;
+			g.setColor(new Color(255,255,255,200));
+			g.fillRect(msgX-2,msgY-14,messageWidth+4,18);
+			g.setColor(new Color(0x33,0x44,0x55));
+			g.drawString(message,msgX,msgY);
+		}
 	}
 
 	private boolean checkVerticeType(Vertice vertice) {

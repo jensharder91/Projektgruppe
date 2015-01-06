@@ -17,6 +17,10 @@ public class MessageData{
 		return "("+getA()+"|"+getC()+") from "+this.sender.getName();
 	}
 
+	public String guiString() {
+		return getA()+","+getC();
+	}
+
 	public int getA(){
 		return a;
 	}

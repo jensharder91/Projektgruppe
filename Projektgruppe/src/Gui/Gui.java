@@ -49,24 +49,19 @@ public abstract class Gui extends JPanel{
 		buttonClear.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-
 				clearGui();
-
 			}
 		});
 
 		buttonCalculate.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
 				calcAlgorithmus(true);
-
 			}
 		});
 
+		/*
 		toggleAutoAlgo.addItemListener(new ItemListener() {
-
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED){
@@ -77,15 +72,20 @@ public abstract class Gui extends JPanel{
 				}
 			}
 		});
+		*/
 
 		buttonBar.add(buttonCalculate);
 		buttonBar.add(buttonClear);
-		buttonBar.add(toggleAutoAlgo);
+		//buttonBar.add(toggleAutoAlgo);
 		this.add(buttonBar, "South");
 	}
 
 	public void addFieldToBar(JTextField tf){
 		buttonBar.add(tf);
+	}
+
+	public void addButtonToBar(JButton btn){
+		buttonBar.add(btn);
 	}
 
 	public Vertice getRoot(){

@@ -86,6 +86,27 @@ public class Vertice {
 		drawAllVertice(g);
 	}
 
+	protected void drawAllTreeLines(Graphics g){
+		if(parent != null){
+			g.setColor(new Color(0x33,0x44,0x55));
+			g.drawLine(xMittel, yMittel, parent.getMittelX(), parent.getMittelY());
+		}
+		for(Vertice child : children){
+			child.drawAllTreeLines(g);
+		}
+	}
+
+	protected void drawAllVertice(Graphics g){
+		g.setColor(Color.white);
+		g.fillOval(xMittel - width/2, yMittel - height/2, width, height);
+		g.setColor(new Color(0x33,0x44,0x55));
+		g.drawOval(xMittel - width/2, yMittel - height/2, width, height);
+
+		for(Vertice child : children){
+			child.drawAllVertice(g);
+		}
+	}
+
 	protected void calcPoints(int areaX, int areaY, int areaWidth, int levelHeight){
 		int pointX = areaX + areaWidth/2;
 		this.xMittel = pointX + width/2;
@@ -102,27 +123,6 @@ public class Vertice {
 			subtreeAreaX = areaX + childrenCounter * subtreeAreaWidth;
 			child.calcPoints(subtreeAreaX,subtreeAreaY,subtreeAreaWidth,levelHeight);
 			childrenCounter++;
-		}
-	}
-	protected void drawAllTreeLines(Graphics g){
-		if(parent != null){
-			g.setColor(new Color(0x33,0x44,0x55));
-			g.drawLine(xMittel, yMittel, parent.getMittelX(), parent.getMittelY());
-		}
-		for(Vertice child : children){
-			child.drawAllTreeLines(g);
-		}
-	}
-
-	protected void drawAllVertice(Graphics g){
-
-		g.setColor(Color.white);
-		g.fillOval(xMittel - width/2, yMittel - height/2, width, height);
-		g.setColor(new Color(0x33,0x44,0x55));
-		g.drawOval(xMittel - width/2, yMittel - height/2, width, height);
-
-		for(Vertice child : children){
-			child.drawAllVertice(g);;
 		}
 	}
 
