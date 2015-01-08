@@ -13,6 +13,8 @@ public class CIMAVertice extends Vertice{
 
 	private int edgeWeightToParent;
 	private int verticeWeight;
+	private boolean drawMu = false;
+	private Color stringColor = Color.black;
 	private int mu;
 	private List<MessageData> lamdas = new ArrayList<MessageData>();
 
@@ -51,8 +53,13 @@ public class CIMAVertice extends Vertice{
 			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
 			g.drawString(string, xMittel - stringWidth/2, yMittel+height/4);
 		}else{
-			g.setColor(Color.black);
-			String string = String.valueOf(mu);
+			String string;
+			if(drawMu){
+				string = String.valueOf(mu);
+			}else{
+				string = String.valueOf(verticeWeight);
+			}
+			g.setColor(stringColor);
 			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
 			g.drawString(string, xMittel - stringWidth/2, yMittel+height/4);
 		}
@@ -134,7 +141,7 @@ public class CIMAVertice extends Vertice{
 	private void startAlgo(){
 		if(children.size() == 0 && parent != null){
 			//got a ready leaf -> send message
-			((CIMAVertice) parent).receive(new MessageData(verticeWeight, this, (CIMAVertice) parent));
+			((CIMAVertice) parent).receive(new MessageData(verticeWeight, this, (CIMAVertice) parent, null, null));
 		}else{
 			for(Vertice child : children){
 				if(!(child instanceof CIMAVertice)){
@@ -209,8 +216,8 @@ public class CIMAVertice extends Vertice{
 				break;
 			}
 		}
-		MessageData max1 = new MessageData(0, null, null);
-		MessageData max2 = new MessageData(0, null, null);
+		MessageData max1 = new MessageData(0, null, null, null, null);
+		MessageData max2 = new MessageData(0, null, null, null, null);
 //		int otherVerticeWeight = 0;
 		if(maximums.size() >= 1){
 			max1 = maximums.get(0);
@@ -222,12 +229,19 @@ public class CIMAVertice extends Vertice{
 
 //		System.out.println("otherVerticeWeight: "+otherVerticeWeight);
 
-		int maxValue = Math.max(max1.getLamdaValue(), max2.getLamdaValue() + verticeWeight);//TODO get verticeWeight from other vertice
+		//int maxValue = Math.max(max1.getLamdaValue(), max2.getLamdaValue() + verticeWeight);//TODO get verticeWeight from other vertice
+		MessageData calcMessageData;
+		if(max1.getLamdaValue() >= max2.getLamdaValue() + verticeWeight){
+			calcMessageData = new MessageData(max1.getLamdaValue(), this, receiverNode, max1, max2);
+		}else{
+			calcMessageData = new MessageData(max2.getLamdaValue() + verticeWeight, this, receiverNode, max1, max2);
+		}
+		
 
 //		System.out.println("++++ sende VON "+ this.name+" nach "+ receiverNode.getName() + " value: "+maxValue +"           // verticeWeight : "+verticeWeight);
 //		System.out.println("+++++++++++++++++++++  max1.getLamdaValue() : "+max1.getLamdaValue()+" max2.getLamdaValue(): "+max2.getLamdaValue());
 
-		receiverNode.receive(new MessageData(maxValue, this, receiverNode));
+		receiverNode.receive(calcMessageData);
 	}
 
 	private CIMAVertice getMissingNeightbour(){
@@ -264,8 +278,8 @@ public class CIMAVertice extends Vertice{
 
 	private void calcMu(){
 		Collections.sort(lamdas, new MessageDataComparator());
-		MessageData max1 = new MessageData(0, null, null);
-		MessageData max2 = new MessageData(0, null, null);
+		MessageData max1 = new MessageData(0, null, null, null, null);
+		MessageData max2 = new MessageData(0, null, null, null, null);
 		if(lamdas.size() >= 1){
 			max1 = lamdas.get(0);
 		}
@@ -456,6 +470,15 @@ public class CIMAVertice extends Vertice{
 	}
 	public int getVerticeWeight(){
 		return verticeWeight;
+	}
+	public void markAsMax(){
+		stringColor = new Color(22, 16, 232);
+	}
+	public void markAsSecMax(){
+		stringColor = new Color(16, 222, 255);
+	}
+	public void resetColor(){
+		stringColor = Color.black;
 	}
 
 }

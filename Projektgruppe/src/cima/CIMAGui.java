@@ -79,6 +79,7 @@ public class CIMAGui extends Gui{
 							if(selectedVertice == rootVertice){
 								clearGui();
 							}else{
+								MessageData.clearGui = true;
 								selectedVertice.delete();
 							}
 						}
@@ -108,6 +109,7 @@ public class CIMAGui extends Gui{
 						}
 						if(parent instanceof CIMAVertice){
 							new CIMAVertice(""+verticeCoutner, parent, gui);
+							MessageData.clearGui = true;
 							verticeCoutner++;
 						}
 					

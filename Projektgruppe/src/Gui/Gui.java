@@ -238,6 +238,7 @@ public abstract class Gui extends JPanel{
 		rootVertice = null;
 		currentVertice = null;
 		homeBase = null;
+		MessageData.clearGui = true;
 		repaint();
 	}
 

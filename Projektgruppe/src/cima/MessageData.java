@@ -12,6 +12,10 @@ public class MessageData {
 	private int lamdaValue;
 	private CIMAVertice sender;
 	private CIMAVertice receiver;
+	private MessageData calcMax1;
+	private MessageData calcMax2;
+	
+	//animation / graphic
 
 	private double angleSender;
 	private double angleReceiver;
@@ -22,18 +26,20 @@ public class MessageData {
 	private int segmentMitteX;
 	private int segmentMitteY;
 
-	private int animationOvalMitteX;
-	private int animationOvalMitteY;
 	private double animationAngle;
 	private boolean activeAnimation = false;
 	public static boolean animationInProgress = false;
+	public static boolean clearGui = false;
 	private boolean animationFinished = true;
+	private Color ovalColor = Color.orange;
 
 
-	public MessageData(int lamdaValue, CIMAVertice sender, CIMAVertice receiver){
+	public MessageData(int lamdaValue, CIMAVertice sender, CIMAVertice receiver, MessageData calcMax1, MessageData calcMax2){
 		this.lamdaValue = lamdaValue;
 		this.sender = sender;
 		this.receiver = receiver;
+		this.calcMax1 = calcMax1;
+		this.calcMax2 = calcMax2;
 
 		if(getSender() != null && getReceiver() != null){
 			calcArc();
@@ -87,11 +93,15 @@ public class MessageData {
 //		System.out.println("##### which animation:");
 
 		if(activeAnimation){
+			clearGui = false;
 			drawAnimation(g);
 		}else{
+			if(clearGui){
+				return;
+			}
 			if((animationInProgress && animationFinished) || !animationInProgress){
 //				System.out.println("##### normal draw (MessageData)");
-//				g.setColor(Color.orange);
+//				g.setColor(ovalColor);
 				g.setColor(Color.YELLOW);
 				g.drawArc(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, (int)Math.toDegrees(angleSender), (int)Math.toDegrees(angleReceiver - angleSender));
 //				drawArrow(g);
@@ -115,7 +125,7 @@ public class MessageData {
 
 //		System.out.println("##### animation (MessageData)");
 
-		g.setColor(Color.orange);
+		g.setColor(ovalColor);
 		g.drawArc(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, (int)Math.toDegrees(angleSender), (int)Math.toDegrees(animationAngle));
 
 		//teste: messageInfo wird im kreissegment verschoben TODO 
@@ -139,7 +149,7 @@ public class MessageData {
 		
 //		//falls schon über die hälfte des kreissegment gezeichnet wurde:
 //		if(animationAngle >= (angleReceiver - angleSender)/2){
-//			g.setColor(Color.orange);
+//			g.setColor(ovalColor);
 //			drawArrow(g);
 //			drawMessageInfo(g, animationOvalMitteX, animationOvalMitteY);
 //		}
@@ -148,7 +158,7 @@ public class MessageData {
 	private void drawMessageInfo(Graphics g, int ovalMitteX, int ovalMitteY){
 		
 		
-		g.setColor(Color.orange);
+		g.setColor(ovalColor);
 		g.fillOval(ovalMitteX - ovalWidth/2, ovalMitteY - ovalWidth/2, ovalWidth, ovalWidth);
 
 		g.setColor(Color.black);
@@ -214,6 +224,16 @@ public class MessageData {
 	public void prepareForAnimation(){
 		animationFinished = false;
 	}
+	
+	public void markAsMax(){
+		ovalColor = new Color(22, 16, 232);
+	}
+	public void markAsSecMax(){
+		ovalColor = new Color(16, 222, 255);
+	}
+	public void resetColor(){
+		ovalColor = Color.orange;
+	}
 
 
 	public SendMessageAnimationTimer animation(Gui gui){
@@ -240,15 +260,33 @@ public class MessageData {
 			activeAnimation = true;
 //			System.out.println(activeAgent);
 			animationAngle = 0;
+			
+			//mark the MessageData from the calc
+			if(calcMax1 != null){
+				calcMax1.markAsMax();
+			}
+			if(calcMax2 != null){
+				calcMax2.markAsMax();
+				sender.markAsMax();
+			}
+			if(calcMax1 != null && calcMax2 != null){
+				if(calcMax1.getLamdaValue() >= calcMax2.getLamdaValue() + sender.getVerticeWeight()){
+					calcMax1.markAsMax();
+					calcMax2.markAsSecMax();
+					sender.markAsSecMax();
+				}else{
+					calcMax1.markAsSecMax();
+					calcMax2.markAsMax();
+					sender.markAsMax();
+				}
+			}
 
 			while(isInterrupted() == false){
 
 				animationAngle += Math.toRadians(1);
 //				System.out.println("animation "+animationAngle + " bis... >= " + (angleReceiver - angleSender));
 
-				//TODO calc the animationOvalMitteX btw ...Y
-				animationOvalMitteX = segmentMitteX;
-				animationOvalMitteY = segmentMitteY;
+
 
 
 //				System.out.println(xMittelAnimation +" / "+yMittelAnimation);
@@ -268,6 +306,16 @@ public class MessageData {
 				}
 			}
 
+			//reset the MessageData from the calc
+			if(calcMax1 != null){
+				calcMax1.resetColor();
+			}
+			if(calcMax2 != null){
+				calcMax2.resetColor();
+				sender.resetColor();
+			}
+			
+			
 //			System.out.println(activeAgent);
 			activeAnimation = false;
 //			System.out.println(activeAgent);
