@@ -34,6 +34,8 @@ public class TDTIVertice extends Vertice{
 	private void reset(){
 		this.state = states.READY;
 		this.dataReceived = new ArrayList<MessageData>();
+		this.psi = 0;
+
 		for(Vertice child : this.children){
 			if(checkVerticeType(child)){
 				((TDTIVertice) child).reset();
@@ -242,9 +244,11 @@ public class TDTIVertice extends Vertice{
 
 		super.drawAllVertice(g,fillColor);
 
-		String string = String.valueOf(psi);
-		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
-		g.drawString(string, xMittel - stringWidth/2, yMittel+height/4);
+		if(psi > 0){
+			String string = String.valueOf(psi);
+			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
+			g.drawString(string, xMittel - stringWidth/2, yMittel+height/4);
+		}
 
 		drawMessages(g);
 	}
