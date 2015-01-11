@@ -22,7 +22,7 @@ public class MessageData {
 	private int radius;
 	private int mittelpunktKreisX;
 	private int mittelpunktKreisY;
-	private int ovalWidth = 17;
+	private int ovalWidth = 16;
 	private int segmentMitteX;
 	private int segmentMitteY;
 
@@ -96,7 +96,7 @@ public class MessageData {
 			clearGui = false;
 			drawAnimation(g);
 		}else{
-			if(clearGui){
+			if(clearGui || CIMAAnimation.breakThread){
 				return;
 			}
 			if((animationInProgress && animationFinished) || !animationInProgress){
@@ -191,7 +191,7 @@ public class MessageData {
 	
 	private double getStopMessageDataAngle(){
 		
-		int abstand = (int) ((ovalWidth + 20) / 1.5); //20 hardcoded verticewidth
+		int abstand = (int) ((ovalWidth + 20) / 1.8); //20 hardcoded verticewidth
 //		double angle = Math.acos((abstand * abstand - radius * radius - radius * radius) / ( -2 * radius * radius));
 		double angle = getAngle(radius, -abstand);
 		

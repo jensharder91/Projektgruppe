@@ -339,6 +339,13 @@ public class CIMAVertice extends Vertice{
 	}
 	
 	public void doCompleteSendMessageAnimation(){
+		
+		//animation läuft schon.... breche die animation ab
+		if(MessageData.animationInProgress == true){
+			CIMAAnimation.getCIMAAnimation(gui).stopSendMessageAnimation();
+			return;
+		}
+		
 		algorithmus();
 		CIMAAnimation.getCIMAAnimation(gui).startSendMessageAnimation(messageDataList);
 	}

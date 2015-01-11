@@ -229,13 +229,20 @@ public abstract class Gui extends JPanel{
 		buttonBack.setVisible(false);
 		buttonCalculate.setVisible(true);
 		buttonCalculateAnimation.setVisible(true);
+		buttonCalculateAnimation.setText("Animation starten");
 		buttonClear.setVisible(true);
 		toggleAutoAlgo.setVisible(true);
 		buttonNextAgentAnimationStep.setVisible(false);
 //		buttonPrev.setVisible(false);
 		buttonCompleteAgentAnimation.setVisible(false);
 //		buttonAnimation.setText("Animation berechnen");
-				
+
+		
+		if(MessageData.animationInProgress){
+			buttonCalculate.setVisible(false);
+			buttonCalculateAnimation.setText("Animation abbrechen");
+		}
+		
 //		if(calcAgentMovesReady){
 		if(CIMAVertice.drawMu == true){
 			buttonBack.setVisible(true);

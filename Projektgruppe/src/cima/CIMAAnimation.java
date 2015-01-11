@@ -11,7 +11,7 @@ import Tree.Vertice.AgentAnimationTimer;
 public class CIMAAnimation {
 
 	private static CIMAAnimation animation = null;
-	private boolean breakThread = false;
+	public static boolean breakThread = false;
 	private static Gui gui;
 	private static int index = 0;
 
@@ -78,6 +78,12 @@ public class CIMAAnimation {
 		AnimationSendMessageLoop animationLoop = new AnimationSendMessageLoop(messageDataList);
 		animationLoop.start();
 
+	}
+	
+	public void stopSendMessageAnimation(){
+		breakThread = true;
+		MessageData.animationInProgress = false;
+		gui.repaint();
 	}
 
 	/*
@@ -210,6 +216,7 @@ public class CIMAAnimation {
 			System.out.println("start animation :)");
 			MessageData.animationInProgress = true;
 			CIMAVertice.drawMu = false;
+			breakThread  = false;
 
 			for(int j  = 0; j < messageDataList.size(); j++){
 //				System.out.println("for loop.... j:"+j);
@@ -220,6 +227,7 @@ public class CIMAAnimation {
 //				System.out.println("for loop.... i:"+i);
 
 //				gui.repaint();
+				
 
 				for(int j  = 0; j < i; j++){
 //					System.out.println("for loop.... j:"+j);
@@ -234,9 +242,17 @@ public class CIMAAnimation {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
+				if(breakThread){
+					break;
+				}
 			}
 			MessageData.animationInProgress = false;
-			CIMAVertice.drawMu = true;
+			if(breakThread){
+				MessageData.clearGui = true;
+			}else{
+				CIMAVertice.drawMu = true;
+			}
 			gui.repaint();
 
 		}
