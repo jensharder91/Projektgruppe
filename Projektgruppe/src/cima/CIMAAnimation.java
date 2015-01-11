@@ -209,6 +209,7 @@ public class CIMAAnimation {
 
 			System.out.println("start animation :)");
 			MessageData.animationInProgress = true;
+			CIMAVertice.drawMu = false;
 
 			for(int j  = 0; j < messageDataList.size(); j++){
 //				System.out.println("for loop.... j:"+j);
@@ -235,6 +236,8 @@ public class CIMAAnimation {
 				}
 			}
 			MessageData.animationInProgress = false;
+			CIMAVertice.drawMu = true;
+			gui.repaint();
 
 		}
 

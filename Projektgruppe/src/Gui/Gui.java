@@ -34,15 +34,17 @@ public abstract class Gui extends JPanel{
 
 	/** Buttons */
 	protected JButton buttonCalculate = new JButton("Berechnung starten");
-	protected JButton buttonAnimation = new JButton("Animation berechnen");
+	protected JButton buttonCalculateAnimation = new JButton("Animation starten");
+//	protected JButton buttonAnimation = new JButton("Animation berechnen");
 	protected JButton buttonClear = new JButton("Clear");
+	protected JButton buttonBack = new JButton("Zurück");
 	protected JToggleButton toggleAutoAlgo = new JToggleButton("AutoCalc");
-	private JButton buttonNext = new JButton("\u25BA");//RightArrow
+	private JButton buttonNextAgentAnimationStep = new JButton("\u25BA");//RightArrow
 //	private JButton buttonPrev = new JButton("\u25c4");//LeftArro
-	protected JButton buttonCompleteAnimation = new JButton("Komplette Animation");
+	protected JButton buttonCompleteAgentAnimation = new JButton("Komplette Animation");
 	
 	protected boolean autoAlgo = false;
-	public static boolean calcAgentMovesReady = false;
+//	public static boolean calcAgentMovesReady = false;
 
 	protected Gui(){
 //		super(true);
@@ -60,6 +62,15 @@ public abstract class Gui extends JPanel{
 	protected void createGui(){
 
 		setLayout(new BorderLayout());
+		
+		buttonBack.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				CIMAVertice.drawMu = false;
+				repaint();
+			}
+		});
 
 		buttonClear.addActionListener(new ActionListener(){
 			@Override
@@ -69,7 +80,7 @@ public abstract class Gui extends JPanel{
 
 			}
 		});
-
+		
 		buttonCalculate.addActionListener(new ActionListener() {
 
 			@Override
@@ -80,30 +91,42 @@ public abstract class Gui extends JPanel{
 			}
 		});
 		
-		buttonAnimation.addActionListener(new ActionListener() {
+
+		buttonCalculateAnimation.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-//				homeBase = ((CIMAVertice) rootVertice).findHomeBase();
-				((CIMAVertice) homeBase).calcAgentsMove();
-				
-				if(calcAgentMovesReady){
-					calcAgentMovesReady = false;
-				}else{
-					calcAgentMovesReady = true;
-				}
-				repaint();
+				homeBase = ((CIMAVertice) rootVertice).findHomeBase();
+				((CIMAVertice) rootVertice).doCompleteSendMessageAnimation();
 
 			}
 		});
 		
-		buttonCompleteAnimation.addActionListener(new ActionListener() {
+//		buttonAnimation.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//
+////				homeBase = ((CIMAVertice) rootVertice).findHomeBase();
+//				((CIMAVertice) homeBase).calcAgentsMove();
+//				
+//				if(calcAgentMovesReady){
+//					calcAgentMovesReady = false;
+//				}else{
+//					calcAgentMovesReady = true;
+//				}
+//				repaint();
+//
+//			}
+//		});
+		
+		buttonCompleteAgentAnimation.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				((CIMAVertice) homeBase).doCompleteAnimation();
+				((CIMAVertice) homeBase).doCompleteAgentAnimation();
 				
 			}
 		});
@@ -118,12 +141,12 @@ public abstract class Gui extends JPanel{
 //			}
 //		});
 		
-		buttonNext.addActionListener(new ActionListener() {
+		buttonNextAgentAnimationStep.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				((CIMAVertice) homeBase).doStepAnimation(true);
+				((CIMAVertice) homeBase).doStepAgentAnimation(true);
 				
 			}
 		});
@@ -141,11 +164,13 @@ public abstract class Gui extends JPanel{
 			}
 		});
 
+		buttonBar.add(buttonBack);
 		buttonBar.add(buttonCalculate);
-		buttonBar.add(buttonAnimation);
-		buttonBar.add(buttonCompleteAnimation);
+		buttonBar.add(buttonCalculateAnimation);
+//		buttonBar.add(buttonAnimation);
+		buttonBar.add(buttonCompleteAgentAnimation);
 //		buttonBar.add(buttonPrev);
-		buttonBar.add(buttonNext);
+		buttonBar.add(buttonNextAgentAnimationStep);
 		buttonBar.add(buttonClear);
 		buttonBar.add(toggleAutoAlgo);
 		this.add(buttonBar, "South");
@@ -182,9 +207,11 @@ public abstract class Gui extends JPanel{
 		}
 		
 		//mark homebase
-		g.setColor(Color.RED);
-		if(homeBase != null){
-			g.drawRect(homeBase.getX(), homeBase.getY(), homeBase.getWidth(), homeBase.getHeight());
+		if(CIMAVertice.drawMu){
+			g.setColor(Color.RED);
+			if(homeBase != null){
+				g.drawRect(homeBase.getX(), homeBase.getY(), homeBase.getWidth(), homeBase.getHeight());
+			}
 		}
 		
 		//messageData
@@ -199,37 +226,47 @@ public abstract class Gui extends JPanel{
 		
 		
 		//disable / enable buttons
+		buttonBack.setVisible(false);
 		buttonCalculate.setVisible(true);
+		buttonCalculateAnimation.setVisible(true);
 		buttonClear.setVisible(true);
 		toggleAutoAlgo.setVisible(true);
-		buttonNext.setVisible(false);
+		buttonNextAgentAnimationStep.setVisible(false);
 //		buttonPrev.setVisible(false);
-		buttonCompleteAnimation.setVisible(false);
-		buttonAnimation.setText("Animation berechnen");
+		buttonCompleteAgentAnimation.setVisible(false);
+//		buttonAnimation.setText("Animation berechnen");
 				
-		if(calcAgentMovesReady){
-			buttonNext.setVisible(true);
+//		if(calcAgentMovesReady){
+		if(CIMAVertice.drawMu == true){
+			buttonBack.setVisible(true);
+			buttonNextAgentAnimationStep.setVisible(true);
 //			buttonPrev.setVisible(true);
-			buttonCompleteAnimation.setVisible(true);
+			buttonCompleteAgentAnimation.setVisible(true);
+			buttonCompleteAgentAnimation.setText("Komplette Animation");
 			buttonCalculate.setVisible(false);
+			buttonCalculateAnimation.setVisible(false);
 			buttonClear.setVisible(false);
 			toggleAutoAlgo.setVisible(false);
-			buttonAnimation.setText("Animation abbrechen");
+//			buttonAnimation.setText("Animation abbrechen");
 		}
 		
 		if(CIMAVertice.activeAnimation){
+			buttonBack.setVisible(false);
 			buttonCalculate.setVisible(false);
+			buttonCalculateAnimation.setVisible(false);
 			buttonClear.setVisible(false);
 			toggleAutoAlgo.setVisible(false);
-			buttonNext.setVisible(false);
+			buttonNextAgentAnimationStep.setVisible(false);
 //			buttonPrev.setVisible(false);
-			buttonCompleteAnimation.setVisible(false);
-			buttonAnimation.setText("Animation abbrechen");
+			buttonCompleteAgentAnimation.setVisible(true);
+			buttonCompleteAgentAnimation.setText("Animation abbrechen");
+//			buttonAnimation.setText("Animation abbrechen");
 			
 			if(CIMAAnimation.singeAnimationModus){
-				buttonNext.setVisible(true);
+				buttonNextAgentAnimationStep.setVisible(true);
 //				buttonPrev.setVisible(true);
-				buttonCompleteAnimation.setVisible(true);//TODO let the complete animation finish the step by step modus
+				buttonCompleteAgentAnimation.setVisible(true);//TODO let the complete animation finish the step by step modus
+				buttonCompleteAgentAnimation.setText("komplette Animation");
 			}
 		}
 	}

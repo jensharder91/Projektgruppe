@@ -109,7 +109,7 @@ public class MessageData {
 				
 				double angle = getStopMessageDataAngle();
 				
-				System.out.println(Math.toDegrees(angleReceiver%2*Math.PI) + " / "+Math.toDegrees(angle));
+//				System.out.println(Math.toDegrees(angleReceiver%2*Math.PI) + " / "+Math.toDegrees(angle));
 				
 				int ovalMitteX = (int) (mittelpunktKreisX + Math.cos(angle) * radius);
 				int ovalMitteY = (int) (mittelpunktKreisY - Math.sin(angle) * radius);
@@ -195,7 +195,7 @@ public class MessageData {
 //		double angle = Math.acos((abstand * abstand - radius * radius - radius * radius) / ( -2 * radius * radius));
 		double angle = getAngle(radius, -abstand);
 		
-		System.out.println("vorher : "+Math.toDegrees(angle));
+//		System.out.println("vorher : "+Math.toDegrees(angle));
 		angle = angleReceiver - angle;
 //		if(angle >= 2*Math.PI){
 //			angle %= 2*Math.PI;
@@ -261,6 +261,8 @@ public class MessageData {
 //			System.out.println(activeAgent);
 			animationAngle = 0;
 			
+			System.out.println("calcmax1 == null ? : "+(calcMax1==null)+"  /  calcmax2 == null ? : "+(calcMax2==null));
+			
 			//mark the MessageData from the calc
 			if(calcMax1 != null){
 				calcMax1.markAsMax();
@@ -279,6 +281,10 @@ public class MessageData {
 					calcMax2.markAsMax();
 					sender.markAsMax();
 				}
+			}
+			if(calcMax1 == null && calcMax2 == null){
+				//has to be a leaf
+				sender.markAsMax();
 			}
 
 			while(isInterrupted() == false){
@@ -312,6 +318,10 @@ public class MessageData {
 			}
 			if(calcMax2 != null){
 				calcMax2.resetColor();
+				sender.resetColor();
+			}
+			if(calcMax1 == null && calcMax2 == null){
+				//has to be a leaf
 				sender.resetColor();
 			}
 			

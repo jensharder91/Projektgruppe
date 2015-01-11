@@ -13,8 +13,9 @@ public class CIMAVertice extends Vertice{
 
 	private int edgeWeightToParent;
 	private int verticeWeight;
-	private boolean drawMu = false;
+	public static boolean drawMu = false;
 	private Color stringColor = Color.black;
+//	private boolean verticeStarted = false;
 	private int mu;
 	private List<MessageData> lamdas = new ArrayList<MessageData>();
 
@@ -57,6 +58,7 @@ public class CIMAVertice extends Vertice{
 			if(drawMu){
 				string = String.valueOf(mu);
 			}else{
+				calcVerticeWeight();
 				string = String.valueOf(verticeWeight);
 			}
 			g.setColor(stringColor);
@@ -107,26 +109,16 @@ public class CIMAVertice extends Vertice{
 		}
 		System.out.println("////////////////////////////////////////////");
 
-		CIMAAnimation.getCIMAAnimation(gui).startSendMessageAnimation(messageDataList);
+		drawMu = true;
 	}
 
 	private void reset(){
 		lamdas.clear();
+//		verticeStarted = false;
 		messageDataList.clear();
 		resetCurrentAgents();
 
-		//calc the verticeWeight
-		verticeWeight = edgeWeightToParent;
-		for(Vertice child : children){
-			if(!(child instanceof CIMAVertice)){
-				System.out.println("ERROR... wrong Verticetype!!");
-				return;
-			}
-
-			if(((CIMAVertice) child).getEdgeWeightToParent() > verticeWeight){
-				verticeWeight = ((CIMAVertice) child).getEdgeWeightToParent();
-			}
-		}
+		calcVerticeWeight();
 
 		//call reset() recursive to all children
 		for(Vertice child : children){
@@ -141,7 +133,11 @@ public class CIMAVertice extends Vertice{
 	private void startAlgo(){
 		if(children.size() == 0 && parent != null){
 			//got a ready leaf -> send message
-			((CIMAVertice) parent).receive(new MessageData(verticeWeight, this, (CIMAVertice) parent, null, null));
+//			if(verticeStarted == false){
+//				verticeStarted = true;
+//				System.out.println("normal leaf start");
+				((CIMAVertice) parent).receive(new MessageData(verticeWeight, this, (CIMAVertice) parent, null, null));
+//			}
 		}else{
 			for(Vertice child : children){
 				if(!(child instanceof CIMAVertice)){
@@ -172,8 +168,13 @@ public class CIMAVertice extends Vertice{
 		}else if(lamdas.size() == numberOfNeighbors()){
 			//TODO **
 			if(lamdas.size() == 1 && children.size() == 0){
-				//leaf, dont send aganin
-//				computeLamdasAndSendTo(data.getSender());
+				//leaf, dont send aganin ? (-> check if it has started)
+//				System.out.println("check leaf");
+//				if(verticeStarted == false){
+//					verticeStarted = true;
+////					System.out.println("continued leaf start");
+//					computeLamdasAndSendTo(data.getSender());
+//				}
 			}else if(lamdas.size() == 1 && children.size() > 0){
 				//root with just one child
 				computeLamdasAndSendTo(data.getSender());
@@ -275,6 +276,21 @@ public class CIMAVertice extends Vertice{
 		}
 		return false;
 	}
+	
+	private void calcVerticeWeight(){
+		//calc the verticeWeight
+		verticeWeight = edgeWeightToParent;
+		for(Vertice child : children){
+			if(!(child instanceof CIMAVertice)){
+				System.out.println("ERROR... wrong Verticetype!!");
+				return;
+			}
+
+			if(((CIMAVertice) child).getEdgeWeightToParent() > verticeWeight){
+				verticeWeight = ((CIMAVertice) child).getEdgeWeightToParent();
+			}
+		}
+	}
 
 	private void calcMu(){
 		Collections.sort(lamdas, new MessageDataComparator());
@@ -304,7 +320,7 @@ public class CIMAVertice extends Vertice{
 
 	/////////////////////////////////
 
-	public void calcAgentsMove(){
+	private void calcAgentsMove(){
 
 		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui);
 
@@ -321,8 +337,13 @@ public class CIMAVertice extends Vertice{
 		homeBase.moveAgents(null, 0);
 
 	}
+	
+	public void doCompleteSendMessageAnimation(){
+		algorithmus();
+		CIMAAnimation.getCIMAAnimation(gui).startSendMessageAnimation(messageDataList);
+	}
 
-	public void doCompleteAnimation(){
+	public void doCompleteAgentAnimation(){
 		//make sure the algo is calced //TODO
 //		algorithmus();
 
@@ -341,7 +362,7 @@ public class CIMAVertice extends Vertice{
 		animation.startAgentAnimation(agentWayList);
 	}
 
-	public void doStepAnimation(boolean nextStep){
+	public void doStepAgentAnimation(boolean nextStep){
 
 		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui);
 
