@@ -70,6 +70,8 @@ public class CIMAGui extends Gui{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				System.out.println(e.getX() +" / "+e.getY());
+				
+				CIMAAnimation.getCIMAAnimation(gui).stopAllAnimations();
 
 				if(SwingUtilities.isRightMouseButton(e)){
 					if(rootVertice != null){

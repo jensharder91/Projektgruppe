@@ -38,7 +38,7 @@ public abstract class Gui extends JPanel{
 //	protected JButton buttonAnimation = new JButton("Animation berechnen");
 	protected JButton buttonClear = new JButton("Clear");
 	protected JButton buttonBack = new JButton("Zurück");
-	protected JToggleButton toggleAutoAlgo = new JToggleButton("AutoCalc");
+//	protected JToggleButton toggleAutoAlgo = new JToggleButton("AutoCalc");
 	private JButton buttonNextAgentAnimationStep = new JButton("\u25BA");//RightArrow
 //	private JButton buttonPrev = new JButton("\u25c4");//LeftArro
 	protected JButton buttonCompleteAgentAnimation = new JButton("Komplette Animation");
@@ -151,18 +151,18 @@ public abstract class Gui extends JPanel{
 			}
 		});
 
-		toggleAutoAlgo.addItemListener(new ItemListener() {
-
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if(e.getStateChange() == ItemEvent.SELECTED){
-					autoAlgo = true;
-					calcAlgorithmus(true);
-				}else if(e.getStateChange() == ItemEvent.DESELECTED){
-					autoAlgo = false;
-				}
-			}
-		});
+//		toggleAutoAlgo.addItemListener(new ItemListener() {
+//
+//			@Override
+//			public void itemStateChanged(ItemEvent e) {
+//				if(e.getStateChange() == ItemEvent.SELECTED){
+//					autoAlgo = true;
+//					calcAlgorithmus(true);
+//				}else if(e.getStateChange() == ItemEvent.DESELECTED){
+//					autoAlgo = false;
+//				}
+//			}
+//		});
 
 		buttonBar.add(buttonBack);
 		buttonBar.add(buttonCalculate);
@@ -172,7 +172,7 @@ public abstract class Gui extends JPanel{
 //		buttonBar.add(buttonPrev);
 		buttonBar.add(buttonNextAgentAnimationStep);
 		buttonBar.add(buttonClear);
-		buttonBar.add(toggleAutoAlgo);
+//		buttonBar.add(toggleAutoAlgo);
 		this.add(buttonBar, "South");
 		
 		
@@ -231,7 +231,7 @@ public abstract class Gui extends JPanel{
 		buttonCalculateAnimation.setVisible(true);
 		buttonCalculateAnimation.setText("Animation starten");
 		buttonClear.setVisible(true);
-		toggleAutoAlgo.setVisible(true);
+//		toggleAutoAlgo.setVisible(true);
 		buttonNextAgentAnimationStep.setVisible(false);
 //		buttonPrev.setVisible(false);
 		buttonCompleteAgentAnimation.setVisible(false);
@@ -241,6 +241,7 @@ public abstract class Gui extends JPanel{
 		if(MessageData.animationInProgress){
 			buttonCalculate.setVisible(false);
 			buttonCalculateAnimation.setText("Animation abbrechen");
+			buttonClear.setVisible(false);
 		}
 		
 //		if(calcAgentMovesReady){
@@ -253,7 +254,7 @@ public abstract class Gui extends JPanel{
 			buttonCalculate.setVisible(false);
 			buttonCalculateAnimation.setVisible(false);
 			buttonClear.setVisible(false);
-			toggleAutoAlgo.setVisible(false);
+//			toggleAutoAlgo.setVisible(false);
 //			buttonAnimation.setText("Animation abbrechen");
 		}
 		
@@ -262,7 +263,7 @@ public abstract class Gui extends JPanel{
 			buttonCalculate.setVisible(false);
 			buttonCalculateAnimation.setVisible(false);
 			buttonClear.setVisible(false);
-			toggleAutoAlgo.setVisible(false);
+//			toggleAutoAlgo.setVisible(false);
 			buttonNextAgentAnimationStep.setVisible(false);
 //			buttonPrev.setVisible(false);
 			buttonCompleteAgentAnimation.setVisible(true);

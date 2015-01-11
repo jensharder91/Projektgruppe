@@ -32,6 +32,14 @@ public class CIMAAnimation {
 	private CIMAAnimation(){
 
 	}
+	
+	public void stopAllAnimations(){
+		
+		if(Vertice.activeAnimation || MessageData.animationInProgress){
+			stopAgentAnimation();
+			stopSendMessageAnimation();
+		}
+	}
 
 	/*
 	 *
