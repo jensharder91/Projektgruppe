@@ -40,6 +40,7 @@ public abstract class Gui extends JPanel{
 	protected JButton buttonBack = new JButton("Zurück");
 //	protected JToggleButton toggleAutoAlgo = new JToggleButton("AutoCalc");
 	private JButton buttonNextAgentAnimationStep = new JButton("\u25BA");//RightArrow
+	private JButton buttonNextCalculateAnimationStep = new JButton("\u25BA");
 //	private JButton buttonPrev = new JButton("\u25c4");//LeftArro
 	protected JButton buttonCompleteAgentAnimation = new JButton("Komplette Animation");
 	
@@ -146,7 +147,18 @@ public abstract class Gui extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				((CIMAVertice) homeBase).doStepAgentAnimation(true);
+				((CIMAVertice) homeBase).doStepAgentAnimation();
+				
+			}
+		});
+		
+		buttonNextCalculateAnimationStep.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				homeBase = ((CIMAVertice) rootVertice).findHomeBase();
+				((CIMAVertice) rootVertice).doStepSendMessageAnimation();
 				
 			}
 		});
@@ -171,6 +183,7 @@ public abstract class Gui extends JPanel{
 		buttonBar.add(buttonCompleteAgentAnimation);
 //		buttonBar.add(buttonPrev);
 		buttonBar.add(buttonNextAgentAnimationStep);
+		buttonBar.add(buttonNextCalculateAnimationStep);
 		buttonBar.add(buttonClear);
 //		buttonBar.add(toggleAutoAlgo);
 		this.add(buttonBar, "South");
@@ -233,6 +246,7 @@ public abstract class Gui extends JPanel{
 		buttonClear.setVisible(true);
 //		toggleAutoAlgo.setVisible(true);
 		buttonNextAgentAnimationStep.setVisible(false);
+		buttonNextCalculateAnimationStep.setVisible(true);
 //		buttonPrev.setVisible(false);
 		buttonCompleteAgentAnimation.setVisible(false);
 //		buttonAnimation.setText("Animation berechnen");
@@ -242,6 +256,14 @@ public abstract class Gui extends JPanel{
 			buttonCalculate.setVisible(false);
 			buttonCalculateAnimation.setText("Animation abbrechen");
 			buttonClear.setVisible(false);
+			buttonNextCalculateAnimationStep.setVisible(false);
+			
+			if(CIMAAnimation.singeAnimationModus){
+				buttonNextCalculateAnimationStep.setVisible(true);
+//				buttonPrev.setVisible(true);
+				buttonCalculateAnimation.setVisible(true);//TODO let the complete animation finish the step by step modus
+				buttonCalculateAnimation.setText("komplette Animation");
+			}
 		}
 		
 //		if(calcAgentMovesReady){
@@ -254,6 +276,7 @@ public abstract class Gui extends JPanel{
 			buttonCalculate.setVisible(false);
 			buttonCalculateAnimation.setVisible(false);
 			buttonClear.setVisible(false);
+			buttonNextCalculateAnimationStep.setVisible(false);
 //			toggleAutoAlgo.setVisible(false);
 //			buttonAnimation.setText("Animation abbrechen");
 		}
@@ -265,6 +288,7 @@ public abstract class Gui extends JPanel{
 			buttonClear.setVisible(false);
 //			toggleAutoAlgo.setVisible(false);
 			buttonNextAgentAnimationStep.setVisible(false);
+			buttonNextCalculateAnimationStep.setVisible(false);
 //			buttonPrev.setVisible(false);
 			buttonCompleteAgentAnimation.setVisible(true);
 			buttonCompleteAgentAnimation.setText("Animation abbrechen");

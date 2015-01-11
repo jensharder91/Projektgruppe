@@ -341,13 +341,34 @@ public class CIMAVertice extends Vertice{
 	public void doCompleteSendMessageAnimation(){
 		
 		//animation läuft schon.... breche die animation ab
-		if(MessageData.animationInProgress == true){
+		if(MessageData.animationInProgress && !CIMAAnimation.singeAnimationModus){
 			CIMAAnimation.getCIMAAnimation(gui).stopSendMessageAnimation();
 			return;
 		}
+
+		if(!MessageData.animationInProgress){
+			algorithmus();
+		}
 		
-		algorithmus();
+		
 		CIMAAnimation.getCIMAAnimation(gui).startSendMessageAnimation(messageDataList);
+	}
+	
+	public void doStepSendMessageAnimation(){
+
+		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui);
+//
+//		if(!activeAnimation){
+//			calcAgentsMove();
+//		}
+		
+		if(!MessageData.animationInProgress){
+			algorithmus();
+		}
+//
+//
+		animation.nextStepSendMessageAnimation(messageDataList);
+
 	}
 
 	public void doCompleteAgentAnimation(){
@@ -369,7 +390,7 @@ public class CIMAVertice extends Vertice{
 		animation.startAgentAnimation(agentWayList);
 	}
 
-	public void doStepAgentAnimation(boolean nextStep){
+	public void doStepAgentAnimation(){
 
 		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui);
 
@@ -377,13 +398,9 @@ public class CIMAVertice extends Vertice{
 			calcAgentsMove();
 		}
 
-		if(nextStep){
-			//nextStep
-			animation.nextStepAgentAnimation(agentWayList, nextStep);
-		}else{
-			//prevStep
-//			animation.nextStepAnimation(agentWayList, nextStep);
-		}
+
+		animation.nextStepAgentAnimation(agentWayList);
+
 	}
 
 	public CIMAVertice findHomeBase(){
