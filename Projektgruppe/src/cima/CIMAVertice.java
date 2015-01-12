@@ -517,13 +517,16 @@ public class CIMAVertice extends Vertice{
 		return verticeWeight;
 	}
 	public void markAsMax(){
-		stringColor = new Color(22, 16, 232);
+//		stringColor = CIMAConstants.getMarkAsMaxColor();
+		verticeColor = CIMAConstants.getMarkAsMaxColor();
 	}
 	public void markAsSecMax(){
-		stringColor = new Color(16, 222, 255);
+//		stringColor = CIMAConstants.getMarkAsSecMaxColor();
+		verticeColor = CIMAConstants.getMarkAsSecMaxColor();
 	}
 	public void resetColor(){
-		stringColor = Color.black;
+//		stringColor = Color.black;
+		verticeColor = Color.white;
 	}
 
 }

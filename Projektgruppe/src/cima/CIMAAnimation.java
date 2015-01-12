@@ -48,6 +48,10 @@ public class CIMAAnimation {
 	 */
 
 	public void startAgentAnimation(List<AgentWayData> agentsWayList){
+		
+		if(activeAgent){
+			return;
+		}
 
 		singeAnimationModus = false;
 		AnimationAgentLoop animationLoop = new AnimationAgentLoop(agentsWayList);
@@ -58,6 +62,7 @@ public class CIMAAnimation {
 	public void stopAgentAnimation(){
 		breakThread = true;
 		Vertice.activeAnimation = false;
+		activeAgent = false;
 		gui.repaint();
 	}
 
@@ -79,6 +84,10 @@ public class CIMAAnimation {
 	 */
 
 	public void startSendMessageAnimation(List<MessageData> messageDataList){
+		
+		if(activeAgent){
+			return;
+		}
 
 		System.out.println("in start sendMessage ANIMATION");
 
@@ -102,6 +111,7 @@ public class CIMAAnimation {
 	public void stopSendMessageAnimation(){
 		breakThread = true;
 		MessageData.animationInProgress = false;
+		activeAgent = false;
 		gui.repaint();
 	}
 
@@ -207,7 +217,7 @@ public class CIMAAnimation {
 
 		private void pauseAnimation(){
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -235,6 +245,7 @@ public class CIMAAnimation {
 			MessageData.animationInProgress = true;
 			CIMAVertice.drawMu = false;
 			breakThread  = false;
+			activeAgent = true;
 
 			for(int j  = 0; j < messageDataList.size(); j++){
 //				System.out.println("for loop.... j:"+j);
@@ -288,6 +299,8 @@ public class CIMAAnimation {
 				}
 			}
 			gui.repaint();
+			
+			activeAgent = false;
 
 		}
 		

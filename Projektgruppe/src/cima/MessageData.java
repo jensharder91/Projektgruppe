@@ -31,7 +31,8 @@ public class MessageData {
 	public static boolean animationInProgress = false;
 	public static boolean clearGui = false;
 	private boolean animationFinished = true;
-	private Color ovalColor = Color.orange;
+	private Color defaultOvalColor = new Color(240, 240, 240);
+	private Color ovalColor = defaultOvalColor;
 
 
 	public MessageData(int lamdaValue, CIMAVertice sender, CIMAVertice receiver, MessageData calcMax1, MessageData calcMax2){
@@ -91,10 +92,17 @@ public class MessageData {
 
 //		g.drawOval(segmentMitteX -10, mittelpunktKreisY + segmentMitteY - 10, 20, 20);
 //		System.out.println("##### which animation:");
+		
+		//after calc dont draw
+		if(CIMAVertice.drawMu){
+			return;
+		}
 
 		if(activeAnimation){
 			clearGui = false;
+			markAsAnimationColor();
 			drawAnimation(g);
+			resetColor();
 		}else{
 			if(clearGui || CIMAAnimation.breakThread){
 				return;
@@ -102,7 +110,8 @@ public class MessageData {
 			if((animationInProgress && animationFinished) || !animationInProgress){
 //				System.out.println("##### normal draw (MessageData)");
 //				g.setColor(ovalColor);
-				g.setColor(Color.YELLOW);
+//				g.setColor(Color.YELLOW);
+				g.setColor(ovalColor);
 				g.drawArc(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, (int)Math.toDegrees(angleSender), (int)Math.toDegrees(angleReceiver - angleSender));
 //				drawArrow(g);
 //				drawMessageInfo(g, segmentMitteX, segmentMitteY);
@@ -124,8 +133,10 @@ public class MessageData {
 	public void drawAnimation(Graphics g){
 
 //		System.out.println("##### animation (MessageData)");
+		
 
 		g.setColor(ovalColor);
+//		g.setColor(CIMAConstants.getMarkAsMaxColor());
 		g.drawArc(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, (int)Math.toDegrees(angleSender), (int)Math.toDegrees(animationAngle));
 
 		//teste: messageInfo wird im kreissegment verschoben TODO 
@@ -159,6 +170,7 @@ public class MessageData {
 		
 		
 		g.setColor(ovalColor);
+//		g.setColor(CIMAConstants.getMarkAsMaxColor());
 		g.fillOval(ovalMitteX - ovalWidth/2, ovalMitteY - ovalWidth/2, ovalWidth, ovalWidth);
 
 		g.setColor(Color.black);
@@ -225,14 +237,18 @@ public class MessageData {
 		animationFinished = false;
 	}
 	
+	public void markAsAnimationColor(){
+//		markAsMax();
+		ovalColor = new Color(140, 220, 230);
+	}
 	public void markAsMax(){
-		ovalColor = new Color(22, 16, 232);
+		ovalColor = CIMAConstants.getMarkAsMaxColor();
 	}
 	public void markAsSecMax(){
-		ovalColor = new Color(16, 222, 255);
+		ovalColor = CIMAConstants.getMarkAsSecMaxColor();
 	}
 	public void resetColor(){
-		ovalColor = Color.orange;
+		ovalColor = defaultOvalColor;
 	}
 
 

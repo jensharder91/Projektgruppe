@@ -33,8 +33,8 @@ public abstract class Gui extends JPanel{
 	protected JPanel buttonBar = new JPanel();
 
 	/** Buttons */
-	protected JButton buttonCalculate = new JButton("Berechnung starten");
-	protected JButton buttonCalculateAnimation = new JButton("Animation starten");
+	protected JButton buttonCalculate = new JButton("Sofort berechnen");
+	protected JButton buttonCalculateAnimation = new JButton("Berechnung animieren");
 //	protected JButton buttonAnimation = new JButton("Animation berechnen");
 	protected JButton buttonClear = new JButton("Clear");
 	protected JButton buttonBack = new JButton("Zurück");
@@ -42,7 +42,7 @@ public abstract class Gui extends JPanel{
 	private JButton buttonNextAgentAnimationStep = new JButton("\u25BA");//RightArrow
 	private JButton buttonNextCalculateAnimationStep = new JButton("\u25BA");
 //	private JButton buttonPrev = new JButton("\u25c4");//LeftArro
-	protected JButton buttonCompleteAgentAnimation = new JButton("Komplette Animation");
+	protected JButton buttonCompleteAgentAnimation = new JButton("Baum dekontaminieren");
 	
 	protected boolean autoAlgo = false;
 //	public static boolean calcAgentMovesReady = false;
@@ -242,7 +242,7 @@ public abstract class Gui extends JPanel{
 		buttonBack.setVisible(false);
 		buttonCalculate.setVisible(true);
 		buttonCalculateAnimation.setVisible(true);
-		buttonCalculateAnimation.setText("Animation starten");
+		buttonCalculateAnimation.setText("Berechnung animieren");
 		buttonClear.setVisible(true);
 //		toggleAutoAlgo.setVisible(true);
 		buttonNextAgentAnimationStep.setVisible(false);
@@ -250,6 +250,16 @@ public abstract class Gui extends JPanel{
 //		buttonPrev.setVisible(false);
 		buttonCompleteAgentAnimation.setVisible(false);
 //		buttonAnimation.setText("Animation berechnen");
+		
+		if(rootVertice == null || rootVertice.getChildren().size() < 1){
+			buttonBack.setVisible(false);
+			buttonCalculate.setVisible(false);
+			buttonCalculateAnimation.setVisible(false);
+			buttonClear.setVisible(false);
+			buttonNextAgentAnimationStep.setVisible(false);
+			buttonNextCalculateAnimationStep.setVisible(false);
+			buttonCompleteAgentAnimation.setVisible(false);
+		}
 
 		
 		if(MessageData.animationInProgress){
@@ -272,7 +282,7 @@ public abstract class Gui extends JPanel{
 			buttonNextAgentAnimationStep.setVisible(true);
 //			buttonPrev.setVisible(true);
 			buttonCompleteAgentAnimation.setVisible(true);
-			buttonCompleteAgentAnimation.setText("Komplette Animation");
+			buttonCompleteAgentAnimation.setText("Baum dekontaminieren");
 			buttonCalculate.setVisible(false);
 			buttonCalculateAnimation.setVisible(false);
 			buttonClear.setVisible(false);

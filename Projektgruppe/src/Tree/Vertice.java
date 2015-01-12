@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+import cima.CIMAVertice;
 import Gui.Gui;
 
 public class Vertice {
@@ -25,6 +26,7 @@ public class Vertice {
     protected int currentAgents = 0;
     protected int moveAgentCounter = 0;
     protected boolean decontaminated = false;
+    protected Color verticeColor = Color.white;
 
 
 	protected Vertice parent;
@@ -135,21 +137,42 @@ public class Vertice {
 	}
 
 	protected void drawAllVertice(Graphics g){
-
-		if(activeAnimation){
-//			g.setColor(Color.black);
-			if(decontaminated){
-				g.setColor(Color.GREEN);
+		
+		//chose color
+		if(CIMAVertice.drawMu){
+			if(activeAnimation){
+				if(decontaminated){
+					verticeColor = Color.GREEN;
+				}else{
+	//				verticeColor = Color.RED;
+					verticeColor = new Color(255, 50, 0);
+				}
+				
 			}else{
-				g.setColor(Color.RED);
+				verticeColor = Color.white;
 			}
-			g.fillOval(xMittel - width/2, yMittel - height/2, width, height);
-		}else{
-			g.setColor(Color.white);
-			g.fillOval(xMittel - width/2, yMittel - height/2, width, height);
-			g.setColor(new Color(0x33,0x44,0x55));
-			g.drawOval(xMittel - width/2, yMittel - height/2, width, height);
 		}
+		
+		//draw vertice
+		g.setColor(verticeColor);
+		g.fillOval(xMittel - width/2, yMittel - height/2, width, height);
+		g.setColor(new Color(0x33,0x44,0x55));
+		g.drawOval(xMittel - width/2, yMittel - height/2, width, height);
+
+//		if(activeAnimation){
+////			g.setColor(Color.black);
+//			if(decontaminated){
+//				g.setColor(Color.GREEN);
+//			}else{
+//				g.setColor(Color.RED);
+//			}
+//			g.fillOval(xMittel - width/2, yMittel - height/2, width, height);
+//		}else{
+//			g.setColor(Color.WHITE);
+//			g.fillOval(xMittel - width/2, yMittel - height/2, width, height);
+//			g.setColor(new Color(0x33,0x44,0x55));
+//			g.drawOval(xMittel - width/2, yMittel - height/2, width, height);
+//		}
 		
 //		g.drawString(name, xMittel, yMittel);
 
@@ -162,9 +185,12 @@ public class Vertice {
 //    	System.out.println("drawing.....");
     	
     	if(activeAgent){
-	        g.setColor(Color.black);
+//    		g.setColor(Color.black);
+    		g.setColor(Color.green);
 	        g.fillOval((int)(xMittelAnimation - width/2), (int)(yMittelAnimation - height/2), width, height);
-			g.setColor(Color.white);
+			g.setColor(new Color(0x33,0x44,0x55));
+			g.drawOval((int)(xMittelAnimation - width/2), (int)(yMittelAnimation - height/2), width, height);
+			g.setColor(Color.black);
 			String string = String.valueOf(moveAgentCounter);
 			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
 			g.drawString(string, (int)(xMittelAnimation - stringWidth/2), (int)(yMittelAnimation + height/4));
