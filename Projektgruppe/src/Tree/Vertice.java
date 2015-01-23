@@ -337,7 +337,6 @@ public class Vertice {
 					Thread.sleep(20);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-					return;
 				}
 				
 				if(vektorLength < 2*animationSpeed){

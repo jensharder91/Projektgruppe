@@ -210,31 +210,36 @@ public abstract class Gui extends JPanel{
 		super.paintComponent(g);
 		
 		//background
-		g.setColor(Color.white);
-		g.fillRect(0, 0, (int)getSize().getWidth(), (int)getSize().getHeight());
+		g2.setColor(Color.white);
+		g2.fillRect(0, 0, (int)getSize().getWidth(), (int)getSize().getHeight());
+		
+		//messageDataLine
+		for(MessageData msgData : CIMAVertice.messageDataList){
+			msgData.drawLine(g2);
+		}
 
 		//mark current point
-		g.setColor(Color.blue);
+		g2.setColor(Color.blue);
 		if(currentVertice != null){
-			g.drawRect(currentVertice.getX(), currentVertice.getY(), currentVertice.getWidth(), currentVertice.getHeight());
+			g2.drawRect(currentVertice.getX(), currentVertice.getY(), currentVertice.getWidth(), currentVertice.getHeight());
 		}
 		
 		//mark homebase
 		if(CIMAVertice.drawMu){
-			g.setColor(Color.RED);
+			g2.setColor(Color.RED);
 			if(homeBase != null){
-				g.drawRect(homeBase.getX(), homeBase.getY(), homeBase.getWidth(), homeBase.getHeight());
+				g2.drawRect(homeBase.getX(), homeBase.getY(), homeBase.getWidth(), homeBase.getHeight());
 			}
-		}
-		
-		//messageData
-		for(MessageData msgData : CIMAVertice.messageDataList){
-			msgData.draw(g); //TODO
 		}
 
 		//draw all vertices recursively
 		if(rootVertice != null){
-			rootVertice.drawTree(g,10,10,getWidth()-20,getHeight()-50);
+			rootVertice.drawTree(g2,10,10,getWidth()-20,getHeight()-50);
+		}
+		
+		//messageData
+		for(MessageData msgData : CIMAVertice.messageDataList){
+			msgData.drawMessageData(g2); //TODO
 		}
 		
 		
