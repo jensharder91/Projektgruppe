@@ -69,6 +69,18 @@ public class Vertice {
 	}
 
 	/**
+	 * Calculates the number of descendants + the vertice itself
+	 * @return int
+	 */
+	public int numberOfVertices(){
+		int number = 0;
+		for(Vertice child : children){
+			number += child.numberOfVertices();
+		}
+		return number+1;
+	}
+
+	/**
 	 * Logs the subtree rooted at the current Vertice to System.out recursively.
 	 */
 	public void logSubtree(){
@@ -131,7 +143,7 @@ public class Vertice {
 	}
 
 	public boolean isSamePoint(int x, int y){
-		System.out.println("Comparing to "+this.xMittel+","+this.yMittel);
+		//System.out.println("Comparing to "+this.xMittel+","+this.yMittel);
 		if((Math.abs(this.xMittel - x) <= width/2) && (Math.abs(this.yMittel - y) < height/2)){
 			return true;
 		}

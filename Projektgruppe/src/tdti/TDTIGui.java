@@ -16,11 +16,13 @@ public class TDTIGui extends Gui{
 
 	public int IMMUNITY_TIME = 0;
 	public int MAX_STEPS = 0;
-	public int STEPS = MAX_STEPS;
+	public int remainingSteps = MAX_STEPS;
 
 	private static final long serialVersionUID = 1L;
 	private static TDTIGui gui;
-	private static JTextField textField = new JTextField("0",2);
+	private JTextField textField = new JTextField("0",2);
+	private JButton btnNext = new JButton("Weiter");
+	private JButton btnPrev = new JButton("Zurück");
 	private TDTIGui algo;
 
 	private TDTIGui(){
@@ -35,30 +37,32 @@ public class TDTIGui extends Gui{
 				// TODO: set Immunity Time
 				IMMUNITY_TIME = newImmunityTime;
 				System.out.println("Immunity Time set to "+newImmunityTime);
-				gui.calcAlgorithmus(true);
+				algo.calcAlgorithmus(true);
 			}
 		});
 		addFieldToBar(textField);
 
-		JButton btnPrev = new JButton("Zurück");
 		btnPrev.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				MAX_STEPS--;
+				updateButtons();
 				calcAlgorithmus(true);
 			}
 		});
 		addButtonToBar(btnPrev);
 
-		JButton btnNext = new JButton("Weiter");
 		btnNext.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				MAX_STEPS++;
+				updateButtons();
 				calcAlgorithmus(true);
 			}
 		});
 		addButtonToBar(btnNext);
+
+		updateButtons();
 	}
 
 	public static TDTIGui getGui(){
@@ -68,9 +72,29 @@ public class TDTIGui extends Gui{
 		return gui;
 	}
 
+	protected void updateButtons(){
+		if(MAX_STEPS <= 0){
+			btnPrev.setEnabled(false);
+		} else {
+			btnPrev.setEnabled(true);
+		}
+		if(MAX_STEPS >= numberOfSteps()){
+			btnNext.setEnabled(false);
+		} else {
+			btnNext.setEnabled(true);
+		}
+	}
+
+	protected int numberOfSteps(){
+		if(rootVertice instanceof TDTIVertice){
+			return 2*rootVertice.numberOfVertices()-2;
+		}
+		return 0;
+	}
+
 	@Override
 	protected void calcAlgorithmus(boolean repaintBool) {
-		STEPS = MAX_STEPS;
+		remainingSteps = MAX_STEPS;
 		if(rootVertice instanceof TDTIVertice){
 			((TDTIVertice) rootVertice).algorithmus();
 			rootVertice.logSubtree();
@@ -86,7 +110,8 @@ public class TDTIGui extends Gui{
 	@Override
 	protected void reset(){
 		MAX_STEPS = 0;
-		STEPS = MAX_STEPS;
+		remainingSteps = MAX_STEPS;
+		updateButtons();
 		calcAlgorithmus(true);
 	}
 
@@ -144,6 +169,7 @@ public class TDTIGui extends Gui{
 							new TDTIVertice("test", parent, algo);
 						}
 					}
+					updateButtons();
 				}
 
 				repaint();

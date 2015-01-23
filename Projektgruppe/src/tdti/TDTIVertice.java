@@ -44,7 +44,7 @@ public class TDTIVertice extends Vertice{
 	}
 
 	private void init(){
-		if(gui.STEPS == 0){
+		if(gui.remainingSteps == 0){
 			return;
 		}
 
@@ -123,10 +123,10 @@ public class TDTIVertice extends Vertice{
 	}
 
 	private void receive(MessageData data){
-		if(gui.STEPS == 0){
+		if(gui.remainingSteps == 0){
 			return;
 		}
-		gui.STEPS--;
+		gui.remainingSteps--;
 
 		this.dataReceived.add(data);
 		System.out.println("Vertice "+this.name+" received "+data+" (message "+this.dataReceived.size()+" of "+this.numberOfNeighbors()+")");
