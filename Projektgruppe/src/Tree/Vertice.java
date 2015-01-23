@@ -13,8 +13,9 @@ public class Vertice {
 	//Gui
 	protected int xMittel;
 	protected int yMittel;
-	protected int width = 20;
-	protected int height = width;
+	public static int RADIUS = 10;
+	protected int width = RADIUS*2;
+	protected int height = RADIUS*2;
 	
     //animation
     protected Gui gui;

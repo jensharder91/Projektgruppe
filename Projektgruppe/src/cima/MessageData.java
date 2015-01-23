@@ -16,12 +16,15 @@ public class MessageData {
 	
 	//animation / graphic
 
+	private int xMittelAnimationEndPosition;
+	private int yMittelAnimationEndPosition;
+	
 	private double angleSender;
 	private double angleReceiver;
 	private int radius;
 	private int mittelpunktKreisX;
 	private int mittelpunktKreisY;
-	private int ovalWidth = 16;
+	private int messageDataRadius = 8;
 	private int segmentMitteX;
 	private int segmentMitteY;
 	
@@ -57,12 +60,19 @@ public class MessageData {
 	}
 
 	private void calcArc(){
-		int mittelpunktX = Math.min(getSender().getMittelX(), getReceiver().getMittelX()) + Math.abs(getSender().getMittelX() - getReceiver().getMittelX()) / 2;
-		int mittelpunktY = Math.min(getSender().getMittelY(), getReceiver().getMittelY()) + Math.abs(getSender().getMittelY() - getReceiver().getMittelY()) / 2;
 
 		int vektorX = getReceiver().getMittelX() - getSender().getMittelX();
 		int vektorY = getReceiver().getMittelY() - getSender().getMittelY();
+		
+		double vektorLength = Math.sqrt(vektorX*vektorX + vektorY*vektorY);
+		xMittelAnimationEndPosition = (int) (getReceiver().getMittelX() - (vektorX/vektorLength)*(messageDataRadius + CIMAVertice.RADIUS + 3));
+		yMittelAnimationEndPosition = (int) (getReceiver().getMittelY() - (vektorY/vektorLength)*(messageDataRadius + CIMAVertice.RADIUS + 3));
+		
 
+		int mittelpunktX = Math.min(getSender().getMittelX(), xMittelAnimationEndPosition) + Math.abs(getSender().getMittelX() - xMittelAnimationEndPosition) / 2;
+		int mittelpunktY = Math.min(getSender().getMittelY(), yMittelAnimationEndPosition) + Math.abs(getSender().getMittelY() - yMittelAnimationEndPosition) / 2;
+		
+		
 		int orthVektorX = vektorY;
 		int orthVektorY = -vektorX;
 
@@ -116,8 +126,10 @@ public class MessageData {
 
 		int vektorKreisMitteSenderX = getSender().getMittelX() - mittelpunktKreisX;
 		int vektorKreisMitteSenderY = getSender().getMittelY() - mittelpunktKreisY;
-		int vektorKreisMitteReceiverX = getReceiver().getMittelX() - mittelpunktKreisX;
-		int vektorKreisMitteReiciverY = getReceiver().getMittelY() - mittelpunktKreisY;
+//		int vektorKreisMitteReceiverX = getReceiver().getMittelX() - mittelpunktKreisX;
+//		int vektorKreisMitteReiciverY = getReceiver().getMittelY() - mittelpunktKreisY;
+		int vektorKreisMitteReceiverX = xMittelAnimationEndPosition - mittelpunktKreisX;
+		int vektorKreisMitteReiciverY = yMittelAnimationEndPosition - mittelpunktKreisY;
 
 		radius = (int) Math.sqrt((vektorKreisMitteSenderX) * (vektorKreisMitteSenderX)
 										+ (vektorKreisMitteSenderY) * (vektorKreisMitteSenderY));
@@ -157,7 +169,8 @@ public class MessageData {
 			}
 			if((animationInProgress && animationFinished) || !animationInProgress){
 				g.setColor(ovalColor);
-				g.drawArc(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, (int)Math.toDegrees(angleSender), (int)Math.toDegrees(angleReceiver - angleSender));
+				g.draw(new Arc2D.Double(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, Math.toDegrees(angleSender), Math.toDegrees(angleReceiver - angleSender), Arc2D.OPEN));
+//				g.drawArc(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, (int)Math.toDegrees(angleSender), (int)Math.toDegrees(angleReceiver - angleSender));
 			}
 		}
 	}
@@ -174,7 +187,7 @@ public class MessageData {
 //		g.drawOval(X_mitte_segMitteGewollt_sender-5, Y_mitte_segMitteGewollt_sender-5, 10, 10);
 //		g.drawLine(X_mitte_segMitteGewollt_sender, Y_mitte_segMitteGewollt_sender, X_möglMittelpunkt, Y_möglMittelpunkt);
 //		g.setColor(Color.MAGENTA);
-//		g.drawOval(tatsächlicherKreisMittelpunkt_X-5, tatsächlicherKreisMittelpunkt_Y-5, 10, 10);
+//		g.drawOval(xMittelAnimationEndPosition-5, yMittelAnimationEndPosition-5, 10, 10);
 		
 		
 		//after calc dont draw
@@ -263,12 +276,12 @@ public class MessageData {
 		
 		g.setColor(ovalColor);
 //		g.setColor(CIMAConstants.getMarkAsMaxColor());
-		g.fillOval(ovalMitteX - ovalWidth/2, ovalMitteY - ovalWidth/2, ovalWidth, ovalWidth);
+		g.fillOval(ovalMitteX - messageDataRadius, ovalMitteY - messageDataRadius, 2*messageDataRadius, 2*messageDataRadius);
 
 		g.setColor(Color.black);
 		String string = String.valueOf(lamdaValue);
 		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
-		g.drawString(string, ovalMitteX - stringWidth/2, ovalMitteY+ovalWidth/4);
+		g.drawString(string, ovalMitteX - stringWidth/2, ovalMitteY+messageDataRadius/2);
 	}
 
 //	private void drawArrow(Graphics g){
@@ -295,17 +308,14 @@ public class MessageData {
 	
 	private double getStopMessageDataAngle(){
 		
-		int abstand = (int) ((ovalWidth + 20) / 1.8); //20 hardcoded verticewidth
-//		double angle = Math.acos((abstand * abstand - radius * radius - radius * radius) / ( -2 * radius * radius));
-		double angle = getAngle(radius, -abstand);
+		return angleReceiver;
 		
-//		System.out.println("vorher : "+Math.toDegrees(angle));
-		angle = angleReceiver - angle;
-//		if(angle >= 2*Math.PI){
-//			angle %= 2*Math.PI;
-//		}
-		
-		return angle;
+//		int abstand = (int) ((2*messageDataRadius + CIMAVertice.RADIUS) / 1.8); //20 hardcoded verticewidth
+//		double angle = getAngle(radius, -abstand);
+//		
+//		angle = angleReceiver - angle;
+//		
+//		return angle;
 	}
 
 	@Override
@@ -399,10 +409,10 @@ public class MessageData {
 
 //				animationAngle += Math.toRadians(1);
 				
-				animationAngle += 3f/radius;
+				animationAngle += 2f/radius;
 //				animationAngle = Math.toRadians(Math.ceil(Math.toDegrees(animationAngle)));
 				
-				System.out.println("animationANgle "+animationAngle +"  /  animationAngle (degree) :"+Math.toDegrees(animationAngle));
+//				System.out.println("animationANgle "+animationAngle +"  /  animationAngle (degree) :"+Math.toDegrees(animationAngle));
 //				System.out.println("animation "+animationAngle + " bis... >= " + (angleReceiver - angleSender));
 //				System.out.println(xMittelAnimation +" / "+yMittelAnimation);
 
