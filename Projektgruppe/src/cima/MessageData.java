@@ -25,6 +25,17 @@ public class MessageData {
 	private int ovalWidth = 16;
 	private int segmentMitteX;
 	private int segmentMitteY;
+	
+	
+	//test
+	int mittelpunktVektorSenderSegMitte_gewollt_X;
+	int mittelpunktVektorSenderSegMitte_gewollt_Y;
+	int möglMittelpunktKreisX;
+	int möglMittelpunktKreisY;
+	int mittelpunktX;
+	int mittelpunktY;
+	int segmentMitteX_gewollt;
+	int segmentMitteY_gewollt;
 
 	private double animationAngle;
 	private boolean activeAnimation = false;
@@ -48,25 +59,71 @@ public class MessageData {
 	}
 
 	private void calcArc(){
-		int mittelpunktX = Math.min(getSender().getMittelX(), getReceiver().getMittelX()) + Math.abs(getSender().getMittelX() - getReceiver().getMittelX()) / 2;
-		int mittelpunktY = Math.min(getSender().getMittelY(), getReceiver().getMittelY()) + Math.abs(getSender().getMittelY() - getReceiver().getMittelY()) / 2;
+		//TODO packe gleiche berechnungen in funktionen
+		
+		//mittelpunkt der strecke zw sender empfänger
+		mittelpunktX = Math.min(getSender().getMittelX(), getReceiver().getMittelX()) + Math.abs(getSender().getMittelX() - getReceiver().getMittelX()) / 2;
+		mittelpunktY = Math.min(getSender().getMittelY(), getReceiver().getMittelY()) + Math.abs(getSender().getMittelY() - getReceiver().getMittelY()) / 2;
 
+		//vektor von sender zu empfänger
 		int vektorX = getReceiver().getMittelX() - getSender().getMittelX();
 		int vektorY = getReceiver().getMittelY() - getSender().getMittelY();
+		
+//		//vektor normieren?
+//		double vektorLength = Math.sqrt(vektorX*vektorX + vektorY*vektorY);
+//		vektorX = (int) (vektorX / (vektorLength) *10);
+//		vektorY = (int) (vektorY / (vektorLength) *10);
+		
+//		System.out.println("Länge vom Vektor Sender -> Empfänger : "+(Math.sqrt(vektorX*vektorX + vektorY*vektorY)));
 
+		//orth vektor zum vektor von sender zum empfänger
 		int orthVektorX = vektorY;
 		int orthVektorY = -vektorX;
 
+		//mittelpunkt vom kreis für das kreissegment
 		mittelpunktKreisX = mittelpunktX + orthVektorX;
 		mittelpunktKreisY = mittelpunktY + orthVektorY;
+		
+		////////////////////
+		//berechne dem gewüschten mittelpunkt auf dem zukünftigen kreissegment (3. punkt vom gesuchten kreis
+		double lengthOrthVektor = Math.sqrt(orthVektorX*orthVektorX + orthVektorY*orthVektorY);
+		segmentMitteX_gewollt = (int) (mittelpunktX - (orthVektorX/lengthOrthVektor)*10);
+		segmentMitteY_gewollt = (int) (mittelpunktY - (orthVektorY/lengthOrthVektor)*10);
+//		double segmentMittel_gewollt_legth = Math.sqrt(segmentMitteY_gewollt*segmentMitteX_gewollt + segmentMitteY_gewollt*segmentMitteY_gewollt);
+//		segmentMitteX_gewollt = (int) (segmentMitteX_gewollt /segmentMittel_gewollt_legth);
+//		segmentMitteY_gewollt = (int) (segmentMitteY_gewollt / segmentMittel_gewollt_legth);
+		
+//		System.out.println("segmentMitteX_gewollt = "+ segmentMitteX_gewollt+"  segmentMitteY_gewollt = "+segmentMitteY_gewollt);
+		
+		//vektor sender -> gewünschter segmentmittelpunkt
+		int vektorSenderSegMitte_gewollt_X = segmentMitteX_gewollt - getSender().getMittelX();
+		int vektorSenderSegMitte_gewollt_Y = segmentMitteY_gewollt - getSender().getMittelY();
+		
+		//vektor sender -> gewüsnchter segmentmittelpunkt MITTE
+		mittelpunktVektorSenderSegMitte_gewollt_X = Math.min(getSender().getMittelX(), vektorSenderSegMitte_gewollt_X) + Math.abs(getSender().getMittelX() - vektorSenderSegMitte_gewollt_X) / 2;
+		mittelpunktVektorSenderSegMitte_gewollt_Y = Math.min(getSender().getMittelY(), vektorSenderSegMitte_gewollt_Y) + Math.abs(getSender().getMittelY() - vektorSenderSegMitte_gewollt_Y) / 2;
+
+		
+		//orthogonaler vektor
+		int orth_mittelpunktVektorSenderSegMitte_gewollt_X =  vektorSenderSegMitte_gewollt_Y;
+		int orth_mittelpunktVektorSenderSegMitte_gewollt_Y = - vektorSenderSegMitte_gewollt_X;
+		
+		
+		//mittelpunkt vom kreis für das kreissegment
+		möglMittelpunktKreisX = mittelpunktVektorSenderSegMitte_gewollt_X + orth_mittelpunktVektorSenderSegMitte_gewollt_X;
+		möglMittelpunktKreisY = mittelpunktVektorSenderSegMitte_gewollt_Y + orth_mittelpunktVektorSenderSegMitte_gewollt_Y;
+		
+		
 
 //		g.drawLine(mittelpunktX, mittelpunktY, startOrthVektorX, startOrthVektorY);
 
+		//vektoren vom mittelpunkt des kreises zu den knoten
 		int vektorKreisMitteSenderX = getSender().getMittelX() - mittelpunktKreisX;
 		int vektorKreisMitteSenderY = getSender().getMittelY() - mittelpunktKreisY;
 		int vektorKreisMitteReceiverX = getReceiver().getMittelX() - mittelpunktKreisX;
 		int vektorKreisMitteReiciverY = getReceiver().getMittelY() - mittelpunktKreisY;
 
+		//radius
 		radius = (int) Math.sqrt((vektorKreisMitteSenderX) * (vektorKreisMitteSenderX)
 										+ (vektorKreisMitteSenderY) * (vektorKreisMitteSenderY));
 
@@ -79,6 +136,7 @@ public class MessageData {
 		}
 
 
+		// berechnung von der mitte des kreissegments
 		int vektorKreisMitteMitteLinieX = mittelpunktX - mittelpunktKreisX;
 		int vektorKreisMitteMitteLinieY = mittelpunktY - mittelpunktKreisY;
 		double längeVektorKreisMitteMitteLinie = Math.sqrt(vektorKreisMitteMitteLinieX*vektorKreisMitteMitteLinieX + vektorKreisMitteMitteLinieY*vektorKreisMitteMitteLinieY);
@@ -92,10 +150,16 @@ public class MessageData {
 
 //		g.drawOval(segmentMitteX -10, mittelpunktKreisY + segmentMitteY - 10, 20, 20);
 //		System.out.println("##### which animation:");
+		g.setColor(Color.red);
+//		g.drawOval(segmentMitteX_gewollt, segmentMitteY_gewollt, 10, 10);
+//		g.drawOval(mittelpunktKreisX-5, mittelpunktKreisY-5, 10, 10);
+		g.drawOval(mittelpunktVektorSenderSegMitte_gewollt_X-5, mittelpunktVektorSenderSegMitte_gewollt_Y-5, 10, 10);
+//		g.drawLine(mittelpunktVektorSenderSegMitte_gewollt_X, mittelpunktVektorSenderSegMitte_gewollt_Y, möglMittelpunktKreisX, möglMittelpunktKreisY);
+//		g.drawLine(mittelpunktX, mittelpunktY, mittelpunktKreisX, mittelpunktKreisY);
 		
 		//after calc dont draw
 		if(CIMAVertice.drawMu){
-			return;
+			return;	
 		}
 
 		if(activeAnimation){
