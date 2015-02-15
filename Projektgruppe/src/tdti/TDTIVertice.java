@@ -8,7 +8,7 @@ import Tree.Vertice;
 
 public class TDTIVertice extends Vertice{
 
-	private TDTIGui gui;
+	private TDTIGui gui = TDTIGui.getGui();
 	protected Color computingColor = new Color(250,220,100);
 	protected Color doneColor = new Color(140,240,100);
 
@@ -21,7 +21,7 @@ public class TDTIVertice extends Vertice{
 	private List<MessageData> dataReceived = new ArrayList<MessageData>();
 
 
-	public TDTIVertice(String name, TDTIVertice parent, TDTIGui gui) {
+	public TDTIVertice(String name, TDTIVertice parent) {
 		super(name, parent);
 		this.gui = gui;
 	}
@@ -87,7 +87,7 @@ public class TDTIVertice extends Vertice{
 			}
 
 			// having data from all neighbors, send data to all neighbors except last sender
-			System.out.println("- All data received, computing and sending data");
+			//System.out.println("- All data received, computing and sending data");
 			if((max1.getA() == max2.getA()) && max2.getC() > gui.IMMUNITY_TIME/2){
 				this.psi = max1.getA()+1;
 			} else {
@@ -102,13 +102,13 @@ public class TDTIVertice extends Vertice{
 		for(Vertice neighbor : this.children){
 			if(checkVerticeType(neighbor) && !didSendData((TDTIVertice) neighbor)){
 				// this neighbor didn’t send any data
-				System.out.println("-- Sending to "+neighbor);
+				//System.out.println("-- Sending to "+neighbor);
 				((TDTIVertice) neighbor).receive(data);
 				return;
 			}
 		}
 		if(this.parent != null && checkVerticeType(this.parent) && !didSendData((TDTIVertice) this.parent)){
-			System.out.println("-- Sending to "+this.parent);
+			//System.out.println("-- Sending to "+this.parent);
 			((TDTIVertice) this.parent).receive(data);
 		}
 	}
@@ -129,7 +129,7 @@ public class TDTIVertice extends Vertice{
 		gui.remainingSteps--;
 
 		this.dataReceived.add(data);
-		System.out.println("Vertice "+this.name+" received "+data+" (message "+this.dataReceived.size()+" of "+this.numberOfNeighbors()+")");
+		//System.out.println("Vertice "+this.name+" received "+data+" (message "+this.dataReceived.size()+" of "+this.numberOfNeighbors()+")");
 
 		// sort dataReceived to get the maximum values:
 		Collections.sort(dataReceived, new MessageDataComparator());
@@ -148,7 +148,7 @@ public class TDTIVertice extends Vertice{
 			if(dataCount == neighborCount-1){
 				// received data from all neighbors but one
 				// compute the received data and send it to the neighbor, that didn’t send anything yet
-				System.out.println("- Sending Data to remaining neighbor.");
+				//System.out.println("- Sending Data to remaining neighbor.");
 				if(case1Boolaen){
 					sendToRemainingNeighbor(new MessageData(max1.getA() + 1, 1, this));
 				} else {
@@ -162,7 +162,7 @@ public class TDTIVertice extends Vertice{
 				this.state = states.COMPUTING;
 			} else {
 				// waiting for more data
-				System.out.println("- Waiting for more data.");
+				//System.out.println("- Waiting for more data.");
 			}
 		}
 
@@ -173,7 +173,7 @@ public class TDTIVertice extends Vertice{
 
 			if(dataCount == neighborCount){
 				// having data from all neighbors, send data to all neighbors except last sender
-				System.out.println("- All data received, computing and sending data");
+				//System.out.println("- All data received, computing and sending data");
 				redirectReceivedDataExceptTo(data.getSender());
 				if(case1Boolaen){
 					this.psi = max1.getA()+1;
@@ -273,6 +273,19 @@ public class TDTIVertice extends Vertice{
 			return false;
 		}
 		return true;
+	}
+
+	public TDTIVertice getMinimumVertice(){
+		TDTIVertice min = this;
+		for(Vertice childVertice : this.children){
+			if(childVertice instanceof TDTIVertice){
+				TDTIVertice child = (TDTIVertice) childVertice;
+				if(child.getPsi() < min.getPsi()){
+					min = child;
+				}
+			}
+		}
+		return min;
 	}
 
 	@Override

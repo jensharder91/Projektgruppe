@@ -1,5 +1,8 @@
 package tdti;
 
+import java.util.*;
+
+import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.ActionEvent;
@@ -24,6 +27,9 @@ public class TDTIGui extends Gui{
 	private JButton btnNext = new JButton("Weiter");
 	private JButton btnPrev = new JButton("Zurück");
 	private TDTIGui algo;
+	private TDTIVertice base;
+
+	private List<TDTIAgent> agents = new ArrayList<TDTIAgent>();
 
 	private TDTIGui(){
 		super();
@@ -78,7 +84,8 @@ public class TDTIGui extends Gui{
 		} else {
 			btnPrev.setEnabled(true);
 		}
-		if(MAX_STEPS >= numberOfSteps()){
+		if(MAX_STEPS >= numberOfSteps()+1){
+			createAgents();
 			btnNext.setEnabled(false);
 		} else {
 			btnNext.setEnabled(true);
@@ -112,7 +119,39 @@ public class TDTIGui extends Gui{
 		MAX_STEPS = 0;
 		remainingSteps = MAX_STEPS;
 		updateButtons();
+		agents.clear();
 		calcAlgorithmus(true);
+	}
+
+	@Override
+	public void draw(Graphics g) {
+		//draw all vertices recursively
+		if(rootVertice != null){
+			rootVertice.drawTree(g,10,10,getWidth()-20,getHeight()-50);
+		}
+
+		// draw agents
+		if(rootVertice != null){
+			for(TDTIAgent agent : agents){
+				agent.draw(g);
+			}
+		}
+	}
+
+	public void createAgents() {
+		// get minimum vertice
+		if(rootVertice instanceof TDTIVertice && rootVertice != null){
+			base = ((TDTIVertice)rootVertice).getMinimumVertice();
+		} else {
+			base = null;
+		}
+		// create the agents
+		if(base != null){
+			if(agents.size() > 0){
+				agents.clear();
+			}
+			agents.add(new TDTIAgent(base,base,base.getPsi(),base.getPsi()));
+		}
 	}
 
 	@Override
@@ -157,7 +196,7 @@ public class TDTIGui extends Gui{
 				} else {
 
 					if(rootVertice == null){
-						rootVertice = new TDTIVertice("root", null, algo);
+						rootVertice = new TDTIVertice("root", null);
 					} else if(rootVertice.pointExists(e.getX(), e.getY()) != null){
 						// add a child to this point
 						TDTIVertice parent = null;
@@ -166,7 +205,7 @@ public class TDTIGui extends Gui{
 							System.out.println("Add new Child to "+parent);
 						}
 						if(parent instanceof TDTIVertice){
-							new TDTIVertice("test", parent, algo);
+							new TDTIVertice("test", parent);
 						}
 					}
 					updateButtons();

@@ -107,6 +107,10 @@ public abstract class Gui extends JPanel{
 		g2.setStroke(new BasicStroke(2));
 		super.paintComponent(g);
 
+		draw(g);
+	}
+
+	public void draw(Graphics g) {
 		//mark current point
 		g.setColor(Color.blue);
 		if(currentVertice != null){
