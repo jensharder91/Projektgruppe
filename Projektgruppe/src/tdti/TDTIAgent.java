@@ -9,19 +9,19 @@ public class TDTIAgent {
   private TDTIVertice end;
   private int progress = 0;
   private int numberOfAgents = 1;
-  private int maximumNumberOfAgents = 3;
+  private int id = 0;
 
-  public TDTIAgent(TDTIVertice sender, TDTIVertice receiver, int agents, int maxAgents){
+  public TDTIAgent(TDTIVertice sender, TDTIVertice receiver, int id, int numberOfAgents){
     this.start = sender;
     this.end = receiver;
-    this.numberOfAgents = agents;
-    this.maximumNumberOfAgents = maxAgents;
+    this.id = id;
+    this.numberOfAgents = numberOfAgents;
   }
-  public TDTIAgent(TDTIVertice sender, TDTIVertice receiver, int agents){
-    this(sender,receiver,agents,6);
+  public TDTIAgent(TDTIVertice sender, TDTIVertice receiver, int id){
+    this(sender,receiver,id,6);
   }
   public TDTIAgent(TDTIVertice sender, TDTIVertice receiver){
-    this(sender,receiver,1);
+    this(sender,receiver,0);
   }
 
   public void nextStep(){
@@ -41,8 +41,8 @@ public class TDTIAgent {
     return end;
   }
 
-  public int getNumberOfAgents(){
-    return numberOfAgents;
+  public int getId(){
+    return id;
   }
 
   public void setVertice(TDTIVertice newVertice){
@@ -54,17 +54,15 @@ public class TDTIAgent {
     double q = 1-p;
     int xMittel = (int)(start.getMittelX()*q) + (int)(end.getMittelX()*p);
     int yMittel = (int)(start.getMittelY()*q) + (int)(end.getMittelY()*p);
-    int diameter = 30;
+    int diameter = 28;
     Color[] colors = new Color[3];
     colors[0] = new Color(0xff,0x55,0x00);
     colors[1] = new Color(0xcc,0x11,0x00);
     colors[2] = new Color(0x99,0x00,0x33);
 
-    int arc = (360/maximumNumberOfAgents);
-    for(int a=0; a<numberOfAgents; a++){
-      g.setColor(colors[a%3]);
-      g.drawArc(xMittel - diameter/2, yMittel - diameter/2, diameter, diameter, a*arc+10+90, arc-20);
-    }
+    int arc = (360/numberOfAgents);
+    g.setColor(colors[id%3]);
+    g.drawArc(xMittel - diameter/2, yMittel - diameter/2, diameter, diameter, id*arc+10+90, arc-20);
     System.out.println("Drawing Agent "+this);
   }
 }

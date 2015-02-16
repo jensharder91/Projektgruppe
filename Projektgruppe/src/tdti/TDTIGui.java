@@ -150,7 +150,9 @@ public class TDTIGui extends Gui{
 			if(agents.size() > 0){
 				agents.clear();
 			}
-			agents.add(new TDTIAgent(base,base,base.getPsi(),base.getPsi()));
+			for(int a=0; a<base.getPsi(); a++){
+				agents.add(new TDTIAgent(base,base,a,base.getPsi()));
+			}
 		}
 	}
 
