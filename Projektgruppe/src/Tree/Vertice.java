@@ -89,7 +89,7 @@ public class Vertice {
 	private int numberOfVerticesInSubtree(){
 		int number = 0;
 		for(Vertice child : children){
-			number += child.numberOfVertices();
+			number += child.numberOfVerticesInSubtree();
 		}
 		return number+1;
 	}
@@ -202,7 +202,7 @@ public class Vertice {
 	 * @return Vertice
 	 */
 	public Vertice getPoint(int x, int y){
-		this.getRoot().getPointOfSubtree(x,y);
+		return this.getRoot().getPointOfSubtree(x,y);
 	}
 
 	/**
@@ -214,7 +214,7 @@ public class Vertice {
 			return this;
 		}
 		for(Vertice child : children){
-			Vertice vertice = child.getPoint(x, y);
+			Vertice vertice = child.getPointOfSubtree(x, y);
 			if(vertice != null){
 				return vertice;
 			}

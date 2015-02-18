@@ -247,7 +247,7 @@ public class TDTIVertice extends Vertice{
 		if(psi > 0){
 			String string = String.valueOf(psi);
 			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
-			g.drawString(string, xMittel - stringWidth/2, yMittel+height/4);
+			g.drawString(string, xMiddle - stringWidth/2, yMiddle+diameter/4);
 		}
 
 		drawMessages(g);
@@ -258,8 +258,8 @@ public class TDTIVertice extends Vertice{
 			TDTIVertice sender = data.getSender();
 			String message = data.guiString();
 			int messageWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(message,g).getWidth());
-			int msgX = (sender.getMittelX() + this.getMittelX()*2)/3 - messageWidth/2;
-			int msgY = (sender.getMittelY() + this.getMittelY()*2)/3;
+			int msgX = (sender.getMiddleX() + this.getMiddleX()*2)/3 - messageWidth/2;
+			int msgY = (sender.getMiddleY() + this.getMiddleY()*2)/3;
 			g.setColor(new Color(255,255,255,200));
 			g.fillRect(msgX-2,msgY-14,messageWidth+4,18);
 			g.setColor(new Color(0x33,0x44,0x55));

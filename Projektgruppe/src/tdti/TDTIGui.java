@@ -179,7 +179,7 @@ public class TDTIGui extends Gui{
 
 				if(SwingUtilities.isRightMouseButton(e)){
 					if(rootVertice != null){
-						Vertice selectedVertice = rootVertice.pointExists(e.getX(), e.getY());
+						Vertice selectedVertice = rootVertice.getPoint(e.getX(), e.getY());
 						if(selectedVertice != null){
 							if(selectedVertice == rootVertice){
 								rootVertice = null;
@@ -192,10 +192,10 @@ public class TDTIGui extends Gui{
 
 					if(rootVertice == null){
 						rootVertice = new TDTIVertice("root", null);
-					} else if(rootVertice.pointExists(e.getX(), e.getY()) != null){
+					} else if(rootVertice.getPoint(e.getX(), e.getY()) != null){
 						// add a child to this point
 						TDTIVertice parent = null;
-						parent = (TDTIVertice) rootVertice.pointExists(e.getX(), e.getY());
+						parent = (TDTIVertice) rootVertice.getPoint(e.getX(), e.getY());
 						if(parent != null){
 							System.out.println("Add new Child to "+parent);
 						}

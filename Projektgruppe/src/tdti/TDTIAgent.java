@@ -54,8 +54,8 @@ public class TDTIAgent {
   public void draw(Graphics g){
     double p = progress/100;
     double q = 1-p;
-    int xMittel = (int)(start.getMittelX()*q) + (int)(end.getMittelX()*p);
-    int yMittel = (int)(start.getMittelY()*q) + (int)(end.getMittelY()*p);
+    int xMittel = (int)(start.getMiddleX()*q) + (int)(end.getMiddleX()*p);
+    int yMittel = (int)(start.getMiddleY()*q) + (int)(end.getMiddleY()*p);
     int diameter = 28;
 
     int arc = (360/numberOfAgents);
