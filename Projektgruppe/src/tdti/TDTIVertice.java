@@ -296,4 +296,24 @@ public class TDTIVertice extends Vertice{
 	public int getPsi(){
 		return psi;
 	}
+
+	private List<Vertice> getNeighbors(){
+		List<Vertice> neighbors = new ArrayList<Vertice>(this.children);
+		if(parent != null){
+			neighbors.add(this.parent);
+		}
+		return neighbors;
+	}
+
+	public TDTIVertice getNeighborThatSentSmallestA(){
+		TDTIVertice smallestNeighbor = null;
+		int a = 0;
+		for(MessageData data : dataReceived){
+			if(a==0 || data.getA() < a){
+				a = data.getA();
+				smallestNeighbor = data.getSender();
+			}
+		}
+		return smallestNeighbor;
+	}
 }

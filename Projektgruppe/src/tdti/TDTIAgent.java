@@ -11,6 +11,8 @@ public class TDTIAgent {
   private int numberOfAgents = 1;
   private int id = 0;
 
+  private Color[] colors = new Color[]{new Color(0xff,0x55,0x00),new Color(0xcc,0x11,0x00),new Color(0x99,0x00,0x33)};
+
   public TDTIAgent(TDTIVertice sender, TDTIVertice receiver, int id, int numberOfAgents){
     this.start = sender;
     this.end = receiver;
@@ -55,10 +57,6 @@ public class TDTIAgent {
     int xMittel = (int)(start.getMittelX()*q) + (int)(end.getMittelX()*p);
     int yMittel = (int)(start.getMittelY()*q) + (int)(end.getMittelY()*p);
     int diameter = 28;
-    Color[] colors = new Color[3];
-    colors[0] = new Color(0xff,0x55,0x00);
-    colors[1] = new Color(0xcc,0x11,0x00);
-    colors[2] = new Color(0x99,0x00,0x33);
 
     int arc = (360/numberOfAgents);
     g.setColor(colors[id%3]);

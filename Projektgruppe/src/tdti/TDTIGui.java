@@ -29,7 +29,7 @@ public class TDTIGui extends Gui{
 	private TDTIGui algo;
 	private TDTIVertice base;
 
-	private List<TDTIAgent> agents = new ArrayList<TDTIAgent>();
+	private TDTIAgentCoordinator coordinator = TDTIAgentCoordinator.getCoordinator();
 
 	private TDTIGui(){
 		super();
@@ -119,7 +119,7 @@ public class TDTIGui extends Gui{
 		MAX_STEPS = 0;
 		remainingSteps = MAX_STEPS;
 		updateButtons();
-		agents.clear();
+		coordinator.clear();
 		calcAlgorithmus(true);
 	}
 
@@ -132,9 +132,7 @@ public class TDTIGui extends Gui{
 
 		// draw agents
 		if(rootVertice != null){
-			for(TDTIAgent agent : agents){
-				agent.draw(g);
-			}
+			coordinator.drawAgents(g);
 		}
 	}
 
@@ -147,12 +145,7 @@ public class TDTIGui extends Gui{
 		}
 		// create the agents
 		if(base != null){
-			if(agents.size() > 0){
-				agents.clear();
-			}
-			for(int a=0; a<base.getPsi(); a++){
-				agents.add(new TDTIAgent(base,base,a,base.getPsi()));
-			}
+			coordinator.setBase(base);
 		}
 	}
 
