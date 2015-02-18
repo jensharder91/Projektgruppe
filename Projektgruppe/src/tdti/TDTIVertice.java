@@ -297,14 +297,6 @@ public class TDTIVertice extends Vertice{
 		return psi;
 	}
 
-	private List<Vertice> getNeighbors(){
-		List<Vertice> neighbors = new ArrayList<Vertice>(this.children);
-		if(parent != null){
-			neighbors.add(this.parent);
-		}
-		return neighbors;
-	}
-
 	public TDTIVertice getNeighborThatSentSmallestA(){
 		TDTIVertice smallestNeighbor = null;
 		int a = 0;

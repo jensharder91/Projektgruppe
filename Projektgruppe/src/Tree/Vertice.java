@@ -8,14 +8,15 @@ import java.util.List;
 public class Vertice {
 
 	//Gui
-	protected int xMittel;
-	protected int yMittel;
-	protected int width = 20;
-	protected int height = width;
+	protected int xMiddle;
+	protected int yMiddle;
+	protected int diameter = 20;
 
 	protected Vertice parent;
 	protected List<Vertice> children = new ArrayList<Vertice>();
 	protected String name;
+
+	protected Color lineColor = new Color(0x33,0x44,0x55);
 
 	public Vertice(String name, Vertice parent){
 		this.name = name;
@@ -23,13 +24,6 @@ public class Vertice {
 			this.parent = parent;
 			this.parent.addChild(this);
 		}
-
-
-		System.out.println("new Vertice created : "+name);
-	}
-
-	public String getName(){
-		return this.name;
 	}
 
 	protected int getSubtreeHeight(){
@@ -44,6 +38,10 @@ public class Vertice {
 		return maxSubtreeHeight+1;
 	}
 
+	/**
+	 * Deletes a child from the list of children
+	 * @param child child to be removed
+	 */
 	protected void deleteChild(Vertice child){
 		children.remove(child);
 	}
@@ -61,18 +59,34 @@ public class Vertice {
 	 * @return int
 	 */
 	protected int numberOfNeighbors(){
-		int count = this.children.size();
-		if(this.parent instanceof Vertice){
-			count++;
+		return this.getNeighbors().size();
+	}
+
+	/**
+	 * Returns a list of all neighbors
+	 * @return List<Vertice>
+	 */
+	protected List<Vertice> getNeighbors(){
+		List<Vertice> neighbors = new ArrayList<Vertice>(this.children);
+		if(parent != null){
+			neighbors.add(this.parent);
 		}
-		return count;
+		return neighbors;
+	}
+
+	/**
+	 * Calculates the number of all vertices in tree
+	 * @return int
+	 */
+	public int numberOfVertices(){
+		return this.getRoot().numberOfVerticesInSubtree();
 	}
 
 	/**
 	 * Calculates the number of descendants + the vertice itself
 	 * @return int
 	 */
-	public int numberOfVertices(){
+	private int numberOfVerticesInSubtree(){
 		int number = 0;
 		for(Vertice child : children){
 			number += child.numberOfVertices();
@@ -90,7 +104,17 @@ public class Vertice {
 		}
 	}
 
+	/**
+	 * Draws the complete tree
+	 */
 	public void drawTree(Graphics g, int areaX, int areaY, int areaWidth, int areaHeight){
+		this.getRoot().drawSubtree(g,areaX,areaY,areaWidth,areaHeight);
+	}
+
+	/**
+	 * Draws the current subtree
+	 */
+	protected void drawSubtree(Graphics g, int areaX, int areaY, int areaWidth, int areaHeight){
 		int levelHeight = (areaHeight-areaY) / (this.getSubtreeHeight()+1);
 		levelHeight = Math.min(100,levelHeight); // maximum Level Height: 100
 		calcPoints(areaX, areaY, areaWidth, levelHeight);
@@ -98,35 +122,47 @@ public class Vertice {
 		drawAllVertice(g);
 	}
 
+	/**
+	 * Draws all tree lines
+	 */
 	protected void drawAllTreeLines(Graphics g){
 		if(parent != null){
-			g.setColor(new Color(0x33,0x44,0x55));
-			g.drawLine(xMittel, yMittel, parent.getMittelX(), parent.getMittelY());
+			g.setColor(lineColor);
+			g.drawLine(xMiddle, yMiddle, parent.getMiddleX(), parent.getMiddleY());
 		}
 		for(Vertice child : children){
 			child.drawAllTreeLines(g);
 		}
 	}
 
+	/**
+	 * Draws all tree vertices with white color
+	 */
 	protected void drawAllVertice(Graphics g){
 		drawAllVertice(g,Color.white);
 	}
 
+	/**
+	 * Draws all tree vertices
+	 */
 	protected void drawAllVertice(Graphics g, Color fillColor){
 		g.setColor(fillColor);
-		g.fillOval(xMittel - width/2, yMittel - height/2, width, height);
-		g.setColor(new Color(0x33,0x44,0x55));
-		g.drawOval(xMittel - width/2, yMittel - height/2, width, height);
+		g.fillOval(xMiddle - diameter/2, yMiddle - diameter/2, diameter, diameter);
+		g.setColor(lineColor);
+		g.drawOval(xMiddle - diameter/2, yMiddle - diameter/2, diameter, diameter);
 
 		for(Vertice child : children){
 			child.drawAllVertice(g);
 		}
 	}
 
+	/**
+	 * Calculates positions for all vertices
+	 */
 	protected void calcPoints(int areaX, int areaY, int areaWidth, int levelHeight){
 		int pointX = areaX + areaWidth/2;
-		this.xMittel = pointX + width/2;
-		this.yMittel = areaY + height/2;
+		this.xMiddle = pointX + diameter/2;
+		this.yMiddle = areaY + diameter/2;
 
 		int numberOfChildren = this.children.size();
 		if(numberOfChildren == 0){ numberOfChildren = 1; }
@@ -142,21 +178,43 @@ public class Vertice {
 		}
 	}
 
+	/**
+	 * Returns true if this vertex overlaps the given coordinates
+	 * @return boolean
+	 */
 	public boolean isSamePoint(int x, int y){
-		//System.out.println("Comparing to "+this.xMittel+","+this.yMittel);
-		if((Math.abs(this.xMittel - x) <= width/2) && (Math.abs(this.yMittel - y) < height/2)){
-			return true;
-		}
-		return false;
+		return ((Math.abs(this.xMiddle - x) <= diameter/2) && (Math.abs(this.yMiddle - y) < diameter/2));
 	}
 
-	public Vertice pointExists(int x, int y){
+	/**
+	 * Return the root vertice of this tree
+	 * @return Vertice
+	 */
+	public Vertice getRoot(){
+		if(parent != null){
+			return parent.getRoot();
+		}
+		return this;
+	}
 
+	/**
+	 * Returns the vertex at the given coordinates or null
+	 * @return Vertice
+	 */
+	public Vertice getPoint(int x, int y){
+		this.getRoot().getPointOfSubtree(x,y);
+	}
+
+	/**
+	 * Returns the vertex at the given coordinates in this subtree or null
+	 * @return Vertice
+	 */
+	private Vertice getPointOfSubtree(int x, int y){
 		if(isSamePoint(x, y)){
 			return this;
 		}
 		for(Vertice child : children){
-			Vertice vertice = child.pointExists(x, y);
+			Vertice vertice = child.getPoint(x, y);
 			if(vertice != null){
 				return vertice;
 			}
@@ -164,6 +222,9 @@ public class Vertice {
 		return null;
 	}
 
+	/**
+	 * Deletes this vertice
+	 */
 	public void delete(){
 		if(parent == null){
 			return;
@@ -176,26 +237,29 @@ public class Vertice {
 		return "Vertice ("+this.name+") ("+this.children.size()+" children)";
 	}
 
+	public String getName(){
+		return this.name;
+	}
 	public Vertice getParent(){
 		return parent;
 	}
-	public int getMittelX(){
-		return xMittel;
+	public int getMiddleX(){
+		return xMiddle;
 	}
-	public int getMittelY(){
-		return yMittel;
+	public int getMiddleY(){
+		return yMiddle;
 	}
 	public int getX(){
-		return xMittel - width/2;
+		return xMiddle - diameter/2;
 	}
 	public int getY(){
-		return yMittel - height/2;
+		return yMiddle - diameter/2;
 	}
-	public int getWidth(){
-		return width;
+	public int getDiameter(){
+		return diameter;
 	}
-	public int getHeight(){
-		return height;
+	public void setLineColor(Color color){
+		this.lineColor = color;
 	}
 
 }

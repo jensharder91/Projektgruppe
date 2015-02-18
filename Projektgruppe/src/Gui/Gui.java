@@ -114,7 +114,7 @@ public abstract class Gui extends JPanel{
 		//mark current point
 		g.setColor(Color.blue);
 		if(currentVertice != null){
-			g.drawRect(currentVertice.getX(), currentVertice.getY(), currentVertice.getWidth(), currentVertice.getHeight());
+			g.drawRect(currentVertice.getX(), currentVertice.getY(), currentVertice.getDiameter(), currentVertice.getDiameter());
 		}
 
 		//draw all vertices recursively
