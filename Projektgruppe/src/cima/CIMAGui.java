@@ -70,12 +70,12 @@ public class CIMAGui extends Gui{
 			public void mouseClicked(MouseEvent e) {
 				System.out.println(e.getX() +" / "+e.getY());
 				
-				CIMAAnimation.getCIMAAnimation(gui).stopAllAnimations();
+				CIMAAnimation.getCIMAAnimation().stopAllAnimations();
 
 				if(SwingUtilities.isRightMouseButton(e)){
 					if(rootVertice != null){
 						//check if its a vertice  -> LÖSCHEN
-						Vertice selectedVertice = rootVertice.pointExists(e.getX(), e.getY());
+						Vertice selectedVertice = rootVertice.getPoint(e.getX(), e.getY());
 						if(selectedVertice != null){
 							if(selectedVertice == rootVertice){
 								clearGui();
@@ -100,19 +100,19 @@ public class CIMAGui extends Gui{
 					// kein root ?  -> neues Kind
 					if(rootVertice == null){
 						verticeCoutner  = 1;
-						rootVertice = new CIMAVertice(""+verticeCoutner, null, gui);
+						rootVertice = new CIMAVertice(""+verticeCoutner, null);
 						verticeCoutner++;
 						CIMAVertice.drawMu = false;
 					//add child
-					}else if(rootVertice.pointExists(e.getX(), e.getY()) != null){
+					}else if(rootVertice.getPoint(e.getX(), e.getY()) != null){
 						// add a child to this point
 						CIMAVertice parent = null;
-						parent = (CIMAVertice) rootVertice.pointExists(e.getX(), e.getY());
+						parent = (CIMAVertice) rootVertice.getPoint(e.getX(), e.getY());
 						if(parent != null){
 							System.out.println("Add new Child to "+parent);
 						}
 						if(parent instanceof CIMAVertice){
-							new CIMAVertice(""+verticeCoutner, parent, gui);
+							new CIMAVertice(""+verticeCoutner, parent);
 							MessageData.clearGui = true;
 							verticeCoutner++;
 							CIMAVertice.drawMu = false;

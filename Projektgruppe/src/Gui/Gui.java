@@ -198,6 +198,8 @@ public abstract class Gui extends JPanel{
 
 	@Override
 	public void paintComponent(Graphics g) {
+		
+		System.out.println("DRAW");
 
 		if(rootVertice != null && autoAlgo){
 			calcAlgorithmus(false);
@@ -221,20 +223,20 @@ public abstract class Gui extends JPanel{
 		//mark current point
 		g2.setColor(Color.blue);
 		if(currentVertice != null){
-			g2.drawRect(currentVertice.getX(), currentVertice.getY(), currentVertice.getWidth(), currentVertice.getHeight());
+			g2.drawRect(currentVertice.getX(), currentVertice.getY(), currentVertice.getDiameter(), currentVertice.getDiameter());
 		}
 		
 		//mark homebase
 		if(CIMAVertice.drawMu){
 			g2.setColor(Color.RED);
 			if(homeBase != null){
-				g2.drawRect(homeBase.getX(), homeBase.getY(), homeBase.getWidth(), homeBase.getHeight());
+				g2.drawRect(homeBase.getX(), homeBase.getY(), homeBase.getDiameter(), homeBase.getDiameter());
 			}
 		}
 
 		//draw all vertices recursively
 		if(rootVertice != null){
-			rootVertice.drawTree(g2,10,10,getWidth()-20,getHeight()-50);
+			((CIMAVertice) rootVertice).drawTree(g2,10,10,getWidth()-20,getHeight()-50);
 		}
 		
 		//messageData
@@ -242,6 +244,7 @@ public abstract class Gui extends JPanel{
 			msgData.drawMessageData(g2); //TODO
 		}
 		
+
 		
 		//disable / enable buttons
 		buttonBack.setVisible(false);

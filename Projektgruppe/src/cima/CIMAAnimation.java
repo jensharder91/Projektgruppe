@@ -6,7 +6,7 @@ import java.util.List;
 import cima.MessageData.SendMessageAnimationTimer;
 import Gui.Gui;
 import Tree.Vertice;
-import Tree.Vertice.AgentAnimationTimer;
+import cima.CIMAVertice.AgentAnimationTimer;
 
 public class CIMAAnimation {
 
@@ -19,9 +19,9 @@ public class CIMAAnimation {
 	public static boolean singeAnimationModus = false;
 
 	/**Singleton*/
-	public static CIMAAnimation getCIMAAnimation(Gui gui){
+	public static CIMAAnimation getCIMAAnimation(){
 
-		CIMAAnimation.gui = gui;
+		CIMAAnimation.gui = CIMAGui.getGui();
 
 		if(animation == null){
 			animation = new CIMAAnimation();
@@ -35,7 +35,7 @@ public class CIMAAnimation {
 	
 	public void stopAllAnimations(){
 		
-		if(Vertice.activeAnimation || MessageData.animationInProgress){
+		if(CIMAVertice.activeAnimation || MessageData.animationInProgress){
 			stopAgentAnimation();
 			stopSendMessageAnimation();
 		}
@@ -61,7 +61,7 @@ public class CIMAAnimation {
 
 	public void stopAgentAnimation(){
 		breakThread = true;
-		Vertice.activeAnimation = false;
+		CIMAVertice.activeAnimation = false;
 		activeAgent = false;
 		gui.repaint();
 	}
@@ -137,7 +137,7 @@ public class CIMAAnimation {
 		@Override
 		public void run() {
 
-			Vertice.activeAnimation = true;
+			CIMAVertice.activeAnimation = true;
 			activeAgent = true;
 
 			System.out.println("##### start animation #####");
@@ -155,7 +155,7 @@ public class CIMAAnimation {
 
 				//bis size - 1 weil der letzte schritt die animation null -> homebase ist und übersprungen werden muss
 				if(index >= agentsWayList.size() -1){
-					Vertice.activeAnimation = false;
+					CIMAVertice.activeAnimation = false;
 //					Gui.calcAgentMovesReady = false;
 					index = 0;
 				}
@@ -183,7 +183,7 @@ public class CIMAAnimation {
 				if(!breakThread){
 					pauseAnimation();
 				}
-				Vertice.activeAnimation = false;
+				CIMAVertice.activeAnimation = false;
 				index = 0;
 			}
 
@@ -311,7 +311,7 @@ public class CIMAAnimation {
 				messageDataList.get(j).animationFinished();
 			}
 
-			SendMessageAnimationTimer timer = messageDataList.get(i).animation(gui);
+			SendMessageAnimationTimer timer = messageDataList.get(i).animation();
 			try {
 				timer.join();
 				messageDataList.get(i).animationFinished();

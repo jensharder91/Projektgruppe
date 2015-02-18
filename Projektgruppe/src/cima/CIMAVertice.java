@@ -21,38 +21,71 @@ public class CIMAVertice extends Vertice{
 
 	//weightField
 	int ovalWidth = 17;
-	int ovalMittelX = -1;
-	int ovalMittelY = -1;
+	int ovalMiddleX = -1;
+	int ovalMiddleY = -1;
+	
+	//animation
+    protected Gui gui = CIMAGui.getGui();
+    protected double xMiddleAnimation;
+    protected double yMiddleAnimation;
+    protected boolean activeAgent = false;
+    public static boolean activeAnimation = false;
+    
+    protected int currentAgents = 0;
+    protected int moveAgentCounter = 0;
+    protected boolean decontaminated = false;
+    protected Color verticeColor = Color.white;
 
 	//agentWaayList
 	public static List<AgentWayData> agentWayList = new ArrayList<AgentWayData>();
 	public static List<MessageData> messageDataList = new ArrayList<MessageData>();
 
 
-	public CIMAVertice(String name, Vertice parent, Gui gui){
-		this(name, parent, 1, gui);
+	public CIMAVertice(String name, Vertice parent){
+		this(name, parent, 1);
 	}
 
-	public CIMAVertice(String name, Vertice parent, int edgeWeightToParent, Gui gui) {
-		super(name, parent, gui);
+	public CIMAVertice(String name, Vertice parent, int edgeWeightToParent) {
+		super(name, parent);
 		if(parent != null){
 			this.edgeWeightToParent = edgeWeightToParent;
 		}else{
 			this.edgeWeightToParent = 0;
 		}
 	}
+	
+	@Override
+	protected void drawSubtree(Graphics g, int areaX, int areaY, int areaWidth,
+			int areaHeight) {
+		super.drawSubtree(g, areaX, areaY, areaWidth, areaHeight);
+		drawAnimation(g);
+	}
 
 	@Override
 	protected void drawAllVertice(Graphics g){
 
-		super.drawAllVertice(g);
+		//chose color
+		if(CIMAVertice.drawMu){
+			if(activeAnimation){
+				if(decontaminated){
+					verticeColor = Color.GREEN;
+				}else{
+	//				verticeColor = Color.RED;
+					verticeColor = new Color(255, 50, 0);
+				}
+				
+			}else{
+				verticeColor = Color.white;
+			}
+		}
+		super.drawAllVertice(g, verticeColor);
 
 		if(activeAnimation){
 //			g.setColor(Color.white);
 			g.setColor(Color.black);
 			String string = String.valueOf(currentAgents);
 			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
-			g.drawString(string, xMittel - stringWidth/2, yMittel+height/4);
+			g.drawString(string, xMiddle - stringWidth/2, yMiddle+diameter/4);
 		}else{
 			String string;
 			if(drawMu){
@@ -63,7 +96,7 @@ public class CIMAVertice extends Vertice{
 			}
 			g.setColor(stringColor);
 			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
-			g.drawString(string, xMittel - stringWidth/2, yMittel+height/4);
+			g.drawString(string, xMiddle - stringWidth/2, yMiddle+diameter/4);
 		}
 
 	}
@@ -74,18 +107,64 @@ public class CIMAVertice extends Vertice{
 
 		if(parent != null){
 			g.setColor(Color.lightGray);
-			ovalMittelX = Math.min(xMittel, parent.getMittelX()) + Math.abs(xMittel - parent.getMittelX()) / 2;
-			ovalMittelY = Math.min(yMittel, parent.getMittelY()) + Math.abs(yMittel - parent.getMittelY()) / 2;
-			g.fillOval(ovalMittelX - ovalWidth/2, ovalMittelY - ovalWidth/2, ovalWidth, ovalWidth);
+			ovalMiddleX = Math.min(xMiddle, parent.getMiddleX()) + Math.abs(xMiddle - parent.getMiddleX()) / 2;
+			ovalMiddleY = Math.min(yMiddle, parent.getMiddleY()) + Math.abs(yMiddle - parent.getMiddleY()) / 2;
+			g.fillOval(ovalMiddleX - ovalWidth/2, ovalMiddleY - ovalWidth/2, ovalWidth, ovalWidth);
 
 			g.setColor(Color.black);
 			String string = String.valueOf(edgeWeightToParent);
 			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
-			g.drawString(string, ovalMittelX - stringWidth/2, ovalMittelY+height/4);
+			g.drawString(string, ovalMiddleX - stringWidth/2, ovalMiddleY+diameter/4);
 
 
-//			g.drawString(""+edgeWeightToParent, Math.min(xMittel, parent.getMittelX()) + Math.abs(xMittel - parent.getMittelX()) / 2, Math.min(yMittel, parent.getMittelY()) + Math.abs(yMittel - parent.getMittelY()) / 2);
+//			g.drawString(""+edgeWeightToParent, Math.min(xMiddle, parent.getMiddleX()) + Math.abs(xMiddle - parent.getMiddleX()) / 2, Math.min(yMiddle, parent.getMiddleY()) + Math.abs(yMiddle - parent.getMiddleY()) / 2);
 		}
+	}
+	
+    protected void drawAnimation(Graphics g) {
+//    	System.out.println("drawing.....");
+    	
+    	if(activeAgent){
+//    		g.setColor(Color.black);
+    		g.setColor(Color.green);
+	        g.fillOval((int)(xMiddleAnimation - diameter/2), (int)(yMiddleAnimation - diameter/2), diameter, diameter);
+			g.setColor(new Color(0x33,0x44,0x55));
+			g.drawOval((int)(xMiddleAnimation - diameter/2), (int)(yMiddleAnimation - diameter/2), diameter, diameter);
+			g.setColor(Color.black);
+			String string = String.valueOf(moveAgentCounter);
+			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
+			g.drawString(string, (int)(xMiddleAnimation - stringWidth/2), (int)(yMiddleAnimation + diameter/4));
+			
+//			System.out.println("~~~~~~~~~~~~ moveAgentCoutner: "+moveAgentCounter);
+    	}
+	        
+		for(Vertice child : children){
+			((CIMAVertice)child).drawAnimation(g);;
+		}
+    }
+    
+	public void resetAllVerticeAnimation(){
+		resetCurrentAgents();
+		
+		for(Vertice vertice : children){
+			if(((CIMAVertice)vertice).isDecontaminated()){
+				((CIMAVertice)vertice).resetAllVerticeAnimation();
+			}
+		}
+		if(parent != null){
+			if(((CIMAVertice)parent).isDecontaminated()){
+				((CIMAVertice)parent).resetAllVerticeAnimation();
+			}
+		}
+	}
+	
+	public void resetCurrentAgents(){
+		this.currentAgents = 0;
+		decontaminated = false;
+	}
+	public void changeCurrentAgents(int number){
+		this.currentAgents += number;
+		decontaminated = true;
 	}
 
 
@@ -322,7 +401,7 @@ public class CIMAVertice extends Vertice{
 
 	private void calcAgentsMove(){
 
-		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui);
+		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
 
 		//animation läuft schon.... breche neue animation ab
 		if(activeAnimation){
@@ -342,7 +421,7 @@ public class CIMAVertice extends Vertice{
 		
 		//animation läuft schon.... breche die animation ab
 		if(MessageData.animationInProgress && !CIMAAnimation.singeAnimationModus){
-			CIMAAnimation.getCIMAAnimation(gui).stopSendMessageAnimation();
+			CIMAAnimation.getCIMAAnimation().stopSendMessageAnimation();
 			return;
 		}
 
@@ -351,12 +430,12 @@ public class CIMAVertice extends Vertice{
 		}
 		
 		
-		CIMAAnimation.getCIMAAnimation(gui).startSendMessageAnimation(messageDataList);
+		CIMAAnimation.getCIMAAnimation().startSendMessageAnimation(messageDataList);
 	}
 	
 	public void doStepSendMessageAnimation(){
 
-		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui);
+		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
 //
 //		if(!activeAnimation){
 //			calcAgentsMove();
@@ -375,7 +454,7 @@ public class CIMAVertice extends Vertice{
 		//make sure the algo is calced //TODO
 //		algorithmus();
 
-		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui);
+		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
 
 		//animation läuft schon.... breche neue animation ab
 		if(activeAnimation && !CIMAAnimation.singeAnimationModus){
@@ -392,7 +471,7 @@ public class CIMAVertice extends Vertice{
 
 	public void doStepAgentAnimation(){
 
-		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation(gui);
+		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
 
 		if(!activeAnimation){
 			calcAgentsMove();
@@ -475,8 +554,8 @@ public class CIMAVertice extends Vertice{
 	}
 
 	public boolean onEdgeWeightClick(int x, int y){
-		System.out.println("Check EdgeWeight : "+this.ovalMittelX+","+this.ovalMittelY);
-		if((Math.abs(this.ovalMittelX - x) <= ovalWidth/2) && (Math.abs(this.ovalMittelY - y) < ovalWidth/2)){
+		System.out.println("Check EdgeWeight : "+this.ovalMiddleX+","+this.ovalMiddleY);
+		if((Math.abs(this.ovalMiddleX - x) <= ovalWidth/2) && (Math.abs(this.ovalMiddleY - y) < ovalWidth/2)){
 			return true;
 		}
 		return false;
@@ -527,6 +606,73 @@ public class CIMAVertice extends Vertice{
 	public void resetColor(){
 //		stringColor = Color.black;
 		verticeColor = Color.white;
+	}
+	public boolean isDecontaminated(){
+		return decontaminated;
+	}
+	
+	
+	
+	
+	public AgentAnimationTimer animation(Vertice destVertice, int moveAgentCounter){
+		this.moveAgentCounter = moveAgentCounter;
+		AgentAnimationTimer timer = new AgentAnimationTimer(destVertice);
+		timer.start();
+		return timer;
+	}
+	
+	public class AgentAnimationTimer extends Thread{
+		
+		Vertice destVertice;
+		int animationSpeed;
+		
+		public AgentAnimationTimer(Vertice destVertice) {
+			this.destVertice = destVertice;
+		}
+		 
+		@Override
+		public void run() {
+			
+			xMiddleAnimation = xMiddle;
+			yMiddleAnimation = yMiddle;
+			
+			animationSpeed = 3;
+			
+//			System.out.println(activeAgent);
+			activeAgent = true;
+//			System.out.println(activeAgent);
+			
+			while(isInterrupted() == false){
+				
+				double vektorX = destVertice.getMiddleX() - xMiddleAnimation;
+				double vektorY = destVertice.getMiddleY() - yMiddleAnimation;
+				
+				double vektorLength = Math.sqrt(vektorX*vektorX + vektorY*vektorY);
+				
+				xMiddleAnimation += animationSpeed * vektorX/vektorLength;
+				yMiddleAnimation += animationSpeed * vektorY/vektorLength;
+				
+				System.out.println(xMiddleAnimation +" / "+yMiddleAnimation);
+				
+				gui.repaint();
+								
+				try {
+					Thread.sleep(20);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				if(vektorLength < 2*animationSpeed){
+					this.interrupt();
+				}
+			}
+			
+//			System.out.println(activeAgent);
+			activeAgent = false;
+//			System.out.println(activeAgent);
+//			System.out.println("~~~~~~~~~~~");
+			gui.repaint();
+		}
 	}
 
 }

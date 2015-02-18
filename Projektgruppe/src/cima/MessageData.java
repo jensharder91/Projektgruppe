@@ -16,14 +16,14 @@ public class MessageData {
 	
 	//animation / graphic
 
-	private int xMittelAnimationEndPosition;
-	private int yMittelAnimationEndPosition;
+	private int xMiddleAnimationEndPosition;
+	private int yMiddleAnimationEndPosition;
 	
 	private double angleSender;
 	private double angleReceiver;
 	private int radius;
-	private int mittelpunktKreisX;
-	private int mittelpunktKreisY;
+	private int MiddlepunktKreisX;
+	private int MiddlepunktKreisY;
 	private int messageDataRadius = 8;
 	private int segmentMitteX;
 	private int segmentMitteY;
@@ -33,10 +33,10 @@ public class MessageData {
 	int Y_segMitteGewollt;
 	int X_mitte_segMitteGewollt_sender;
 	int Y_mitte_segMitteGewollt_sender;
-	int X_möglMittelpunkt;
-	int Y_möglMittelpunkt;
-	int tatsächlicherKreisMittelpunkt_X;
-	int tatsächlicherKreisMittelpunkt_Y;
+	int X_möglMiddlepunkt;
+	int Y_möglMiddlepunkt;
+	int tatsächlicherKreisMiddlepunkt_X;
+	int tatsächlicherKreisMiddlepunkt_Y;
 
 	private double animationAngle;
 	private boolean activeAnimation = false;
@@ -61,50 +61,50 @@ public class MessageData {
 
 	private void calcArc(){
 
-		int vektorX = getReceiver().getMittelX() - getSender().getMittelX();
-		int vektorY = getReceiver().getMittelY() - getSender().getMittelY();
+		int vektorX = getReceiver().getMiddleX() - getSender().getMiddleX();
+		int vektorY = getReceiver().getMiddleY() - getSender().getMiddleY();
 		
 		double vektorLength = Math.sqrt(vektorX*vektorX + vektorY*vektorY);
-		xMittelAnimationEndPosition = (int) (getReceiver().getMittelX() - (vektorX/vektorLength)*(messageDataRadius + CIMAVertice.RADIUS + 3));
-		yMittelAnimationEndPosition = (int) (getReceiver().getMittelY() - (vektorY/vektorLength)*(messageDataRadius + CIMAVertice.RADIUS + 3));
+		xMiddleAnimationEndPosition = (int) (getReceiver().getMiddleX() - (vektorX/vektorLength)*(messageDataRadius + getReceiver().getDiameter()/2 + 3));
+		yMiddleAnimationEndPosition = (int) (getReceiver().getMiddleY() - (vektorY/vektorLength)*(messageDataRadius + getReceiver().getDiameter()/2 + 3));
 		
 
-		int mittelpunktX = Math.min(getSender().getMittelX(), xMittelAnimationEndPosition) + Math.abs(getSender().getMittelX() - xMittelAnimationEndPosition) / 2;
-		int mittelpunktY = Math.min(getSender().getMittelY(), yMittelAnimationEndPosition) + Math.abs(getSender().getMittelY() - yMittelAnimationEndPosition) / 2;
+		int MiddlepunktX = Math.min(getSender().getMiddleX(), xMiddleAnimationEndPosition) + Math.abs(getSender().getMiddleX() - xMiddleAnimationEndPosition) / 2;
+		int MiddlepunktY = Math.min(getSender().getMiddleY(), yMiddleAnimationEndPosition) + Math.abs(getSender().getMiddleY() - yMiddleAnimationEndPosition) / 2;
 		
 		
 		int orthVektorX = vektorY;
 		int orthVektorY = -vektorX;
 
-		mittelpunktKreisX = mittelpunktX + orthVektorX;
-		mittelpunktKreisY = mittelpunktY + orthVektorY;
+		MiddlepunktKreisX = MiddlepunktX + orthVektorX;
+		MiddlepunktKreisY = MiddlepunktY + orthVektorY;
 		
 		//////TODO
 		double orthLength = Math.sqrt(orthVektorX*orthVektorX + orthVektorY*orthVektorY);
-		X_segMitteGewollt = (int) (mittelpunktX - orthVektorX/orthLength * 15);
-		Y_segMitteGewollt = (int) (mittelpunktY - orthVektorY/orthLength * 15);
+		X_segMitteGewollt = (int) (MiddlepunktX - orthVektorX/orthLength * 15);
+		Y_segMitteGewollt = (int) (MiddlepunktY - orthVektorY/orthLength * 15);
 		
-		X_mitte_segMitteGewollt_sender = Math.min(getSender().getMittelX(), X_segMitteGewollt) + Math.abs(getSender().getMittelX() - X_segMitteGewollt) / 2;
-		Y_mitte_segMitteGewollt_sender = Math.min(getSender().getMittelY(), Y_segMitteGewollt) + Math.abs(getSender().getMittelY() - Y_segMitteGewollt) / 2;
+		X_mitte_segMitteGewollt_sender = Math.min(getSender().getMiddleX(), X_segMitteGewollt) + Math.abs(getSender().getMiddleX() - X_segMitteGewollt) / 2;
+		Y_mitte_segMitteGewollt_sender = Math.min(getSender().getMiddleY(), Y_segMitteGewollt) + Math.abs(getSender().getMiddleY() - Y_segMitteGewollt) / 2;
 		
-		int vektor_sender_segMitteGewollt_X = X_segMitteGewollt - getSender().getMittelX();
-		int vektor_sender_segMitteGewollt_Y = Y_segMitteGewollt - getSender().getMittelY();
+		int vektor_sender_segMitteGewollt_X = X_segMitteGewollt - getSender().getMiddleX();
+		int vektor_sender_segMitteGewollt_Y = Y_segMitteGewollt - getSender().getMiddleY();
 		
 		int orthVektor_sender_segMitteGewollt_X = vektor_sender_segMitteGewollt_Y;
 		int orthVektor_sender_segMitteGewollt_Y = -vektor_sender_segMitteGewollt_X;
 		
-		X_möglMittelpunkt = X_mitte_segMitteGewollt_sender + orthVektor_sender_segMitteGewollt_X;
-		Y_möglMittelpunkt = Y_mitte_segMitteGewollt_sender + orthVektor_sender_segMitteGewollt_Y;
+		X_möglMiddlepunkt = X_mitte_segMitteGewollt_sender + orthVektor_sender_segMitteGewollt_X;
+		Y_möglMiddlepunkt = Y_mitte_segMitteGewollt_sender + orthVektor_sender_segMitteGewollt_Y;
 		
 		
-		int x1 = mittelpunktX;
-		int x2 = mittelpunktKreisX;
+		int x1 = MiddlepunktX;
+		int x2 = MiddlepunktKreisX;
 		int x3 = X_mitte_segMitteGewollt_sender;
-		int x4 = X_möglMittelpunkt;
-		int y1 = mittelpunktY;
-		int y2 = mittelpunktKreisY;
+		int x4 = X_möglMiddlepunkt;
+		int y1 = MiddlepunktY;
+		int y2 = MiddlepunktKreisY;
 		int y3 = Y_mitte_segMitteGewollt_sender;
-		int y4 = Y_möglMittelpunkt;
+		int y4 = Y_möglMiddlepunkt;
 		
 	    double d = (x1-x2)*(y3-y4) - (y1-y2)*(x3-x4);
 	    
@@ -112,24 +112,24 @@ public class MessageData {
     
      
     
-        tatsächlicherKreisMittelpunkt_X = (int) (((x3-x4)*(x1*y2-y1*x2)-(x1-x2)*(x3*y4-y3*x4))/d);
+        tatsächlicherKreisMiddlepunkt_X = (int) (((x3-x4)*(x1*y2-y1*x2)-(x1-x2)*(x3*y4-y3*x4))/d);
     
-        tatsächlicherKreisMittelpunkt_Y = (int) (((y3-y4)*(x1*y2-y1*x2)-(y1-y2)*(x3*y4-y3*x4))/d);
+        tatsächlicherKreisMiddlepunkt_Y = (int) (((y3-y4)*(x1*y2-y1*x2)-(y1-y2)*(x3*y4-y3*x4))/d);
         
-        mittelpunktKreisX = tatsächlicherKreisMittelpunkt_X;
-        mittelpunktKreisY = tatsächlicherKreisMittelpunkt_Y;
+        MiddlepunktKreisX = tatsächlicherKreisMiddlepunkt_X;
+        MiddlepunktKreisY = tatsächlicherKreisMiddlepunkt_Y;
 
 		
 		//
 
-//		g.drawLine(mittelpunktX, mittelpunktY, startOrthVektorX, startOrthVektorY);
+//		g.drawLine(MiddlepunktX, MiddlepunktY, startOrthVektorX, startOrthVektorY);
 
-		int vektorKreisMitteSenderX = getSender().getMittelX() - mittelpunktKreisX;
-		int vektorKreisMitteSenderY = getSender().getMittelY() - mittelpunktKreisY;
-//		int vektorKreisMitteReceiverX = getReceiver().getMittelX() - mittelpunktKreisX;
-//		int vektorKreisMitteReiciverY = getReceiver().getMittelY() - mittelpunktKreisY;
-		int vektorKreisMitteReceiverX = xMittelAnimationEndPosition - mittelpunktKreisX;
-		int vektorKreisMitteReiciverY = yMittelAnimationEndPosition - mittelpunktKreisY;
+		int vektorKreisMitteSenderX = getSender().getMiddleX() - MiddlepunktKreisX;
+		int vektorKreisMitteSenderY = getSender().getMiddleY() - MiddlepunktKreisY;
+//		int vektorKreisMitteReceiverX = getReceiver().getMiddleX() - MiddlepunktKreisX;
+//		int vektorKreisMitteReiciverY = getReceiver().getMiddleY() - MiddlepunktKreisY;
+		int vektorKreisMitteReceiverX = xMiddleAnimationEndPosition - MiddlepunktKreisX;
+		int vektorKreisMitteReiciverY = yMiddleAnimationEndPosition - MiddlepunktKreisY;
 
 		radius = (int) Math.sqrt((vektorKreisMitteSenderX) * (vektorKreisMitteSenderX)
 										+ (vektorKreisMitteSenderY) * (vektorKreisMitteSenderY));
@@ -143,13 +143,13 @@ public class MessageData {
 		}
 
 
-		int vektorKreisMitteMitteLinieX = mittelpunktX - mittelpunktKreisX;
-		int vektorKreisMitteMitteLinieY = mittelpunktY - mittelpunktKreisY;
-		double längeVektorKreisMitteMitteLinie = Math.sqrt(vektorKreisMitteMitteLinieX*vektorKreisMitteMitteLinieX + vektorKreisMitteMitteLinieY*vektorKreisMitteMitteLinieY);
-		int vektorKreisMitteSegmentMitteX = (int) (vektorKreisMitteMitteLinieX/längeVektorKreisMitteMitteLinie * radius);
-		int vektorKreisMitteSegmentMitteY = (int) (vektorKreisMitteMitteLinieY/längeVektorKreisMitteMitteLinie * radius);
-		segmentMitteX = mittelpunktKreisX + vektorKreisMitteSegmentMitteX;
-		segmentMitteY = mittelpunktKreisY + vektorKreisMitteSegmentMitteY;
+		int vektorKreisMitteMiddleinieX = MiddlepunktX - MiddlepunktKreisX;
+		int vektorKreisMitteMiddleinieY = MiddlepunktY - MiddlepunktKreisY;
+		double längeVektorKreisMitteMiddleinie = Math.sqrt(vektorKreisMitteMiddleinieX*vektorKreisMitteMiddleinieX + vektorKreisMitteMiddleinieY*vektorKreisMitteMiddleinieY);
+		int vektorKreisMitteSegmentMitteX = (int) (vektorKreisMitteMiddleinieX/längeVektorKreisMitteMiddleinie * radius);
+		int vektorKreisMitteSegmentMitteY = (int) (vektorKreisMitteMiddleinieY/längeVektorKreisMitteMiddleinie * radius);
+		segmentMitteX = MiddlepunktKreisX + vektorKreisMitteSegmentMitteX;
+		segmentMitteY = MiddlepunktKreisY + vektorKreisMitteSegmentMitteY;
 	}
 	
 	public void drawLine(Graphics2D g){
@@ -169,15 +169,15 @@ public class MessageData {
 			}
 			if((animationInProgress && animationFinished) || !animationInProgress){
 				g.setColor(ovalColor);
-				g.draw(new Arc2D.Double(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, Math.toDegrees(angleSender), Math.toDegrees(angleReceiver - angleSender), Arc2D.OPEN));
-//				g.drawArc(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, (int)Math.toDegrees(angleSender), (int)Math.toDegrees(angleReceiver - angleSender));
+				g.draw(new Arc2D.Double(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, Math.toDegrees(angleSender), Math.toDegrees(angleReceiver - angleSender), Arc2D.OPEN));
+//				g.drawArc(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, (int)Math.toDegrees(angleSender), (int)Math.toDegrees(angleReceiver - angleSender));
 			}
 		}
 	}
 
 	public void drawMessageData(Graphics2D g){
 
-//		g.drawOval(segmentMitteX -10, mittelpunktKreisY + segmentMitteY - 10, 20, 20);
+//		g.drawOval(segmentMitteX -10, MiddlepunktKreisY + segmentMitteY - 10, 20, 20);
 //		System.out.println("##### which animation:");
 		
 		/////TODO
@@ -185,9 +185,9 @@ public class MessageData {
 //		g.drawOval(X_segMitteGewollt-5, Y_segMitteGewollt-5, 10, 10);
 //		g.setColor(Color.BLUE);
 //		g.drawOval(X_mitte_segMitteGewollt_sender-5, Y_mitte_segMitteGewollt_sender-5, 10, 10);
-//		g.drawLine(X_mitte_segMitteGewollt_sender, Y_mitte_segMitteGewollt_sender, X_möglMittelpunkt, Y_möglMittelpunkt);
+//		g.drawLine(X_mitte_segMitteGewollt_sender, Y_mitte_segMitteGewollt_sender, X_möglMiddlepunkt, Y_möglMiddlepunkt);
 //		g.setColor(Color.MAGENTA);
-//		g.drawOval(xMittelAnimationEndPosition-5, yMittelAnimationEndPosition-5, 10, 10);
+//		g.drawOval(xMiddleAnimationEndPosition-5, yMiddleAnimationEndPosition-5, 10, 10);
 		
 		
 		//after calc dont draw
@@ -209,7 +209,7 @@ public class MessageData {
 //				g.setColor(ovalColor);
 //				g.setColor(Color.YELLOW);
 //				g.setColor(ovalColor);
-//				g.drawArc(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, (int)Math.toDegrees(angleSender), (int)Math.toDegrees(angleReceiver - angleSender));
+//				g.drawArc(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, (int)Math.toDegrees(angleSender), (int)Math.toDegrees(angleReceiver - angleSender));
 //				drawArrow(g);
 //				drawMessageInfo(g, segmentMitteX, segmentMitteY);
 				
@@ -217,8 +217,8 @@ public class MessageData {
 				
 //				System.out.println(Math.toDegrees(angleReceiver%2*Math.PI) + " / "+Math.toDegrees(angle));
 				
-				int ovalMitteX = (int) (mittelpunktKreisX + Math.cos(angle) * radius);
-				int ovalMitteY = (int) (mittelpunktKreisY - Math.sin(angle) * radius);
+				int ovalMitteX = (int) (MiddlepunktKreisX + Math.cos(angle) * radius);
+				int ovalMitteY = (int) (MiddlepunktKreisY - Math.sin(angle) * radius);
 				
 				drawMessageInfo(g, ovalMitteX, ovalMitteY);
 				//
@@ -230,8 +230,8 @@ public class MessageData {
 	public void drawAnimationLine(Graphics2D g){
 		g.setColor(ovalColor);
 //		g.setColor(CIMAConstants.getMarkAsMaxColor());
-		g.draw(new Arc2D.Double(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, Math.toDegrees(angleSender), Math.toDegrees(animationAngle), Arc2D.OPEN));
-//		g.drawArc(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, (int)Math.toDegrees(angleSender), (int)Math.toDegrees(animationAngle));
+		g.draw(new Arc2D.Double(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, Math.toDegrees(angleSender), Math.toDegrees(animationAngle), Arc2D.OPEN));
+//		g.drawArc(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, (int)Math.toDegrees(angleSender), (int)Math.toDegrees(animationAngle));
 
 	}
 	public void drawAnimation(Graphics2D g){
@@ -241,8 +241,8 @@ public class MessageData {
 
 //		g.setColor(ovalColor);
 ////		g.setColor(CIMAConstants.getMarkAsMaxColor());
-//		g.draw(new Arc2D.Double(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, Math.toDegrees(angleSender), Math.toDegrees(animationAngle), Arc2D.OPEN));
-////		g.drawArc(mittelpunktKreisX - radius, mittelpunktKreisY - radius, 2*radius, 2*radius, (int)Math.toDegrees(angleSender), (int)Math.toDegrees(animationAngle));
+//		g.draw(new Arc2D.Double(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, Math.toDegrees(angleSender), Math.toDegrees(animationAngle), Arc2D.OPEN));
+////		g.drawArc(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, (int)Math.toDegrees(angleSender), (int)Math.toDegrees(animationAngle));
 
 		//teste: messageInfo wird im kreissegment verschoben TODO 
 		double kreisSegmentEndeAngle = angleSender + animationAngle;
@@ -255,8 +255,8 @@ public class MessageData {
 			kreisSegmentEndeAngle %= 2*Math.PI;
 		}
 		
-		int kreisSegmentEndeX = (int) (mittelpunktKreisX + Math.cos(kreisSegmentEndeAngle) * radius);
-		int kreisSegmentEndeY = (int) (mittelpunktKreisY - Math.sin(kreisSegmentEndeAngle) * radius);
+		int kreisSegmentEndeX = (int) (MiddlepunktKreisX + Math.cos(kreisSegmentEndeAngle) * radius);
+		int kreisSegmentEndeY = (int) (MiddlepunktKreisY - Math.sin(kreisSegmentEndeAngle) * radius);
 		
 //		System.out.println("Angle : "+Math.toDegrees(kreisSegmentEndeAngle)+"   y wert vom kreissegment: "+kreisSegmentEndeY);
 		
@@ -287,7 +287,7 @@ public class MessageData {
 //	private void drawArrow(Graphics g){
 //		//TODO pfeilspitze muss verbessert werden
 //		int pfeillänge = 10;
-//		double a = (int) (Math.PI/4 - Math.atan2((segmentMitteY - getSender().getMittelY()),(segmentMitteX - getSender().getMittelX())));
+//		double a = (int) (Math.PI/4 - Math.atan2((segmentMitteY - getSender().getMiddleY()),(segmentMitteX - getSender().getMiddleX())));
 //		int c = (int) (Math.cos(a)*pfeillänge);
 //		int s = (int) (Math.sin(a)*pfeillänge);
 //		g.drawLine(segmentMitteX, segmentMitteY, segmentMitteX-s, segmentMitteY-c);
@@ -354,8 +354,8 @@ public class MessageData {
 	}
 
 
-	public SendMessageAnimationTimer animation(Gui gui){
-		SendMessageAnimationTimer timer = new SendMessageAnimationTimer(gui);
+	public SendMessageAnimationTimer animation(){
+		SendMessageAnimationTimer timer = new SendMessageAnimationTimer();
 		timer.start();
 		return timer;
 	}
@@ -365,8 +365,8 @@ public class MessageData {
 		Gui gui;
 		int animationSpeed;
 
-		public SendMessageAnimationTimer(Gui gui) {
-			this.gui = gui;
+		public SendMessageAnimationTimer() {
+			this.gui = CIMAGui.getGui();
 		}
 
 		@Override
@@ -414,7 +414,7 @@ public class MessageData {
 				
 //				System.out.println("animationANgle "+animationAngle +"  /  animationAngle (degree) :"+Math.toDegrees(animationAngle));
 //				System.out.println("animation "+animationAngle + " bis... >= " + (angleReceiver - angleSender));
-//				System.out.println(xMittelAnimation +" / "+yMittelAnimation);
+//				System.out.println(xMiddleAnimation +" / "+yMiddleAnimation);
 
 				gui.repaint();
 
