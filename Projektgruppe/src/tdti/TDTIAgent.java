@@ -27,28 +27,12 @@ public class TDTIAgent {
   }
 
   public void nextStep(){
-    progress = 100;
-  }
-
-  @Override
-  public String toString() {
-    return "Agent ("+this.numberOfAgents+") from "+this.start.getName()+" to "+this.end.getName();
-  }
-
-  public TDTIVertice getStart(){
-    return start;
-  }
-
-  public TDTIVertice getEnd(){
-    return end;
-  }
-
-  public int getId(){
-    return id;
+    //progress = 100;
+    progress = 0;
   }
 
   public void setVertice(TDTIVertice newVertice){
-    start = newVertice;
+    this.start = newVertice;
   }
 
   public void draw(Graphics g){
@@ -62,5 +46,18 @@ public class TDTIAgent {
     g.setColor(colors[id%3]);
     g.drawArc(xMittel - diameter/2, yMittel - diameter/2, diameter, diameter, id*arc+10+90, arc-20);
     System.out.println("Drawing Agent "+this);
+  }
+
+  @Override
+  public String toString() {
+    return "Agent ("+this.id+") at "+this.start.getName();
+  }
+
+  public TDTIVertice getVertice(){
+    return this.start;
+  }
+
+  public int getId(){
+    return id;
   }
 }

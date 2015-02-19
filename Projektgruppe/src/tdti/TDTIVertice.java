@@ -11,6 +11,8 @@ public class TDTIVertice extends Vertice{
 	private TDTIGui gui = TDTIGui.getGui();
 	protected Color computingColor = new Color(250,220,100);
 	protected Color doneColor = new Color(140,240,100);
+	private int immunityTime = 0;
+	private boolean contaminated = true;
 
 	public enum states{
 		READY, COMPUTING, DONE
@@ -275,7 +277,7 @@ public class TDTIVertice extends Vertice{
 		return true;
 	}
 
-	public TDTIVertice getMinimumVertice(){
+	public TDTIVertice getMinimumVerticeOfSubtree(){
 		TDTIVertice min = this;
 		for(Vertice childVertice : this.children){
 			if(childVertice instanceof TDTIVertice){
@@ -297,15 +299,29 @@ public class TDTIVertice extends Vertice{
 		return psi;
 	}
 
-	public TDTIVertice getNeighborThatSentSmallestA(){
-		TDTIVertice smallestNeighbor = null;
-		int a = 0;
+	public TDTIVertice getContaminatedNeighborWithSmallestMessage(){
+		Collections.sort(dataReceived, new MessageDataComparator());
+		Collections.reverse(dataReceived);
+		int neighborCounter = 0;
+		TDTIVertice neighbor = null;
 		for(MessageData data : dataReceived){
-			if(a==0 || data.getA() < a){
-				a = data.getA();
-				smallestNeighbor = data.getSender();
+			if(!data.getSender().isImmun()){
+				neighbor = data.getSender();
+				break;
 			}
 		}
-		return smallestNeighbor;
+		if(neighbor == null && parent != null){
+			neighbor = (TDTIVertice)parent;
+		}
+		return neighbor;
+	}
+
+	public boolean isImmun(){
+		return (immunityTime > 0) || !contaminated;
+	}
+
+	public void setImmun(){
+		immunityTime = gui.IMMUNITY_TIME;
+		contaminated = false;
 	}
 }

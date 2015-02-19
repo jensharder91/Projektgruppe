@@ -1,6 +1,6 @@
 package tdti;
 
-public class MessageData{
+public class MessageData {
 
 	private int a;
 	private int c;

@@ -21,8 +21,11 @@ public class TDTIAgentCoordinator {
     return coordinator;
   }
 
-  public void setBase(TDTIVertice base){
-    this.base = base;
+  public void setBase(TDTIVertice newBase){
+    if(base == newBase){
+      return;
+    }
+    this.base = newBase;
     if(base != null){
       this.numberOfAgents = base.getPsi();
     } else {
@@ -32,11 +35,17 @@ public class TDTIAgentCoordinator {
     for(int a=0; a<numberOfAgents; a++){
       this.agents.add(new TDTIAgent(base,base,a,numberOfAgents));
     }
-    // TODO: Remove this, was just for testing
-    if(this.agents.size() >= 2){
-      this.agents.get(1).setVertice(base.getNeighborThatSentSmallestA());
+  }
+
+  public void moveAgents(){
+    TDTIAgent agent = this.agents.get(this.agents.size()-1);
+    TDTIVertice nextVertice = agent.getVertice().getContaminatedNeighborWithSmallestMessage();
+    if(nextVertice != null){
+      agent.setVertice(nextVertice);
+      nextVertice.setImmun();
+    } else {
+      System.out.println("Done");
     }
-    // END
   }
 
   public void drawAgents(Graphics g){
@@ -47,6 +56,11 @@ public class TDTIAgentCoordinator {
 
   public void clear(){
     agents.clear();
+    base = null;
+  }
+
+  public TDTIVertice getBase(){
+    return this.base;
   }
 
 }

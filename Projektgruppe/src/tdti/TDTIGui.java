@@ -85,9 +85,10 @@ public class TDTIGui extends Gui{
 			btnPrev.setEnabled(true);
 		}
 		if(MAX_STEPS >= numberOfSteps()+1){
-			createAgents();
-			btnNext.setEnabled(false);
+			updateAgents();
+			//btnNext.setEnabled(false);
 		} else {
+			coordinator.clear();
 			btnNext.setEnabled(true);
 		}
 	}
@@ -136,16 +137,21 @@ public class TDTIGui extends Gui{
 		}
 	}
 
-	public void createAgents() {
+	private void updateAgents() {
+		boolean move = (coordinator.getBase() != null);
 		// get minimum vertice
 		if(rootVertice instanceof TDTIVertice && rootVertice != null){
-			base = ((TDTIVertice)rootVertice).getMinimumVertice();
+			base = ((TDTIVertice)rootVertice).getMinimumVerticeOfSubtree();
 		} else {
 			base = null;
 		}
 		// create the agents
 		if(base != null){
 			coordinator.setBase(base);
+		}
+		// update the Agent positions
+		if(move){
+			coordinator.moveAgents();
 		}
 	}
 
@@ -200,7 +206,7 @@ public class TDTIGui extends Gui{
 							System.out.println("Add new Child to "+parent);
 						}
 						if(parent instanceof TDTIVertice){
-							new TDTIVertice("test", parent);
+							new TDTIVertice(parent.getName()+"-", parent);
 						}
 					}
 					updateButtons();
