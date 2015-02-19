@@ -187,7 +187,6 @@ public abstract class Gui extends JPanel{
 	@Override
 	public void paintComponent(Graphics g) {
 		
-		System.out.println("DRAW");
 
 		if(rootVertice != null && autoAlgo){
 			calcAlgorithmus(false);

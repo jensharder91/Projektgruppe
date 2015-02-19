@@ -70,7 +70,7 @@ public class CIMAGui extends Gui{
 			public void mouseClicked(MouseEvent e) {
 				System.out.println(e.getX() +" / "+e.getY());
 				
-				CIMAAnimation.getCIMAAnimation().stopAllAnimations();
+//				CIMAAnimation.getCIMAAnimation().stopAllAnimations();
 
 				if(SwingUtilities.isRightMouseButton(e)){
 					if(rootVertice != null){
@@ -83,9 +83,7 @@ public class CIMAGui extends Gui{
 								MessageData.clearGui = true;
 								selectedVertice.delete();
 							}
-							CIMAVertice.drawMu = false;
-							CIMAVertice.activeAnimation = false;
-							MessageData.animationInProgress = false;
+							treeChanged();
 						}
 					}
 					if(rootVertice != null){
@@ -93,9 +91,7 @@ public class CIMAGui extends Gui{
 						Vertice edgeWeigthOwner = ((CIMAVertice) rootVertice).edgeWeightOvalExists(e.getX(), e.getY());
 						if(edgeWeigthOwner != null){
 							((CIMAVertice) edgeWeigthOwner).edgeWeightDepress();
-							CIMAVertice.drawMu = false;
-							CIMAVertice.activeAnimation = false;
-							MessageData.animationInProgress = false;
+							treeChanged();
 						}
 					}
 				//linksklick
@@ -106,9 +102,7 @@ public class CIMAGui extends Gui{
 						verticeCoutner  = 1;
 						rootVertice = new CIMAVertice(""+verticeCoutner, null);
 						verticeCoutner++;
-						CIMAVertice.drawMu = false;
-						CIMAVertice.activeAnimation = false;
-						MessageData.animationInProgress = false;
+						treeChanged();
 					//add child
 					}else if(rootVertice.getPoint(e.getX(), e.getY()) != null){
 						// add a child to this point
@@ -121,9 +115,7 @@ public class CIMAGui extends Gui{
 							new CIMAVertice(""+verticeCoutner, parent);
 							MessageData.clearGui = true;
 							verticeCoutner++;
-							CIMAVertice.drawMu = false;
-							CIMAVertice.activeAnimation = false;
-							MessageData.animationInProgress = false;
+							treeChanged();
 						}
 					
 					}else {
@@ -131,9 +123,7 @@ public class CIMAGui extends Gui{
 						Vertice edgeWeigthOwner = ((CIMAVertice) rootVertice).edgeWeightOvalExists(e.getX(), e.getY());
 						if(edgeWeigthOwner != null){
 							((CIMAVertice) edgeWeigthOwner).edgeWeightIncrease();;
-							CIMAVertice.drawMu = false;
-							CIMAVertice.activeAnimation = false;
-							MessageData.animationInProgress = false;
+							treeChanged();
 						}
 					}
 				}
@@ -141,6 +131,11 @@ public class CIMAGui extends Gui{
 				repaint();
 			}
 		});
+	}
+	
+	private void treeChanged(){
+		CIMAVertice.drawMu = false;
+		CIMAAnimation.getCIMAAnimation().stopAllAnimations();
 	}
 
 }
