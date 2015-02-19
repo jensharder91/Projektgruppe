@@ -41,7 +41,6 @@ public abstract class Gui extends JPanel{
 //	protected JToggleButton toggleAutoAlgo = new JToggleButton("AutoCalc");
 	private JButton buttonNextAgentAnimationStep = new JButton("\u25BA");//RightArrow
 	private JButton buttonNextCalculateAnimationStep = new JButton("\u25BA");
-//	private JButton buttonPrev = new JButton("\u25c4");//LeftArro
 	protected JButton buttonCompleteAgentAnimation = new JButton("Baum dekontaminieren");
 	
 	protected boolean autoAlgo = false;
@@ -132,16 +131,6 @@ public abstract class Gui extends JPanel{
 			}
 		});
 		
-//		buttonPrev.addActionListener(new ActionListener() {
-//
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//
-//				((CIMAVertice) homeBase).doStepAnimation(false);
-//
-//			}
-//		});
-		
 		buttonNextAgentAnimationStep.addActionListener(new ActionListener() {
 
 			@Override
@@ -181,7 +170,6 @@ public abstract class Gui extends JPanel{
 		buttonBar.add(buttonCalculateAnimation);
 //		buttonBar.add(buttonAnimation);
 		buttonBar.add(buttonCompleteAgentAnimation);
-//		buttonBar.add(buttonPrev);
 		buttonBar.add(buttonNextAgentAnimationStep);
 		buttonBar.add(buttonNextCalculateAnimationStep);
 		buttonBar.add(buttonClear);
@@ -247,77 +235,122 @@ public abstract class Gui extends JPanel{
 
 		
 		//disable / enable buttons
-		buttonBack.setVisible(false);
-		buttonCalculate.setVisible(true);
-		buttonCalculateAnimation.setVisible(true);
+//		buttonBack.setVisible(false);
+		buttonSetEnabled(buttonBack, false);
+//		buttonCalculate.setVisible(true);
+		buttonSetEnabled(buttonCalculate, true);
+//		buttonCalculateAnimation.setVisible(true);
+		buttonSetEnabled(buttonCalculateAnimation, true);
 		buttonCalculateAnimation.setText("Berechnung animieren");
-		buttonClear.setVisible(true);
+//		buttonClear.setVisible(true);
+		buttonSetEnabled(buttonClear, true);
 //		toggleAutoAlgo.setVisible(true);
-		buttonNextAgentAnimationStep.setVisible(false);
-		buttonNextCalculateAnimationStep.setVisible(true);
-//		buttonPrev.setVisible(false);
-		buttonCompleteAgentAnimation.setVisible(false);
+//		buttonNextAgentAnimationStep.setVisible(false);
+		buttonSetEnabled(buttonNextAgentAnimationStep, false);
+//		buttonNextCalculateAnimationStep.setVisible(true);
+		buttonSetEnabled(buttonNextCalculateAnimationStep, true);
+//		buttonCompleteAgentAnimation.setVisible(false);
+		buttonSetEnabled(buttonCompleteAgentAnimation, false);
 //		buttonAnimation.setText("Animation berechnen");
 		
 		if(rootVertice == null || rootVertice.getChildren().size() < 1){
-			buttonBack.setVisible(false);
-			buttonCalculate.setVisible(false);
-			buttonCalculateAnimation.setVisible(false);
-			buttonClear.setVisible(false);
-			buttonNextAgentAnimationStep.setVisible(false);
-			buttonNextCalculateAnimationStep.setVisible(false);
-			buttonCompleteAgentAnimation.setVisible(false);
+//			buttonBack.setVisible(false);
+//			buttonCalculate.setVisible(false);
+//			buttonCalculateAnimation.setVisible(false);
+//			buttonClear.setVisible(false);
+//			buttonNextAgentAnimationStep.setVisible(false);
+//			buttonNextCalculateAnimationStep.setVisible(false);
+//			buttonCompleteAgentAnimation.setVisible(false);
+			buttonSetEnabled(buttonBack, false);
+			buttonSetEnabled(buttonCalculate, false);
+			buttonSetEnabled(buttonCalculateAnimation, false);
+			buttonSetEnabled(buttonClear, false);
+			buttonSetEnabled(buttonNextAgentAnimationStep, false);
+			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
+			buttonSetEnabled(buttonCompleteAgentAnimation, false);
 		}
 
 		
 		if(MessageData.animationInProgress){
-			buttonCalculate.setVisible(false);
+//			buttonCalculate.setVisible(false);
 			buttonCalculateAnimation.setText("Animation abbrechen");
-			buttonClear.setVisible(false);
-			buttonNextCalculateAnimationStep.setVisible(false);
+//			buttonClear.setVisible(false);
+//			buttonNextCalculateAnimationStep.setVisible(false);
+			buttonSetEnabled(buttonCalculate, false);
+			buttonSetEnabled(buttonClear, false);
+			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
 			
 			if(CIMAAnimation.singeAnimationModus){
-				buttonNextCalculateAnimationStep.setVisible(true);
-//				buttonPrev.setVisible(true);
-				buttonCalculateAnimation.setVisible(true);//TODO let the complete animation finish the step by step modus
+//				buttonNextCalculateAnimationStep.setVisible(true);
+//				buttonCalculateAnimation.setVisible(true);//TODO let the complete animation finish the step by step modus
 				buttonCalculateAnimation.setText("komplette Animation");
+				buttonSetEnabled(buttonNextCalculateAnimationStep, true);
+				buttonSetEnabled(buttonCalculateAnimation, true);
 			}
 		}
 		
 //		if(calcAgentMovesReady){
 		if(CIMAVertice.drawMu == true){
-			buttonBack.setVisible(true);
-			buttonNextAgentAnimationStep.setVisible(true);
-//			buttonPrev.setVisible(true);
-			buttonCompleteAgentAnimation.setVisible(true);
+//			buttonBack.setVisible(true);
+//			buttonNextAgentAnimationStep.setVisible(true);
+//			buttonCompleteAgentAnimation.setVisible(true);
 			buttonCompleteAgentAnimation.setText("Baum dekontaminieren");
-			buttonCalculate.setVisible(false);
-			buttonCalculateAnimation.setVisible(false);
-			buttonClear.setVisible(false);
-			buttonNextCalculateAnimationStep.setVisible(false);
+//			buttonCalculate.setVisible(false);
+//			buttonCalculateAnimation.setVisible(false);
+//			buttonClear.setVisible(false);
+//			buttonNextCalculateAnimationStep.setVisible(false);
 //			toggleAutoAlgo.setVisible(false);
 //			buttonAnimation.setText("Animation abbrechen");
+			
+			buttonSetEnabled(buttonBack, true);
+			buttonSetEnabled(buttonNextAgentAnimationStep, true);
+			buttonSetEnabled(buttonCompleteAgentAnimation, true);
+			buttonSetEnabled(buttonCalculate, false);
+			buttonSetEnabled(buttonCalculateAnimation, false);
+			buttonSetEnabled(buttonClear, false);
+			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
 		}
 		
 		if(CIMAVertice.activeAnimation){
-			buttonBack.setVisible(false);
-			buttonCalculate.setVisible(false);
-			buttonCalculateAnimation.setVisible(false);
-			buttonClear.setVisible(false);
+//			buttonBack.setVisible(false);
+//			buttonCalculate.setVisible(false);
+//			buttonCalculateAnimation.setVisible(false);
+//			buttonClear.setVisible(false);
 //			toggleAutoAlgo.setVisible(false);
-			buttonNextAgentAnimationStep.setVisible(false);
-			buttonNextCalculateAnimationStep.setVisible(false);
-//			buttonPrev.setVisible(false);
-			buttonCompleteAgentAnimation.setVisible(true);
+//			buttonNextAgentAnimationStep.setVisible(false);
+//			buttonNextCalculateAnimationStep.setVisible(false);
+//			buttonCompleteAgentAnimation.setVisible(true);
 			buttonCompleteAgentAnimation.setText("Animation abbrechen");
 //			buttonAnimation.setText("Animation abbrechen");
 			
+			buttonSetEnabled(buttonBack, false);
+			buttonSetEnabled(buttonCalculate, false);
+			buttonSetEnabled(buttonCalculateAnimation, false);
+			buttonSetEnabled(buttonClear, false);
+			buttonSetEnabled(buttonNextAgentAnimationStep, false);
+			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
+			buttonSetEnabled(buttonCompleteAgentAnimation, true);
+			
 			if(CIMAAnimation.singeAnimationModus){
-				buttonNextAgentAnimationStep.setVisible(true);
-//				buttonPrev.setVisible(true);
-				buttonCompleteAgentAnimation.setVisible(true);//TODO let the complete animation finish the step by step modus
+//				buttonNextAgentAnimationStep.setVisible(true);
+//				buttonCompleteAgentAnimation.setVisible(true);//TODO let the complete animation finish the step by step modus
 				buttonCompleteAgentAnimation.setText("komplette Animation");
+				
+				buttonSetEnabled(buttonNextAgentAnimationStep, true);
+				buttonSetEnabled(buttonCompleteAgentAnimation, true);
 			}
+		}
+	}
+	
+	private void buttonSetEnabled(JButton button, boolean shouldBeVisible){
+		if(shouldBeVisible && !button.isEnabled()){
+			button.setEnabled(true);
+			button.setVisible(true);
+		}
+		
+		if(!shouldBeVisible && button.isEnabled()){
+			button.setEnabled(false);
+			button.setVisible(false);
 		}
 	}
 

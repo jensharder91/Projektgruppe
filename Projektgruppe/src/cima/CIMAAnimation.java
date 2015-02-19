@@ -113,7 +113,7 @@ public class CIMAAnimation {
 	
 	public void stopSendMessageAnimation(){
 		breakThread = true;
-		index = 0;
+//		index = 0;	
 		MessageData.animationInProgress = false;
 		activeAgent = false;
 		gui.repaint();
