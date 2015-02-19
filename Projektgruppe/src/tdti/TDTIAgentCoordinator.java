@@ -28,6 +28,7 @@ public class TDTIAgentCoordinator {
     this.base = newBase;
     if(base != null){
       this.numberOfAgents = base.getPsi();
+      base.decontaminate();
     } else {
       this.numberOfAgents = 0;
     }
@@ -42,7 +43,7 @@ public class TDTIAgentCoordinator {
     TDTIVertice nextVertice = agent.getVertice().getContaminatedNeighborWithSmallestMessage();
     if(nextVertice != null){
       agent.setVertice(nextVertice);
-      nextVertice.setImmun();
+      nextVertice.decontaminate();
     } else {
       System.out.println("Done");
     }

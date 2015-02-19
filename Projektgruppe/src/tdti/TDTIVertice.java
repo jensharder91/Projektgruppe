@@ -11,6 +11,7 @@ public class TDTIVertice extends Vertice{
 	private TDTIGui gui = TDTIGui.getGui();
 	protected Color computingColor = new Color(250,220,100);
 	protected Color doneColor = new Color(140,240,100);
+	protected Color decontaminatedColor = new Color(255,255,255);
 	private int immunityTime = 0;
 	private boolean contaminated = true;
 
@@ -41,6 +42,16 @@ public class TDTIVertice extends Vertice{
 		for(Vertice child : this.children){
 			if(checkVerticeType(child)){
 				((TDTIVertice) child).reset();
+			}
+		}
+	}
+
+	public void recursiveReset(){
+		contaminated = true;
+		immunityTime = 0;
+		for(Vertice child : children){
+			if(checkVerticeType(child)){
+				((TDTIVertice) child).recursiveReset();
 			}
 		}
 	}
@@ -232,6 +243,9 @@ public class TDTIVertice extends Vertice{
 	}
 
 	protected Color getColor(){
+		if(this.contaminated == false){
+			return decontaminatedColor;
+		}
 		if(this.state == states.COMPUTING){
 			return computingColor;
 		}
@@ -244,9 +258,16 @@ public class TDTIVertice extends Vertice{
 	protected void drawAllVertice(Graphics g){
 		Color fillColor = getColor();
 
+		if(immunityTime > 0){
+			System.out.println("Drawing Immunity Timer "+immunityTime);
+			g.setColor(new Color(0x00,0x00,0x00,0xaa));
+			g.fillArc(xMiddle-diameter/2-3,yMiddle-diameter/2-3,diameter+6,diameter+6,90,360*immunityTime/gui.IMMUNITY_TIME);
+		}
+
 		super.drawAllVertice(g,fillColor);
 
 		if(psi > 0){
+			g.setColor(new Color(0x33,0x44,0x55));
 			String string = String.valueOf(psi);
 			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
 			g.drawString(string, xMiddle - stringWidth/2, yMiddle+diameter/4);
@@ -278,12 +299,16 @@ public class TDTIVertice extends Vertice{
 	}
 
 	public TDTIVertice getMinimumVerticeOfSubtree(){
+		if(this.children.size() == 0){
+			return this;
+		}
 		TDTIVertice min = this;
 		for(Vertice childVertice : this.children){
 			if(childVertice instanceof TDTIVertice){
 				TDTIVertice child = (TDTIVertice) childVertice;
-				if(child.getPsi() < min.getPsi()){
-					min = child;
+				TDTIVertice childMin = child.getMinimumVerticeOfSubtree();
+				if(childMin.getPsi() < min.getPsi()){
+					min = childMin;
 				}
 			}
 		}
@@ -305,7 +330,7 @@ public class TDTIVertice extends Vertice{
 		int neighborCounter = 0;
 		TDTIVertice neighbor = null;
 		for(MessageData data : dataReceived){
-			if(!data.getSender().isImmun()){
+			if(data.getSender().isContaminated()){
 				neighbor = data.getSender();
 				break;
 			}
@@ -316,12 +341,22 @@ public class TDTIVertice extends Vertice{
 		return neighbor;
 	}
 
-	public boolean isImmun(){
-		return (immunityTime > 0) || !contaminated;
+	public boolean isContaminated(){
+		return contaminated;
 	}
 
-	public void setImmun(){
+	public void decontaminate(){
 		immunityTime = gui.IMMUNITY_TIME;
 		contaminated = false;
+		System.out.println("Decontaminated "+this);
+	}
+
+	public void decreaseImmunityTimesOfSubtree(){
+		immunityTime = Math.max(0,immunityTime-1);
+		for(Vertice child : children){
+			if(child instanceof TDTIVertice){
+				((TDTIVertice)child).decreaseImmunityTimesOfSubtree();
+			}
+		}
 	}
 }

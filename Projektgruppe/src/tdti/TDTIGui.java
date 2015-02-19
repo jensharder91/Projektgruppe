@@ -85,8 +85,9 @@ public class TDTIGui extends Gui{
 			btnPrev.setEnabled(true);
 		}
 		if(MAX_STEPS >= numberOfSteps()+1){
+			btnPrev.setEnabled(false);
+			updateVertices();
 			updateAgents();
-			//btnNext.setEnabled(false);
 		} else {
 			coordinator.clear();
 			btnNext.setEnabled(true);
@@ -105,7 +106,7 @@ public class TDTIGui extends Gui{
 		remainingSteps = MAX_STEPS;
 		if(rootVertice instanceof TDTIVertice){
 			((TDTIVertice) rootVertice).algorithmus();
-			rootVertice.logSubtree();
+			//rootVertice.logSubtree();
 
 			if(repaintBool){
 				repaint();
@@ -122,6 +123,9 @@ public class TDTIGui extends Gui{
 		updateButtons();
 		coordinator.clear();
 		calcAlgorithmus(true);
+		if(rootVertice != null && rootVertice instanceof TDTIVertice){
+			((TDTIVertice)rootVertice).recursiveReset();
+		}
 	}
 
 	@Override
@@ -138,7 +142,7 @@ public class TDTIGui extends Gui{
 	}
 
 	private void updateAgents() {
-		boolean move = (coordinator.getBase() != null);
+		boolean move = (coordinator.getBase() != null); // when the base is already set, move them
 		// get minimum vertice
 		if(rootVertice instanceof TDTIVertice && rootVertice != null){
 			base = ((TDTIVertice)rootVertice).getMinimumVerticeOfSubtree();
@@ -152,6 +156,14 @@ public class TDTIGui extends Gui{
 		// update the Agent positions
 		if(move){
 			coordinator.moveAgents();
+		}
+	}
+
+	private void updateVertices() {
+		// decrease all the immunity times
+		if(rootVertice instanceof TDTIVertice && rootVertice != null){
+			System.out.println("Decreasing Immunity Time of all Vertices");
+			((TDTIVertice)rootVertice).decreaseImmunityTimesOfSubtree();
 		}
 	}
 
