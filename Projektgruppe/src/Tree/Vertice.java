@@ -258,6 +258,9 @@ public class Vertice {
 	public int getDiameter(){
 		return diameter;
 	}
+	public List<Vertice> getChildren(){
+		return children;
+	}
 	public void setLineColor(Color color){
 		this.lineColor = color;
 	}
