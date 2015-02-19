@@ -84,6 +84,8 @@ public class CIMAGui extends Gui{
 								selectedVertice.delete();
 							}
 							CIMAVertice.drawMu = false;
+							CIMAVertice.activeAnimation = false;
+							MessageData.animationInProgress = false;
 						}
 					}
 					if(rootVertice != null){
@@ -92,6 +94,8 @@ public class CIMAGui extends Gui{
 						if(edgeWeigthOwner != null){
 							((CIMAVertice) edgeWeigthOwner).edgeWeightDepress();
 							CIMAVertice.drawMu = false;
+							CIMAVertice.activeAnimation = false;
+							MessageData.animationInProgress = false;
 						}
 					}
 				//linksklick
@@ -103,6 +107,8 @@ public class CIMAGui extends Gui{
 						rootVertice = new CIMAVertice(""+verticeCoutner, null);
 						verticeCoutner++;
 						CIMAVertice.drawMu = false;
+						CIMAVertice.activeAnimation = false;
+						MessageData.animationInProgress = false;
 					//add child
 					}else if(rootVertice.getPoint(e.getX(), e.getY()) != null){
 						// add a child to this point
@@ -116,6 +122,8 @@ public class CIMAGui extends Gui{
 							MessageData.clearGui = true;
 							verticeCoutner++;
 							CIMAVertice.drawMu = false;
+							CIMAVertice.activeAnimation = false;
+							MessageData.animationInProgress = false;
 						}
 					
 					}else {
@@ -124,6 +132,8 @@ public class CIMAGui extends Gui{
 						if(edgeWeigthOwner != null){
 							((CIMAVertice) edgeWeigthOwner).edgeWeightIncrease();;
 							CIMAVertice.drawMu = false;
+							CIMAVertice.activeAnimation = false;
+							MessageData.animationInProgress = false;
 						}
 					}
 				}

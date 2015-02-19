@@ -162,7 +162,7 @@ public class MessageData {
 			clearGui = false;
 			markAsAnimationColor();
 			drawAnimationLine(g);
-			resetColor();
+//			resetColor();//TODO
 		}else{
 			if(clearGui || CIMAAnimation.breakThread){
 				return;
@@ -199,7 +199,7 @@ public class MessageData {
 			clearGui = false;
 			markAsAnimationColor();
 			drawAnimation(g);
-			resetColor();
+//			resetColor();//TODO
 		}else{
 			if(clearGui || CIMAAnimation.breakThread){
 				return;
@@ -352,6 +352,45 @@ public class MessageData {
 	public void resetColor(){
 		ovalColor = defaultOvalColor;
 	}
+	
+	public void markAllColors(){
+		if(calcMax1 != null){
+			calcMax1.markAsMax();
+		}
+		if(calcMax2 != null){
+			calcMax2.markAsMax();
+			sender.markAsMax();
+		}
+		if(calcMax1 != null && calcMax2 != null){
+			if(calcMax1.getLamdaValue() >= calcMax2.getLamdaValue() + sender.getVerticeWeight()){
+				calcMax1.markAsMax();
+				calcMax2.markAsSecMax();
+				sender.markAsSecMax();
+			}else{
+				calcMax1.markAsSecMax();
+				calcMax2.markAsMax();
+				sender.markAsMax();
+			}
+		}
+		if(calcMax1 == null && calcMax2 == null){
+			//has to be a leaf
+			sender.markAsMax();
+		}
+	}
+	public void resetAllColors(){
+		if(calcMax1 != null){
+			calcMax1.resetColor();
+		}
+		if(calcMax2 != null){
+			calcMax2.resetColor();
+			sender.resetColor();
+		}
+		if(calcMax1 == null && calcMax2 == null){
+			//has to be a leaf
+			sender.resetColor();
+		}
+		resetColor();
+	}
 
 
 	public SendMessageAnimationTimer animation(){
@@ -382,28 +421,28 @@ public class MessageData {
 			System.out.println("calcmax1 == null ? : "+(calcMax1==null)+"  /  calcmax2 == null ? : "+(calcMax2==null));
 			
 			//mark the MessageData from the calc
-			if(calcMax1 != null){
-				calcMax1.markAsMax();
-			}
-			if(calcMax2 != null){
-				calcMax2.markAsMax();
-				sender.markAsMax();
-			}
-			if(calcMax1 != null && calcMax2 != null){
-				if(calcMax1.getLamdaValue() >= calcMax2.getLamdaValue() + sender.getVerticeWeight()){
-					calcMax1.markAsMax();
-					calcMax2.markAsSecMax();
-					sender.markAsSecMax();
-				}else{
-					calcMax1.markAsSecMax();
-					calcMax2.markAsMax();
-					sender.markAsMax();
-				}
-			}
-			if(calcMax1 == null && calcMax2 == null){
-				//has to be a leaf
-				sender.markAsMax();
-			}
+//			if(calcMax1 != null){
+//				calcMax1.markAsMax();
+//			}
+//			if(calcMax2 != null){
+//				calcMax2.markAsMax();
+//				sender.markAsMax();
+//			}
+//			if(calcMax1 != null && calcMax2 != null){
+//				if(calcMax1.getLamdaValue() >= calcMax2.getLamdaValue() + sender.getVerticeWeight()){
+//					calcMax1.markAsMax();
+//					calcMax2.markAsSecMax();
+//					sender.markAsSecMax();
+//				}else{
+//					calcMax1.markAsSecMax();
+//					calcMax2.markAsMax();
+//					sender.markAsMax();
+//				}
+//			}
+//			if(calcMax1 == null && calcMax2 == null){
+//				//has to be a leaf
+//				sender.markAsMax();
+//			}
 
 			while(isInterrupted() == false){
 
@@ -431,18 +470,18 @@ public class MessageData {
 				}
 			}
 
-			//reset the MessageData from the calc
-			if(calcMax1 != null){
-				calcMax1.resetColor();
-			}
-			if(calcMax2 != null){
-				calcMax2.resetColor();
-				sender.resetColor();
-			}
-			if(calcMax1 == null && calcMax2 == null){
-				//has to be a leaf
-				sender.resetColor();
-			}
+			//reset the MessageData from the calc (rest color)
+//			if(calcMax1 != null){
+//				calcMax1.resetColor();
+//			}
+//			if(calcMax2 != null){
+//				calcMax2.resetColor();
+//				sender.resetColor();
+//			}
+//			if(calcMax1 == null && calcMax2 == null){
+//				//has to be a leaf
+//				sender.resetColor();
+//			}
 			
 			
 //			System.out.println(activeAgent);

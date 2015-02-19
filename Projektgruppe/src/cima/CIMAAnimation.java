@@ -103,6 +103,9 @@ public class CIMAAnimation {
 			return;
 		}
 
+		if(!MessageData.animationInProgress){
+			index = 0;
+		}
 		singeAnimationModus  = true;
 		AnimationSendMessageLoop animationLoop = new AnimationSendMessageLoop(messageDataList, singeAnimationModus);
 		animationLoop.start();
@@ -110,6 +113,7 @@ public class CIMAAnimation {
 	
 	public void stopSendMessageAnimation(){
 		breakThread = true;
+		index = 0;
 		MessageData.animationInProgress = false;
 		activeAgent = false;
 		gui.repaint();
@@ -253,6 +257,8 @@ public class CIMAAnimation {
 			}
 
 			if(singleStepAnimation){
+				
+				System.out.println("single step anim animation <<<<<<<<<<<<<<<<<<<<<<");
 
 				doAnimation(index);
 				index++;
@@ -268,6 +274,12 @@ public class CIMAAnimation {
 						MessageData.clearGui = true;
 					}else{
 						CIMAVertice.drawMu = true;
+					}
+//					if(messageDataList.get(index-1) != null){
+//						messageDataList.get(index-1).resetAllColors();
+//					}
+					for(MessageData msgData : messageDataList){
+						msgData.resetAllColors();
 					}
 					index = 0;
 				}
@@ -287,8 +299,15 @@ public class CIMAAnimation {
 					doAnimation(i);
 					
 					if(breakThread){
+						messageDataList.get(i).resetAllColors();
 						break;
 					}
+				}
+//				if(messageDataList.get(messageDataList.size() - 1) != null){
+//					messageDataList.get(messageDataList.size() - 1).resetAllColors();
+//				}
+				for(MessageData msgData : messageDataList){
+					msgData.resetAllColors();
 				}
 				index = 0;
 				MessageData.animationInProgress = false;
@@ -311,6 +330,15 @@ public class CIMAAnimation {
 				messageDataList.get(j).animationFinished();
 			}
 
+//			if(i > 0){
+//				if(messageDataList.get(i-1) != null){
+//					messageDataList.get(i-1).resetAllColors();
+//				}
+//			}
+			for(MessageData msgData : messageDataList){
+				msgData.resetAllColors();
+			}
+			messageDataList.get(i).markAllColors();
 			SendMessageAnimationTimer timer = messageDataList.get(i).animation();
 			try {
 				timer.join();
