@@ -33,6 +33,7 @@ public class TDTIAgent {
 
   public void setVertice(TDTIVertice newVertice){
     this.start = newVertice;
+    newVertice.decontaminate();
   }
 
   public void draw(Graphics g){

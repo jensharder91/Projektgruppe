@@ -312,20 +312,27 @@ public class TDTIVertice extends Vertice{
 	}
 
 	public TDTIVertice getContaminatedNeighborWithSmallestMessage(){
+		MessageData msg = getSmallestContaminatedNeighborMessage();
+		if(msg != null){
+			return msg.getSender();
+		}
+		if(parent != null){
+			return (TDTIVertice)parent;
+		}
+		return null;
+	}
+
+	public MessageData getSmallestContaminatedNeighborMessage(){
 		Collections.sort(dataReceived, new MessageDataComparator());
 		Collections.reverse(dataReceived);
-		int neighborCounter = 0;
-		TDTIVertice neighbor = null;
+		MessageData msg = null;
 		for(MessageData data : dataReceived){
 			if(data.getSender().isContaminated()){
-				neighbor = data.getSender();
+				msg = data;
 				break;
 			}
 		}
-		if(neighbor == null && parent != null){
-			neighbor = (TDTIVertice)parent;
-		}
-		return neighbor;
+		return msg;
 	}
 
 	public boolean isContaminated(){

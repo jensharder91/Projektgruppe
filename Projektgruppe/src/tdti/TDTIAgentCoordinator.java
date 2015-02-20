@@ -41,9 +41,9 @@ public class TDTIAgentCoordinator {
   public void moveAgents(){
     TDTIAgent agent = this.agents.get(this.agents.size()-1);
     TDTIVertice nextVertice = agent.getVertice().getContaminatedNeighborWithSmallestMessage();
+    MessageData msg = agent.getVertice().getSmallestContaminatedNeighborMessage();
     if(nextVertice != null){
       agent.setVertice(nextVertice);
-      nextVertice.decontaminate();
     } else {
       System.out.println("Done");
     }
