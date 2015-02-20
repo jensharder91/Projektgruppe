@@ -13,6 +13,7 @@ public class CIMAVertice extends Vertice{
 
 	private int edgeWeightToParent;
 	private int verticeWeight;
+	private int specialVerticeWeight;
 	public static boolean drawMu = false;
 	private Color stringColor = Color.black;
 //	private boolean verticeStarted = false;
@@ -30,6 +31,7 @@ public class CIMAVertice extends Vertice{
     protected double yMiddleAnimation;
     protected boolean activeAgent = false;
     public static boolean activeAnimation = false;
+    private boolean marked = false;
     
     protected int currentAgents = 0;
     protected int moveAgentCounter = 0;
@@ -93,6 +95,9 @@ public class CIMAVertice extends Vertice{
 			}else{
 				calcGeneralVerticeWeight();
 				string = String.valueOf(verticeWeight);
+				if(MessageData.animationInProgress && marked){
+					string = String.valueOf(specialVerticeWeight);
+				}
 			}
 			g.setColor(stringColor);
 			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
@@ -211,7 +216,8 @@ public class CIMAVertice extends Vertice{
 			//got a ready leaf -> send message
 //			if(verticeStarted == false){
 //				verticeStarted = true;
-				((CIMAVertice) parent).receive(new MessageData(verticeWeight, this, (CIMAVertice) parent, null, null));
+			specialVerticeWeight = calcSpecialVerticeWeight((CIMAVertice)parent);
+				((CIMAVertice) parent).receive(new MessageData(specialVerticeWeight, this, (CIMAVertice) parent, null, null, specialVerticeWeight));
 //			}
 		}else{
 			for(Vertice child : children){
@@ -285,8 +291,8 @@ public class CIMAVertice extends Vertice{
 				break;
 			}
 		}
-		MessageData max1 = new MessageData(0, null, null, null, null);
-		MessageData max2 = new MessageData(0, null, null, null, null);
+		MessageData max1 = new MessageData(0, null, null, null, null, 0);
+		MessageData max2 = new MessageData(0, null, null, null, null, 0);
 //		int otherVerticeWeight = 0;
 		if(maximums.size() >= 1){
 			max1 = maximums.get(0);
@@ -298,11 +304,11 @@ public class CIMAVertice extends Vertice{
 
 		//int maxValue = Math.max(max1.getLamdaValue(), max2.getLamdaValue() + verticeWeight);//TODO get verticeWeight from other vertice
 		MessageData calcMessageData;
-		int specialverticeWeight = calcSpecialVerticeWeight(receiverNode);
-		if(max1.getLamdaValue() >= max2.getLamdaValue() + specialverticeWeight){
-			calcMessageData = new MessageData(max1.getLamdaValue(), this, receiverNode, max1, max2);
+		specialVerticeWeight = calcSpecialVerticeWeight(receiverNode);
+		if(max1.getLamdaValue() >= max2.getLamdaValue() + specialVerticeWeight){
+			calcMessageData = new MessageData(max1.getLamdaValue(), this, receiverNode, max1, max2, specialVerticeWeight);
 		}else{
-			calcMessageData = new MessageData(max2.getLamdaValue() + specialverticeWeight, this, receiverNode, max1, max2);
+			calcMessageData = new MessageData(max2.getLamdaValue() + specialVerticeWeight, this, receiverNode, max1, max2, specialVerticeWeight);
 		}
 
 //		System.out.println("SEND: " + name+" -> " +receiverNode.getName()+"   value: "+ calcMessageData.getLamdaValue()  +"     specWeight: "+specialverticeWeight  );
@@ -362,29 +368,35 @@ public class CIMAVertice extends Vertice{
 		
 		if(allNeighbors.size() == 1){
 			System.out.println("case 1 neighbor -> neighbor: "+excetVertice.getName());
+			System.out.println("result: "+verticeWeight + "  on vertex: "+this.getName()+"  exept:"+excetVertice.getName());
 			return verticeWeight;
 		}
 		
 		for(Vertice vertice : allNeighbors){
 			if((CIMAVertice)vertice != excetVertice){
 				if(vertice == parent){
-					specialVerticeWeight = edgeWeightToParent;
+					if(specialVerticeWeight < edgeWeightToParent){
+						specialVerticeWeight = edgeWeightToParent;
+					}
 					System.out.println("case2");
 				}else{
-					specialVerticeWeight = ((CIMAVertice) vertice).getEdgeWeightToParent();
-					System.out.println("case3");
+					if(specialVerticeWeight < ((CIMAVertice) vertice).getEdgeWeightToParent()){
+						specialVerticeWeight = ((CIMAVertice) vertice).getEdgeWeightToParent();
+						System.out.println("case3");
+					}
 				}
 			}
 		}
 		
+		System.out.println("result: "+specialVerticeWeight + "  on vertex: "+this.getName()+"  exept:"+excetVertice.getName());
 		return specialVerticeWeight;
 	}
 	
 
 	private void calcMu(){
 		Collections.sort(lamdas, new MessageDataComparator());
-		MessageData max1 = new MessageData(0, null, null, null, null);
-		MessageData max2 = new MessageData(0, null, null, null, null);
+		MessageData max1 = new MessageData(0, null, null, null, null, 0);
+		MessageData max2 = new MessageData(0, null, null, null, null, 0);
 		if(lamdas.size() >= 1){
 			max1 = lamdas.get(0);
 		}
@@ -392,6 +404,7 @@ public class CIMAVertice extends Vertice{
 			max2 = lamdas.get(1);
 		}
 
+		calcGeneralVerticeWeight();
 		mu = Math.max(max1.getLamdaValue(), max2.getLamdaValue() + verticeWeight);
 
 
@@ -584,17 +597,22 @@ public class CIMAVertice extends Vertice{
 	public int getVerticeWeight(){
 		return verticeWeight;
 	}
-	public void markAsMax(){
+	public void markAsMax(int specialVerticeWeight){
+		this.specialVerticeWeight = specialVerticeWeight;
 //		stringColor = CIMAConstants.getMarkAsMaxColor();
 		verticeColor = CIMAConstants.getMarkAsMaxColor();
+		marked = true;
 	}
-	public void markAsSecMax(){
+	public void markAsSecMax(int specialVerticeWeight){
+		this.specialVerticeWeight = specialVerticeWeight;
 //		stringColor = CIMAConstants.getMarkAsSecMaxColor();
 		verticeColor = CIMAConstants.getMarkAsSecMaxColor();
+		marked = true;
 	}
 	public void resetColor(){
 //		stringColor = Color.black;
 		verticeColor = Color.white;
+		marked = false;
 	}
 	public boolean isDecontaminated(){
 		return decontaminated;

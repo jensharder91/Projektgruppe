@@ -13,6 +13,7 @@ public class MessageData {
 	private CIMAVertice receiver;
 	private MessageData calcMax1;
 	private MessageData calcMax2;
+	private int specialVerticeWeight;
 	
 	//animation / graphic
 
@@ -47,12 +48,13 @@ public class MessageData {
 	private Color ovalColor = defaultOvalColor;
 
 
-	public MessageData(int lamdaValue, CIMAVertice sender, CIMAVertice receiver, MessageData calcMax1, MessageData calcMax2){
+	public MessageData(int lamdaValue, CIMAVertice sender, CIMAVertice receiver, MessageData calcMax1, MessageData calcMax2, int specialVerticeWeight){
 		this.lamdaValue = lamdaValue;
 		this.sender = sender;
 		this.receiver = receiver;
 		this.calcMax1 = calcMax1;
 		this.calcMax2 = calcMax2;
+		this.specialVerticeWeight = specialVerticeWeight;
 
 		if(getSender() != null && getReceiver() != null){
 			calcArc();
@@ -350,22 +352,22 @@ public class MessageData {
 		}
 		if(calcMax2 != null){
 			calcMax2.markAsMax();
-			sender.markAsMax();
+			sender.markAsMax(specialVerticeWeight);
 		}
 		if(calcMax1 != null && calcMax2 != null){
 			if(calcMax1.getLamdaValue() >= calcMax2.getLamdaValue() + sender.getVerticeWeight()){
 				calcMax1.markAsMax();
 				calcMax2.markAsSecMax();
-				sender.markAsSecMax();
+				sender.markAsSecMax(specialVerticeWeight);
 			}else{
 				calcMax1.markAsSecMax();
 				calcMax2.markAsMax();
-				sender.markAsMax();
+				sender.markAsMax(specialVerticeWeight);
 			}
 		}
 		if(calcMax1 == null && calcMax2 == null){
 			//has to be a leaf
-			sender.markAsMax();
+			sender.markAsMax(specialVerticeWeight);
 		}
 	}
 	public void resetAllColors(){
