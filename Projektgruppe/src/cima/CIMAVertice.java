@@ -91,7 +91,7 @@ public class CIMAVertice extends Vertice{
 			if(drawMu){
 				string = String.valueOf(mu);
 			}else{
-				calcVerticeWeight();
+				calcGeneralVerticeWeight();
 				string = String.valueOf(verticeWeight);
 			}
 			g.setColor(stringColor);
@@ -195,7 +195,7 @@ public class CIMAVertice extends Vertice{
 		agentWayList.clear();
 		resetCurrentAgents();
 
-		calcVerticeWeight();
+		calcGeneralVerticeWeight();
 
 		//call reset() recursive to all children
 		for(Vertice child : children){
@@ -298,12 +298,14 @@ public class CIMAVertice extends Vertice{
 
 		//int maxValue = Math.max(max1.getLamdaValue(), max2.getLamdaValue() + verticeWeight);//TODO get verticeWeight from other vertice
 		MessageData calcMessageData;
-		if(max1.getLamdaValue() >= max2.getLamdaValue() + verticeWeight){
+		int specialverticeWeight = calcSpecialVerticeWeight(receiverNode);
+		if(max1.getLamdaValue() >= max2.getLamdaValue() + specialverticeWeight){
 			calcMessageData = new MessageData(max1.getLamdaValue(), this, receiverNode, max1, max2);
 		}else{
-			calcMessageData = new MessageData(max2.getLamdaValue() + verticeWeight, this, receiverNode, max1, max2);
+			calcMessageData = new MessageData(max2.getLamdaValue() + specialverticeWeight, this, receiverNode, max1, max2);
 		}
 
+//		System.out.println("SEND: " + name+" -> " +receiverNode.getName()+"   value: "+ calcMessageData.getLamdaValue()  +"     specWeight: "+specialverticeWeight  );
 		receiverNode.receive(calcMessageData);
 	}
 
@@ -336,7 +338,7 @@ public class CIMAVertice extends Vertice{
 		return false;
 	}
 	
-	private void calcVerticeWeight(){
+	private void calcGeneralVerticeWeight(){
 		//calc the verticeWeight
 		verticeWeight = edgeWeightToParent;
 		for(Vertice child : children){
@@ -349,6 +351,35 @@ public class CIMAVertice extends Vertice{
 			}
 		}
 	}
+	
+	private int calcSpecialVerticeWeight(CIMAVertice excetVertice){
+		
+		System.out.println("==============");
+		
+		int specialVerticeWeight = 0;
+		
+		List<Vertice> allNeighbors = getNeighbors();
+		
+		if(allNeighbors.size() == 1){
+			System.out.println("case 1 neighbor -> neighbor: "+excetVertice.getName());
+			return verticeWeight;
+		}
+		
+		for(Vertice vertice : allNeighbors){
+			if((CIMAVertice)vertice != excetVertice){
+				if(vertice == parent){
+					specialVerticeWeight = edgeWeightToParent;
+					System.out.println("case2");
+				}else{
+					specialVerticeWeight = ((CIMAVertice) vertice).getEdgeWeightToParent();
+					System.out.println("case3");
+				}
+			}
+		}
+		
+		return specialVerticeWeight;
+	}
+	
 
 	private void calcMu(){
 		Collections.sort(lamdas, new MessageDataComparator());

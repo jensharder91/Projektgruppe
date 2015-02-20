@@ -207,7 +207,9 @@ public class CIMAAnimation {
 					e.printStackTrace();
 				}
 //	        }
-			agentsWayList.get(i).getReceiver().changeCurrentAgents(agentsWayList.get(i).getAgentNumber());
+			if(i < agentsWayList.size()){
+				agentsWayList.get(i).getReceiver().changeCurrentAgents(agentsWayList.get(i).getAgentNumber());
+			}
 
 			gui.repaint();
 			return timer;
