@@ -12,6 +12,16 @@ public class MessageData {
 		this.sender = sender;
 	}
 
+	public boolean equals(Object other){
+		if(!(other instanceof MessageData)){
+			return false;
+		}
+
+		MessageData otherMsg = (MessageData)other;
+
+		return ((sender == otherMsg.sender) && (a == otherMsg.a) && (c == otherMsg.c));
+	}
+
 	@Override
 	public String toString() {
 		return "("+getA()+"|"+getC()+") from "+this.sender.getName();

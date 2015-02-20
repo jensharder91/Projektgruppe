@@ -64,11 +64,9 @@ public class TDTIVertice extends Vertice{
 		if((this.state == states.READY) && (this.children.size() == 0)){
 			// this is a ready leaf, we should send (1,1)
 			MessageData data = new MessageData(1, 1, this);
-			if(this.parent != null){
+			if(parent != null && checkVerticeType(parent)){
 				// this is a leaf, only neighbor we can send to is the parent
-				if(checkVerticeType(this.parent)){
-					((TDTIVertice) this.parent).receive(data);
-				}
+				((TDTIVertice) this.parent).receive(data);
 				this.state = states.COMPUTING;
 				// should not wait for data, if they are already received
 				checkDataAlreadyReceived();
@@ -112,17 +110,13 @@ public class TDTIVertice extends Vertice{
 
 	private void sendToRemainingNeighbor(MessageData data){
 		// find out which neighbor didn’t send any data yet
-		for(Vertice neighbor : this.children){
+		for(Vertice neighbor : getNeighbors()){
 			if(checkVerticeType(neighbor) && !didSendData((TDTIVertice) neighbor)){
 				// this neighbor didn’t send any data
 				//System.out.println("-- Sending to "+neighbor);
 				((TDTIVertice) neighbor).receive(data);
 				return;
 			}
-		}
-		if(this.parent != null && checkVerticeType(this.parent) && !didSendData((TDTIVertice) this.parent)){
-			//System.out.println("-- Sending to "+this.parent);
-			((TDTIVertice) this.parent).receive(data);
 		}
 	}
 
@@ -141,6 +135,8 @@ public class TDTIVertice extends Vertice{
 		}
 		gui.remainingSteps--;
 
+		System.out.println("Received data from "+data.getSender());
+
 		this.dataReceived.add(data);
 		//System.out.println("Vertice "+this.name+" received "+data+" (message "+this.dataReceived.size()+" of "+this.numberOfNeighbors()+")");
 
@@ -151,7 +147,7 @@ public class TDTIVertice extends Vertice{
 		if(dataReceived.size() >= 2){
 			max2 = dataReceived.get(1);
 		}
-		boolean case1Boolaen = (max1.getA() == max2.getA()) && max2.getC() > gui.IMMUNITY_TIME/2;
+		boolean case1Boolean = (max1.getA() == max2.getA()) && max2.getC() > gui.IMMUNITY_TIME/2;
 
 		if((this.state == states.READY) && (this.children.size() > 0)){
 			// it’s a ready non-leaf
@@ -162,7 +158,7 @@ public class TDTIVertice extends Vertice{
 				// received data from all neighbors but one
 				// compute the received data and send it to the neighbor, that didn’t send anything yet
 				//System.out.println("- Sending Data to remaining neighbor.");
-				if(case1Boolaen){
+				if(case1Boolean){
 					sendToRemainingNeighbor(new MessageData(max1.getA() + 1, 1, this));
 				} else {
 					sendToRemainingNeighbor(new MessageData(max1.getA(), Math.max(max1.getC(), max2.getC()) + 1, this));
@@ -188,7 +184,7 @@ public class TDTIVertice extends Vertice{
 				// having data from all neighbors, send data to all neighbors except last sender
 				//System.out.println("- All data received, computing and sending data");
 				redirectReceivedDataExceptTo(data.getSender());
-				if(case1Boolaen){
+				if(case1Boolean){
 					this.psi = max1.getA()+1;
 				} else {
 					this.psi = max1.getA();
@@ -199,20 +195,14 @@ public class TDTIVertice extends Vertice{
 	}
 
 	private void redirectReceivedDataExceptTo(TDTIVertice exceptTo){
-		List<Vertice> neighbors = new ArrayList<Vertice>();
-		for(Vertice child : this.children){
-			neighbors.add( child );
-		}
-		if(this.parent instanceof TDTIVertice){
-			neighbors.add( this.parent );
-		}
+		List<Vertice> neighbors = getNeighbors();
+		System.out.println("Redirect Data except to "+exceptTo);
 
 		for(Vertice neighbor : neighbors){
-			if(neighbor != exceptTo){
+			if(neighbor != exceptTo && checkVerticeType(neighbor)){
 				// send this neighbor the data computed from the other neighbors
-				if(checkVerticeType(neighbor)){
-					((TDTIVertice) neighbor).receive(this.computeDataExceptFromNeighbor((TDTIVertice) neighbor));
-				}
+				//System.out.println("Redirecting to "+(TDTIVertice)neighbor);
+				((TDTIVertice) neighbor).receive(this.computeDataExceptFromNeighbor((TDTIVertice) neighbor));
 			}
 		}
 	}
