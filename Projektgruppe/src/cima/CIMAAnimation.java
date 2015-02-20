@@ -89,8 +89,6 @@ public class CIMAAnimation {
 			return;
 		}
 
-		System.out.println("in start sendMessage ANIMATION");
-
 		singeAnimationModus = false;
 		AnimationSendMessageLoop animationLoop = new AnimationSendMessageLoop(messageDataList);
 		animationLoop.start();
@@ -144,8 +142,6 @@ public class CIMAAnimation {
 			CIMAVertice.activeAnimation = true;
 			activeAgent = true;
 
-			System.out.println("##### start animation #####");
-
 			gui.repaint();
 
 			if(singleStepAnimation){
@@ -198,8 +194,6 @@ public class CIMAAnimation {
 
 		private AgentAnimationTimer doAnimation(int i){
 
-			System.out.println("make animation from "+agentsWayList.get(i).getSender().getName()+" to "+agentsWayList.get(i).getReceiver().getName());
-
 			agentsWayList.get(i).getSender().changeCurrentAgents(- agentsWayList.get(i).getAgentNumber());
 
 			AgentAnimationTimer timer = agentsWayList.get(i).getSender().animation(agentsWayList.get(i).getReceiver(), agentsWayList.get(i).getAgentNumber());
@@ -244,21 +238,17 @@ public class CIMAAnimation {
 
 		@Override
 		public void run() {
-
-			System.out.println("start animation :)");
+			
 			MessageData.animationInProgress = true;
 			CIMAVertice.drawMu = false;
 			breakThread  = false;
 			activeAgent = true;
 
 			for(int j  = 0; j < messageDataList.size(); j++){
-//				System.out.println("for loop.... j:"+j);
 				messageDataList.get(j).prepareForAnimation();
 			}
 
 			if(singleStepAnimation){
-				
-				System.out.println("single step anim animation <<<<<<<<<<<<<<<<<<<<<<");
 
 				doAnimation(index);
 				index++;
@@ -268,7 +258,7 @@ public class CIMAAnimation {
 				}
 
 				//bis size - 1 weil der letzte schritt die animation null -> homebase ist und übersprungen werden muss
-				if(index >= messageDataList.size() -1){
+				if(index > messageDataList.size() -1){
 					MessageData.animationInProgress = false;
 					if(breakThread){
 						MessageData.clearGui = true;
@@ -291,7 +281,6 @@ public class CIMAAnimation {
 			
 			
 				for(int i = index; i < messageDataList.size(); i++){
-	//				System.out.println("for loop.... i:"+i);
 	
 	//				gui.repaint();
 					
@@ -299,7 +288,9 @@ public class CIMAAnimation {
 					doAnimation(i);
 					
 					if(breakThread){
-						messageDataList.get(i).resetAllColors();
+						if(i < messageDataList.size()){
+							messageDataList.get(i).resetAllColors();
+						}
 						break;
 					}
 				}
@@ -326,7 +317,6 @@ public class CIMAAnimation {
 		
 		private void doAnimation(int i){
 			for(int j  = 0; j < i; j++){
-//				System.out.println("for loop.... j:"+j);
 				messageDataList.get(j).animationFinished();
 			}
 
@@ -342,7 +332,9 @@ public class CIMAAnimation {
 			SendMessageAnimationTimer timer = messageDataList.get(i).animation();
 			try {
 				timer.join();
-				messageDataList.get(i).animationFinished();
+				if(i < messageDataList.size()){
+					messageDataList.get(i).animationFinished();
+				}
 //				timer.wait();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block

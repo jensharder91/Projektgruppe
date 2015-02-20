@@ -68,7 +68,6 @@ public class CIMAGui extends Gui{
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.out.println(e.getX() +" / "+e.getY());
 				
 //				CIMAAnimation.getCIMAAnimation().stopAllAnimations();
 
@@ -109,7 +108,6 @@ public class CIMAGui extends Gui{
 						CIMAVertice parent = null;
 						parent = (CIMAVertice) rootVertice.getPoint(e.getX(), e.getY());
 						if(parent != null){
-							System.out.println("Add new Child to "+parent);
 						}
 						if(parent instanceof CIMAVertice){
 							new CIMAVertice(""+verticeCoutner, parent);
@@ -136,6 +134,9 @@ public class CIMAGui extends Gui{
 	private void treeChanged(){
 		CIMAVertice.drawMu = false;
 		CIMAAnimation.getCIMAAnimation().stopAllAnimations();
+		if(rootVertice != null){
+			((CIMAVertice) rootVertice).reset();
+		}
 	}
 
 }

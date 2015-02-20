@@ -154,7 +154,7 @@ public class MessageData {
 	
 	public void drawLine(Graphics2D g){
 		//after calc dont draw
-		if(CIMAVertice.drawMu){
+		if(CIMAVertice.drawMu && CIMAVertice.activeAnimation){
 			return;
 		}
 
@@ -178,7 +178,6 @@ public class MessageData {
 	public void drawMessageData(Graphics2D g){
 
 //		g.drawOval(segmentMitteX -10, MiddlepunktKreisY + segmentMitteY - 10, 20, 20);
-//		System.out.println("##### which animation:");
 		
 		/////TODO
 //		g.setColor(Color.RED);
@@ -191,7 +190,7 @@ public class MessageData {
 		
 		
 		//after calc dont draw
-		if(CIMAVertice.drawMu){
+		if(CIMAVertice.drawMu && CIMAVertice.activeAnimation){
 			return;
 		}
 
@@ -205,7 +204,6 @@ public class MessageData {
 				return;
 			}
 			if((animationInProgress && animationFinished) || !animationInProgress){
-//				System.out.println("##### normal draw (MessageData)");
 //				g.setColor(ovalColor);
 //				g.setColor(Color.YELLOW);
 //				g.setColor(ovalColor);
@@ -214,8 +212,6 @@ public class MessageData {
 //				drawMessageInfo(g, segmentMitteX, segmentMitteY);
 				
 				double angle = getStopMessageDataAngle();
-				
-//				System.out.println(Math.toDegrees(angleReceiver%2*Math.PI) + " / "+Math.toDegrees(angle));
 				
 				int ovalMitteX = (int) (MiddlepunktKreisX + Math.cos(angle) * radius);
 				int ovalMitteY = (int) (MiddlepunktKreisY - Math.sin(angle) * radius);
@@ -234,10 +230,7 @@ public class MessageData {
 //		g.drawArc(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, (int)Math.toDegrees(angleSender), (int)Math.toDegrees(animationAngle));
 
 	}
-	public void drawAnimation(Graphics2D g){
-
-//		System.out.println("##### animation (MessageData)");
-		
+	public void drawAnimation(Graphics2D g){		
 
 //		g.setColor(ovalColor);
 ////		g.setColor(CIMAConstants.getMarkAsMaxColor());
@@ -257,8 +250,6 @@ public class MessageData {
 		
 		int kreisSegmentEndeX = (int) (MiddlepunktKreisX + Math.cos(kreisSegmentEndeAngle) * radius);
 		int kreisSegmentEndeY = (int) (MiddlepunktKreisY - Math.sin(kreisSegmentEndeAngle) * radius);
-		
-//		System.out.println("Angle : "+Math.toDegrees(kreisSegmentEndeAngle)+"   y wert vom kreissegment: "+kreisSegmentEndeY);
 		
 //		drawMessageInfo(g, 100, kreisSegmentEndeY);
 		drawMessageInfo(g, kreisSegmentEndeX, kreisSegmentEndeY);
@@ -413,12 +404,8 @@ public class MessageData {
 
 			animationSpeed = 3;
 
-//			System.out.println(activeAgent);
 			activeAnimation = true;
-//			System.out.println(activeAgent);
 			animationAngle = 0;
-			
-			System.out.println("calcmax1 == null ? : "+(calcMax1==null)+"  /  calcmax2 == null ? : "+(calcMax2==null));
 			
 			//mark the MessageData from the calc
 //			if(calcMax1 != null){
@@ -450,10 +437,6 @@ public class MessageData {
 				
 				animationAngle += 2f/radius;
 //				animationAngle = Math.toRadians(Math.ceil(Math.toDegrees(animationAngle)));
-				
-//				System.out.println("animationANgle "+animationAngle +"  /  animationAngle (degree) :"+Math.toDegrees(animationAngle));
-//				System.out.println("animation "+animationAngle + " bis... >= " + (angleReceiver - angleSender));
-//				System.out.println(xMiddleAnimation +" / "+yMiddleAnimation);
 
 				gui.repaint();
 
@@ -483,11 +466,7 @@ public class MessageData {
 //				sender.resetColor();
 //			}
 			
-			
-//			System.out.println(activeAgent);
 			activeAnimation = false;
-//			System.out.println(activeAgent);
-//			System.out.println("~~~~~~~~~~~");
 			gui.repaint();
 		}
 	}

@@ -122,7 +122,11 @@ public class CIMAVertice extends Vertice{
 	}
 	
     protected void drawAnimation(Graphics g) {
-//system.out.println("drawing.....");
+    	
+    	//no active Animation, probl animation canceled
+//    	if(!activeAnimation){
+//    		return;
+//    	}
     	
     	if(activeAgent){
 //    		g.setColor(Color.black);
@@ -134,8 +138,6 @@ public class CIMAVertice extends Vertice{
 			String string = String.valueOf(moveAgentCounter);
 			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
 			g.drawString(string, (int)(xMiddleAnimation - stringWidth/2), (int)(yMiddleAnimation + diameter/4));
-			
-//system.out.println("~~~~~~~~~~~~ moveAgentCoutner: "+moveAgentCounter);
     	}
 	        
 		for(Vertice child : children){
@@ -173,28 +175,24 @@ public class CIMAVertice extends Vertice{
 	/************************************************************************************/
 
 	public void algorithmus(){
-		//system.out.println("starting algo....");
+
 		reset();
 		startAlgo();
 
-		//system.out.println("##################################\n###############################\n######################");
-
-		calcMu();
+				calcMu();
 		logSubtree();
-
-		//system.out.println("//////////////////////");
-		for(MessageData msgData : messageDataList){
-			//system.out.println("  "+msgData.toString());
-		}
-		//system.out.println("//////////////////////");
 
 		drawMu = true;
 	}
 
-	private void reset(){
+	public void reset(){
 		lamdas.clear();
 //		verticeStarted = false;
+		for(MessageData msgData : messageDataList){
+			msgData.resetAllColors();
+		}
 		messageDataList.clear();
+		agentWayList.clear();
 		resetCurrentAgents();
 
 		calcVerticeWeight();
@@ -202,7 +200,6 @@ public class CIMAVertice extends Vertice{
 		//call reset() recursive to all children
 		for(Vertice child : children){
 			if(!(child instanceof CIMAVertice)){
-				//system.out.println("ERROR... wrong Verticetype!!");
 				return;
 			}
 			((CIMAVertice) child).reset();
@@ -214,13 +211,11 @@ public class CIMAVertice extends Vertice{
 			//got a ready leaf -> send message
 //			if(verticeStarted == false){
 //				verticeStarted = true;
-//system.out.println("normal leaf start");
 				((CIMAVertice) parent).receive(new MessageData(verticeWeight, this, (CIMAVertice) parent, null, null));
 //			}
 		}else{
 			for(Vertice child : children){
 				if(!(child instanceof CIMAVertice)){
-					//system.out.println("ERROR... wrong Verticetype!!");
 					return;
 				}
 				((CIMAVertice) child).startAlgo();
@@ -239,8 +234,6 @@ public class CIMAVertice extends Vertice{
 		this.lamdas.add(data);
 		messageDataList.add(data);
 
-		//system.out.println("++++++++ received msg in: "+this.getName()+ "msg: "+data);
-
 		if(lamdas.size() == numberOfNeighbors() -1){
 			//TODO *
 			computeLamdasAndSendTo(getMissingNeightbour());
@@ -248,10 +241,8 @@ public class CIMAVertice extends Vertice{
 			//TODO **
 			if(lamdas.size() == 1 && children.size() == 0){
 				//leaf, dont send aganin ? (-> check if it has started)
-//system.out.println("check leaf");
 //				if(verticeStarted == false){
 //					verticeStarted = true;
-////system.out.println("continued leaf start");
 //					computeLamdasAndSendTo(data.getSender());
 //				}
 			}else if(lamdas.size() == 1 && children.size() > 0){
@@ -266,7 +257,6 @@ public class CIMAVertice extends Vertice{
 	private void computeAllLamdasExeptFor(CIMAVertice exeptVertice){
 		for(Vertice child : children){
 			if(!(child instanceof CIMAVertice)){
-				//system.out.println("ERROR... wrong Verticetype!!");
 				return;
 			}
 			if(((CIMAVertice) child) != exeptVertice){
@@ -275,7 +265,6 @@ public class CIMAVertice extends Vertice{
 		}
 		if(parent != null){
 			if(!(parent instanceof CIMAVertice)){
-				//system.out.println("ERROR... wrong Verticetype!!");
 				return;
 			}
 			if(((CIMAVertice)parent) != exeptVertice){
@@ -307,8 +296,6 @@ public class CIMAVertice extends Vertice{
 //			otherVerticeWeight = maximums.get(1).getSender().getVerticeWeight();
 		}
 
-//system.out.println("otherVerticeWeight: "+otherVerticeWeight);
-
 		//int maxValue = Math.max(max1.getLamdaValue(), max2.getLamdaValue() + verticeWeight);//TODO get verticeWeight from other vertice
 		MessageData calcMessageData;
 		if(max1.getLamdaValue() >= max2.getLamdaValue() + verticeWeight){
@@ -316,10 +303,6 @@ public class CIMAVertice extends Vertice{
 		}else{
 			calcMessageData = new MessageData(max2.getLamdaValue() + verticeWeight, this, receiverNode, max1, max2);
 		}
-		
-
-//system.out.println("++++ sende VON "+ this.name+" nach "+ receiverNode.getName() + " value: "+maxValue +"           // verticeWeight : "+verticeWeight);
-//system.out.println("+++++++++++++++++++++  max1.getLamdaValue() : "+max1.getLamdaValue()+" max2.getLamdaValue(): "+max2.getLamdaValue());
 
 		receiverNode.receive(calcMessageData);
 	}
@@ -327,7 +310,6 @@ public class CIMAVertice extends Vertice{
 	private CIMAVertice getMissingNeightbour(){
 		for(Vertice neighbor : children){
 			if(!(neighbor instanceof CIMAVertice)){
-				//system.out.println("ERROR... wrong Verticetype!!");
 				return null;
 			}
 			if(! didSendData((CIMAVertice) neighbor)){
@@ -336,14 +318,12 @@ public class CIMAVertice extends Vertice{
 		}
 		if(parent != null){
 			if(!(parent instanceof CIMAVertice)){
-				//system.out.println("ERROR... wrong Verticetype!!");
 				return null;
 			}
 			if(!didSendData((CIMAVertice) parent)){
 				return (CIMAVertice) parent;
 			}
 		}
-		//system.out.println("ERROR : no missing neighbor?");
 		return null;
 	}
 
@@ -361,7 +341,6 @@ public class CIMAVertice extends Vertice{
 		verticeWeight = edgeWeightToParent;
 		for(Vertice child : children){
 			if(!(child instanceof CIMAVertice)){
-				//system.out.println("ERROR... wrong Verticetype!!");
 				return;
 			}
 
@@ -384,13 +363,9 @@ public class CIMAVertice extends Vertice{
 
 		mu = Math.max(max1.getLamdaValue(), max2.getLamdaValue() + verticeWeight);
 
-//system.out.println("++++ bin in "+ this.name+"   value (mu) : "+mu +"           // verticeWeight : "+verticeWeight);
-//system.out.println("+++++++++++++++++++++  max1.getLamdaValue() : "+max1.getLamdaValue()+" max2.getLamdaValue(): "+max2.getLamdaValue());
-
 
 		for(Vertice child : children){
 			if(!(child instanceof CIMAVertice)){
-				//system.out.println("ERROR... wrong Verticetype!!");
 				return;
 			}
 			((CIMAVertice) child).calcMu();
@@ -402,6 +377,8 @@ public class CIMAVertice extends Vertice{
 	private void calcAgentsMove(){
 
 		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
+		
+//		MessageData.animationInProgress = false;
 
 		//animation läuft schon.... breche neue animation ab
 		if(activeAnimation){
@@ -410,6 +387,8 @@ public class CIMAVertice extends Vertice{
 		}
 
 		agentWayList.clear();
+		messageDataList.clear();
+		
 		CIMAVertice homeBase = findHomeBase();
 		homeBase.resetAllVerticeAnimation();
 		homeBase.changeCurrentAgents(homeBase.getMu());
@@ -492,32 +471,15 @@ public class CIMAVertice extends Vertice{
 
 	private int moveAgents(CIMAVertice sender, int agentNumber){
 
-		if(sender == null){
-			//system.out.println("###################");
-			//system.out.println("sender := null -> start?");
-		}else{
-			//system.out.println("sende >"+agentNumber +"< agent from "+sender.getName()+" zu "+this.getName());
-		}
-
 		Collections.sort(lamdas, new MessageDataComparator());
 		for(int i = lamdas.size() - 1; i >= 0; i--){
 
-//system.out.println("##### lamdaMessage from _ "+lamdas.get(i).getSender().getName());
-
 			if(sender == null  || !(lamdas.get(i).getSender().equals(sender))){
-				//system.out.println("call " + this.getName() +" -> "+lamdas.get(i).getSender().getName());
 				agentWayList.add(new AgentWayData(this, lamdas.get(i).getSender(), lamdas.get(i).getLamdaValue()));
 				lamdas.get(i).getSender().moveAgents(this, lamdas.get(i).getLamdaValue());
 			}
 		}
 
-
-		if(sender == null){
-			//system.out.println("## fertig?");
-			//system.out.println("###################");
-		}else{
-			//system.out.println("## sende >"+agentNumber +"< agent #ZURÜCK# von "+this.getName()+" zu "+sender.getName());
-		}
 		agentWayList.add(new AgentWayData(this, sender, agentNumber));
 		return agentNumber;
 	}
@@ -551,7 +513,6 @@ public class CIMAVertice extends Vertice{
 	}
 
 	public boolean onEdgeWeightClick(int x, int y){
-		//system.out.println("Check EdgeWeight : "+this.ovalMiddleX+","+this.ovalMiddleY);
 		if((Math.abs(this.ovalMiddleX - x) <= ovalWidth/2) && (Math.abs(this.ovalMiddleY - y) < ovalWidth/2)){
 			return true;
 		}
@@ -635,9 +596,7 @@ public class CIMAVertice extends Vertice{
 			
 			animationSpeed = 3;
 			
-//system.out.println(activeAgent);
 			activeAgent = true;
-//system.out.println(activeAgent);
 			
 			while(isInterrupted() == false){
 				
@@ -648,8 +607,6 @@ public class CIMAVertice extends Vertice{
 				
 				xMiddleAnimation += animationSpeed * vektorX/vektorLength;
 				yMiddleAnimation += animationSpeed * vektorY/vektorLength;
-				
-				//system.out.println(xMiddleAnimation +" / "+yMiddleAnimation);
 				
 				gui.repaint();
 								
@@ -664,10 +621,7 @@ public class CIMAVertice extends Vertice{
 				}
 			}
 			
-//system.out.println(activeAgent);
 			activeAgent = false;
-//system.out.println(activeAgent);
-//system.out.println("~~~~~~~~~~~");
 			gui.repaint();
 		}
 	}
