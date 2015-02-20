@@ -163,7 +163,7 @@ public abstract class Gui extends JPanel{
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				CIMAVertice.setAnimationSpeed((int) spinnerAnimationSpeed.getValue());
-				CIMAVertice.setAnimationSpeed((int) spinnerAnimationSpeed.getValue());
+				MessageData.setAnimationSpeed((int) spinnerAnimationSpeed.getValue());
 			}
 		});
 
@@ -297,8 +297,8 @@ public abstract class Gui extends JPanel{
 			buttonSetEnabled(buttonCalculate, false);
 			buttonSetEnabled(buttonClear, false);
 			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
-//			spinnerAnimationSpeed.setVisible(true);
-			spinnerAnimationSpeed.setVisible(false);
+			spinnerAnimationSpeed.setVisible(true);
+//			spinnerAnimationSpeed.setVisible(false);
 			
 			if(CIMAAnimation.singeAnimationModus){
 //				buttonNextCalculateAnimationStep.setVisible(true);

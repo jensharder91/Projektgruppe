@@ -440,7 +440,11 @@ public class MessageData {
 
 //				animationAngle += Math.toRadians(1);
 				
-				animationAngle += 2f/radius;
+//				animationAngle += 2f/radius;
+				
+				double calcAngle = 2f/radius;
+				animationAngle += animationSpeed * calcAngle / 4;
+				
 //				animationAngle = Math.toRadians(Math.ceil(Math.toDegrees(animationAngle)));
 
 				gui.repaint();
