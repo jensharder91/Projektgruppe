@@ -15,7 +15,7 @@ public class TDTIVertice extends Vertice{
 	private int immunityTime = 0;
 	private boolean contaminated = true;
 
-	public enum states{
+	public enum states {
 		READY, COMPUTING, DONE
 	}
 
@@ -24,7 +24,7 @@ public class TDTIVertice extends Vertice{
 	private List<MessageData> dataReceived = new ArrayList<MessageData>();
 
 
-	public TDTIVertice(String name, TDTIVertice parent) {
+	public TDTIVertice(String name, TDTIVertice parent){
 		super(name, parent);
 		this.gui = gui;
 	}
@@ -66,10 +66,8 @@ public class TDTIVertice extends Vertice{
 			MessageData data = new MessageData(1, 1, this);
 			if(parent != null && checkVerticeType(parent)){
 				// this is a leaf, only neighbor we can send to is the parent
-				((TDTIVertice) this.parent).receive(data);
 				this.state = states.COMPUTING;
-				// should not wait for data, if they are already received
-				checkDataAlreadyReceived();
+				((TDTIVertice) this.parent).receive(data);
 			} else {
 				// this is the only vertice in the tree
 				this.psi = 1;
@@ -84,38 +82,15 @@ public class TDTIVertice extends Vertice{
 		}
 	}
 
-	private void checkDataAlreadyReceived(){
-		int neighborCount = this.numberOfNeighbors();
-		int dataCount = this.dataReceived.size();
-
-		if(dataCount == neighborCount){
-			// sort dataReceived to get the maximum values:
-			Collections.sort(dataReceived, new MessageDataComparator());
-			MessageData max1 = dataReceived.get(0);
-			MessageData max2 = new MessageData(0,0,null);
-			if(dataReceived.size() >= 2){
-				max2 = dataReceived.get(1);
-			}
-
-			// having data from all neighbors, send data to all neighbors except last sender
-			//System.out.println("- All data received, computing and sending data");
-			if((max1.getA() == max2.getA()) && max2.getC() > gui.IMMUNITY_TIME/2){
-				this.psi = max1.getA()+1;
-			} else {
-				this.psi = max1.getA();
-			}
-			this.state = states.DONE;
-		}
-	}
-
 	private void sendToRemainingNeighbor(MessageData data){
 		// find out which neighbor didn’t send any data yet
+		int counter = 0;
 		for(Vertice neighbor : getNeighbors()){
 			if(checkVerticeType(neighbor) && !didSendData((TDTIVertice) neighbor)){
+				if(counter > 0){ System.out.println("# ERROR: sendToRemainingNeighbor found more than one neighbor"); return; }
 				// this neighbor didn’t send any data
-				//System.out.println("-- Sending to "+neighbor);
 				((TDTIVertice) neighbor).receive(data);
-				return;
+				counter++;
 			}
 		}
 	}
@@ -129,6 +104,34 @@ public class TDTIVertice extends Vertice{
 		return false;
 	}
 
+	private MessageData computeMessageDataFromMessages(List<MessageData> data){
+		if(data.size() == 0){ System.out.println("# ERROR: computeMessageDataFromMessages got empty input list"); return null; }
+		int a = 0;
+		int c = 0;
+		if(data.size() == 1){
+			a = data.get(0).getA();
+			c = data.get(0).getC()+1;
+			return new MessageData(a,c,this);
+		}
+		// sort data to get the maximum values:
+		Collections.sort(data, new MessageDataComparator());
+		MessageData max1 = dataReceived.get(0);
+		MessageData max2 = dataReceived.get(1);
+		if((max1.getA() == max2.getA()) && (max2.getC() > gui.IMMUNITY_TIME/2)){
+			a = max1.getA()+1;
+			c = 1;
+		} else {
+			a = max1.getA();
+			c = max1.getC()+1;
+		}
+		return new MessageData(a,c,this);
+	}
+
+	private int calculatePsiFromMessages(List<MessageData> data){
+		if(data.size() == 0){ System.out.println("# ERROR: calculatePsiFromMessages got empty input list"); return -1; }
+		return computeMessageDataFromMessages(data).getA();
+	}
+
 	private void receive(MessageData data){
 		if(gui.remainingSteps == 0){
 			return;
@@ -138,59 +141,53 @@ public class TDTIVertice extends Vertice{
 		System.out.println("Received data from "+data.getSender());
 
 		this.dataReceived.add(data);
-		//System.out.println("Vertice "+this.name+" received "+data+" (message "+this.dataReceived.size()+" of "+this.numberOfNeighbors()+")");
+		int neighborCount = this.numberOfNeighbors();
+		int dataCount = this.dataReceived.size();
 
-		// sort dataReceived to get the maximum values:
-		Collections.sort(dataReceived, new MessageDataComparator());
-		MessageData max1 = dataReceived.get(0);
-		MessageData max2 = new MessageData(0,0,null);
-		if(dataReceived.size() >= 2){
-			max2 = dataReceived.get(1);
-		}
-		boolean case1Boolean = (max1.getA() == max2.getA()) && max2.getC() > gui.IMMUNITY_TIME/2;
 
-		if((this.state == states.READY) && (this.children.size() > 0)){
-			// it’s a ready non-leaf
-			int neighborCount = this.numberOfNeighbors();
-			int dataCount = this.dataReceived.size();
-
-			if(dataCount == neighborCount-1){
-				// received data from all neighbors but one
-				// compute the received data and send it to the neighbor, that didn’t send anything yet
-				//System.out.println("- Sending Data to remaining neighbor.");
-				if(case1Boolean){
-					sendToRemainingNeighbor(new MessageData(max1.getA() + 1, 1, this));
-				} else {
-					sendToRemainingNeighbor(new MessageData(max1.getA(), Math.max(max1.getC(), max2.getC()) + 1, this));
-				}
-				this.state = states.COMPUTING;
-			} else if(neighborCount == 1 && dataCount == 1) {
-				// received only message from only neighbor
-				// send back (1|1), since it was the only neighbor
-				data.getSender().receive(new MessageData(1,1,this));
-				this.state = states.COMPUTING;
-			} else {
-				// waiting for more data
-				//System.out.println("- Waiting for more data.");
-			}
+		if(state == states.DONE){
+			System.out.println("# ERROR: Received message in state DONE");
+			return;
 		}
 
-		if(this.state == states.COMPUTING){
-			// check if we have all data
-			int neighborCount = this.numberOfNeighbors();
-			int dataCount = this.dataReceived.size();
-
+		if(state == states.READY){
 			if(dataCount == neighborCount){
-				// having data from all neighbors, send data to all neighbors except last sender
-				//System.out.println("- All data received, computing and sending data");
-				redirectReceivedDataExceptTo(data.getSender());
-				if(case1Boolean){
-					this.psi = max1.getA()+1;
-				} else {
-					this.psi = max1.getA();
-				}
-				this.state = states.DONE;
+				if(neighborCount != 1){ System.out.println("# ERROR: Received last message in state READY with neighborcount != 1"); return; }
+				// receiving last message in state ready means this is a leaf
+				// -> be DONE
+				// -> calculate own Psi
+				// -> send (1,1) to only neighbor
+				state = states.DONE;
+				psi = calculatePsiFromMessages(dataReceived);
+				((TDTIVertice)getNeighbors().get(0)).receive(new MessageData(1,1,this));
 			}
+			if(dataCount == neighborCount-1){
+				if(neighborCount <= 1){ System.out.println("# ERROR: Received second to last message in state READY with neighborcount <= 1"); return; }
+				// received second to last message
+				// -> be COMPUTING
+				// -> compute data from all of those and send computed data to missing neighbor
+				state = states.COMPUTING;
+				MessageData newData = computeMessageDataFromMessages(dataReceived);
+				sendToRemainingNeighbor(newData);
+			}
+			if(dataCount < neighborCount-1){
+				// didn't receive enough messages yet
+				// -> wait for more messages
+			}
+			return;
+		}
+
+		if(state == states.COMPUTING){
+			if(dataCount != neighborCount){ System.out.println("# ERROR: Received message, that was not last one, in state COMPUTING"); return; }
+			// Received last message in state computing
+			// -> be DONE
+			// -> calculate my Psi
+			// -> compute and send data to all neighbors except the sender of this last message
+			state = states.DONE;
+			psi = calculatePsiFromMessages(dataReceived);
+			TDTIVertice lastSender = data.getSender();
+			redirectReceivedDataExceptTo(lastSender);
+			return;
 		}
 	}
 
@@ -280,7 +277,7 @@ public class TDTIVertice extends Vertice{
 		}
 	}
 
-	private boolean checkVerticeType(Vertice vertice) {
+	private boolean checkVerticeType(Vertice vertice){
 		if(!(vertice instanceof TDTIVertice)){
 			System.out.println("wrong VerticeType!!! FATAL ERROR");
 			return false;
