@@ -32,6 +32,7 @@ public class CIMAVertice extends Vertice{
     protected boolean activeAgent = false;
     public static boolean activeAnimation = false;
     private boolean marked = false;
+    private static int animationSpeed = 3;
     
     protected int currentAgents = 0;
     protected int moveAgentCounter = 0;
@@ -310,8 +311,18 @@ public class CIMAVertice extends Vertice{
 		}else{
 			calcMessageData = new MessageData(max2.getLamdaValue() + specialVerticeWeight, this, receiverNode, max1, max2, specialVerticeWeight);
 		}
+		
+		//make sure the lamdaValue is not sless then the edgeWeight
+		if(receiverNode == parent){
+			if(edgeWeightToParent > calcMessageData.getLamdaValue()){
+				calcMessageData = new MessageData(edgeWeightToParent, this, receiverNode, max1, max2, specialVerticeWeight);
+			}
+		}else{
+			if(receiverNode.getEdgeWeightToParent() > calcMessageData.getLamdaValue()){
+				calcMessageData = new MessageData(receiverNode.getEdgeWeightToParent(), this, receiverNode, max1, max2, specialVerticeWeight);
+			}
+		}
 
-//		System.out.println("SEND: " + name+" -> " +receiverNode.getName()+"   value: "+ calcMessageData.getLamdaValue()  +"     specWeight: "+specialverticeWeight  );
 		receiverNode.receive(calcMessageData);
 	}
 
@@ -358,37 +369,31 @@ public class CIMAVertice extends Vertice{
 		}
 	}
 	
-	private int calcSpecialVerticeWeight(CIMAVertice excetVertice){
-		
-		System.out.println("==============");
+	private int calcSpecialVerticeWeight(CIMAVertice exeptVertice){
 		
 		int specialVerticeWeight = 0;
 		
 		List<Vertice> allNeighbors = getNeighbors();
 		
 		if(allNeighbors.size() == 1){
-			System.out.println("case 1 neighbor -> neighbor: "+excetVertice.getName());
-			System.out.println("result: "+verticeWeight + "  on vertex: "+this.getName()+"  exept:"+excetVertice.getName());
-			return verticeWeight;
+			specialVerticeWeight = verticeWeight;
 		}
-		
-		for(Vertice vertice : allNeighbors){
-			if((CIMAVertice)vertice != excetVertice){
-				if(vertice == parent){
-					if(specialVerticeWeight < edgeWeightToParent){
-						specialVerticeWeight = edgeWeightToParent;
-					}
-					System.out.println("case2");
-				}else{
-					if(specialVerticeWeight < ((CIMAVertice) vertice).getEdgeWeightToParent()){
-						specialVerticeWeight = ((CIMAVertice) vertice).getEdgeWeightToParent();
-						System.out.println("case3");
+		else{
+			for(Vertice vertice : allNeighbors){
+				if((CIMAVertice)vertice != exeptVertice){
+					if(vertice == parent){
+						if(specialVerticeWeight < edgeWeightToParent){
+							specialVerticeWeight = edgeWeightToParent;
+						}
+					}else{
+						if(specialVerticeWeight < ((CIMAVertice) vertice).getEdgeWeightToParent()){
+							specialVerticeWeight = ((CIMAVertice) vertice).getEdgeWeightToParent();
+						}
 					}
 				}
 			}
-		}
-		
-		System.out.println("result: "+specialVerticeWeight + "  on vertex: "+this.getName()+"  exept:"+excetVertice.getName());
+		}		
+	
 		return specialVerticeWeight;
 	}
 	
@@ -617,6 +622,14 @@ public class CIMAVertice extends Vertice{
 	public boolean isDecontaminated(){
 		return decontaminated;
 	}
+	public static void setAnimationSpeed(int animationSpeed){
+		if(animationSpeed >= 0 && animationSpeed <= 10){
+			CIMAVertice.animationSpeed = animationSpeed;
+		}
+	}
+	public static int getAnimationSpeed(){
+		return animationSpeed;
+	}
 	
 	
 	
@@ -631,7 +644,6 @@ public class CIMAVertice extends Vertice{
 	public class AgentAnimationTimer extends Thread{
 		
 		Vertice destVertice;
-		int animationSpeed;
 		
 		public AgentAnimationTimer(Vertice destVertice) {
 			this.destVertice = destVertice;
@@ -643,7 +655,6 @@ public class CIMAVertice extends Vertice{
 			xMiddleAnimation = xMiddle;
 			yMiddleAnimation = yMiddle;
 			
-			animationSpeed = 3;
 			
 			activeAgent = true;
 			

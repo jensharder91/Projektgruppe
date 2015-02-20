@@ -19,6 +19,7 @@ public class MessageData {
 
 	private int xMiddleAnimationEndPosition;
 	private int yMiddleAnimationEndPosition;
+	private static int animationSpeed = 3;
 	
 	private double angleSender;
 	private double angleReceiver;
@@ -331,6 +332,11 @@ public class MessageData {
 	public void prepareForAnimation(){
 		animationFinished = false;
 	}
+	public static void setAnimationSpeed(int animationSpeed){
+		if(animationSpeed >= 0 && animationSpeed <= 10){
+			MessageData.animationSpeed = animationSpeed;
+		}
+	}
 	
 	public void markAsAnimationColor(){
 //		markAsMax();
@@ -395,7 +401,6 @@ public class MessageData {
 	public class SendMessageAnimationTimer extends Thread{
 
 		Gui gui;
-		int animationSpeed;
 
 		public SendMessageAnimationTimer() {
 			this.gui = CIMAGui.getGui();
@@ -403,8 +408,6 @@ public class MessageData {
 
 		@Override
 		public void run() {
-
-			animationSpeed = 3;
 
 			activeAnimation = true;
 			animationAngle = 0;

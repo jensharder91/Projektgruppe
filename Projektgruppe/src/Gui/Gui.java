@@ -14,7 +14,11 @@ import java.awt.event.ItemListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JToggleButton;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import cima.CIMAAnimation;
 import cima.CIMAVertice;
@@ -42,6 +46,8 @@ public abstract class Gui extends JPanel{
 	private JButton buttonNextAgentAnimationStep = new JButton("\u25BA");//RightArrow
 	private JButton buttonNextCalculateAnimationStep = new JButton("\u25BA");
 	protected JButton buttonCompleteAgentAnimation = new JButton("Baum dekontaminieren");
+	private SpinnerNumberModel spinnerModel = new SpinnerNumberModel(3, 0, 10, 1);
+	private JSpinner spinnerAnimationSpeed = new JSpinner(spinnerModel);
 	
 	protected boolean autoAlgo = false;
 //	public static boolean calcAgentMovesReady = false;
@@ -151,6 +157,15 @@ public abstract class Gui extends JPanel{
 				
 			}
 		});
+		
+		spinnerAnimationSpeed.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				CIMAVertice.setAnimationSpeed((int) spinnerAnimationSpeed.getValue());
+				CIMAVertice.setAnimationSpeed((int) spinnerAnimationSpeed.getValue());
+			}
+		});
 
 //		toggleAutoAlgo.addItemListener(new ItemListener() {
 //
@@ -165,6 +180,7 @@ public abstract class Gui extends JPanel{
 //			}
 //		});
 
+		buttonBar.add(spinnerAnimationSpeed);
 		buttonBar.add(buttonBack);
 		buttonBar.add(buttonCalculate);
 		buttonBar.add(buttonCalculateAnimation);
@@ -216,6 +232,7 @@ public abstract class Gui extends JPanel{
 		//mark homebase
 		if(CIMAVertice.drawMu){
 			g2.setColor(Color.RED);
+			homeBase = ((CIMAVertice) rootVertice).findHomeBase();
 			if(homeBase != null){
 				g2.drawRect(homeBase.getX(), homeBase.getY(), homeBase.getDiameter(), homeBase.getDiameter());
 			}
@@ -251,6 +268,7 @@ public abstract class Gui extends JPanel{
 //		buttonCompleteAgentAnimation.setVisible(false);
 		buttonSetEnabled(buttonCompleteAgentAnimation, false);
 //		buttonAnimation.setText("Animation berechnen");
+		spinnerAnimationSpeed.setVisible(false);
 		
 		if(rootVertice == null || rootVertice.getChildren().size() < 1){
 //			buttonBack.setVisible(false);
@@ -267,6 +285,7 @@ public abstract class Gui extends JPanel{
 			buttonSetEnabled(buttonNextAgentAnimationStep, false);
 			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
 			buttonSetEnabled(buttonCompleteAgentAnimation, false);
+			spinnerAnimationSpeed.setVisible(false);
 		}
 
 		
@@ -278,6 +297,8 @@ public abstract class Gui extends JPanel{
 			buttonSetEnabled(buttonCalculate, false);
 			buttonSetEnabled(buttonClear, false);
 			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
+//			spinnerAnimationSpeed.setVisible(true);
+			spinnerAnimationSpeed.setVisible(false);
 			
 			if(CIMAAnimation.singeAnimationModus){
 //				buttonNextCalculateAnimationStep.setVisible(true);
@@ -308,6 +329,7 @@ public abstract class Gui extends JPanel{
 			buttonSetEnabled(buttonCalculateAnimation, false);
 			buttonSetEnabled(buttonClear, false);
 			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
+			spinnerAnimationSpeed.setVisible(false);
 		}
 		
 		if(CIMAVertice.activeAnimation){
@@ -329,6 +351,7 @@ public abstract class Gui extends JPanel{
 			buttonSetEnabled(buttonNextAgentAnimationStep, false);
 			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
 			buttonSetEnabled(buttonCompleteAgentAnimation, true);
+			spinnerAnimationSpeed.setVisible(true);
 			
 			if(CIMAAnimation.singeAnimationModus){
 //				buttonNextAgentAnimationStep.setVisible(true);
