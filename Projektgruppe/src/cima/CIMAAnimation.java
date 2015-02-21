@@ -49,10 +49,6 @@ public class CIMAAnimation {
 
 	public void startAgentAnimation(List<AgentWayData> agentsWayList){
 		
-		if(breakThread){
-			return;
-		}
-		
 		if(activeAgent){
 			return;
 		}
@@ -71,10 +67,6 @@ public class CIMAAnimation {
 	}
 
 	public void nextStepAgentAnimation(List<AgentWayData> agentsWayList){
-		
-		if(breakThread){
-			return;
-		}
 
 		if(activeAgent){
 			return;
@@ -92,11 +84,7 @@ public class CIMAAnimation {
 	 */
 
 	public void startSendMessageAnimation(List<MessageData> messageDataList){
-		
-		if(breakThread){
-			return;
-		}
-		
+			
 		if(activeAgent){
 			return;
 		}
@@ -108,10 +96,6 @@ public class CIMAAnimation {
 	}
 	
 	public void nextStepSendMessageAnimation(List<MessageData> messageDataList){
-		
-		if(breakThread){
-			return;
-		}
 
 		if(activeAgent){
 			return;

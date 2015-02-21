@@ -232,7 +232,9 @@ public abstract class Gui extends JPanel{
 		//mark homebase
 		if(CIMAVertice.drawMu){
 			g2.setColor(Color.RED);
-			homeBase = ((CIMAVertice) rootVertice).findHomeBase();
+			if(rootVertice != null){
+				homeBase = ((CIMAVertice) rootVertice).findHomeBase();
+			}
 			if(homeBase != null){
 				g2.drawRect(homeBase.getX(), homeBase.getY(), homeBase.getDiameter(), homeBase.getDiameter());
 			}

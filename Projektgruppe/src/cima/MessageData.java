@@ -376,6 +376,7 @@ public class MessageData {
 			sender.markAsMax(specialVerticeWeight);
 		}
 	}
+	
 	public void resetAllColors(){
 		if(calcMax1 != null){
 			calcMax1.resetColor();

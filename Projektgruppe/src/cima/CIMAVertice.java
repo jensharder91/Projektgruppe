@@ -203,7 +203,7 @@ public class CIMAVertice extends Vertice{
 		reset();
 		startAlgo();
 
-				calcMu();
+		calcMu();
 		logSubtree();
 
 		drawMu = true;
