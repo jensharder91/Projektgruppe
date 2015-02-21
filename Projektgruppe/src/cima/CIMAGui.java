@@ -5,8 +5,8 @@ import java.awt.event.MouseListener;
 
 import javax.swing.SwingUtilities;
 
-import Gui.Gui;
-import Tree.Vertice;
+import cima.Gui;
+import cima.Vertice;
 
 public class CIMAGui extends Gui{
 

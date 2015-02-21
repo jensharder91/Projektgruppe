@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import Gui.Gui;
-import Tree.Vertice;
+import cima.Gui;
+import cima.Vertice;
 
 public class CIMAVertice extends Vertice{
 

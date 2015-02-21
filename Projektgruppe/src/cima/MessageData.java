@@ -5,7 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Arc2D;
 
-import Gui.Gui;
+import cima.Gui;
 
 public class MessageData {
 

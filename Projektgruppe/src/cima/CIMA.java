@@ -2,7 +2,7 @@ package cima;
 
 import java.applet.Applet;
 
-import Gui.MyApplet;
+import cima.MyApplet;
 
 public class CIMA extends MyApplet{
 	

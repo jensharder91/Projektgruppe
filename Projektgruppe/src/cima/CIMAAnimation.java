@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cima.MessageData.SendMessageAnimationTimer;
-import Gui.Gui;
-import Tree.Vertice;
+import cima.Gui;
+import cima.Vertice;
 import cima.CIMAVertice.AgentAnimationTimer;
 
 public class CIMAAnimation {
