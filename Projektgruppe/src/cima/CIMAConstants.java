@@ -1,6 +1,7 @@
 package cima;
 
 import java.awt.Color;
+import java.awt.Font;
 
 public class CIMAConstants {
 	
@@ -11,6 +12,10 @@ public class CIMAConstants {
 	public static Color getMarkAsSecMaxColor(){
 //		return new Color(16, 222, 255);
 		return new Color(255, 234, 13);
+	}
+	
+	public static Font getTextFont(){
+		return new Font("Arial", Font.BOLD, 13);
 	}
 	
 

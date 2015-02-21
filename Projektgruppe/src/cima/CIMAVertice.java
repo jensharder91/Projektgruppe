@@ -34,6 +34,7 @@ public class CIMAVertice extends Vertice{
     public static boolean activeAnimation = false;
     private boolean marked = false;
     private static int animationSpeed = 3;
+    private static String displayedInfoString ="";
     
     protected int currentAgents = 0;
     protected int moveAgentCounter = 0;
@@ -89,7 +90,7 @@ public class CIMAVertice extends Vertice{
 		super.drawAllVertice(g, verticeColor);
 
 		String stringVertice;
-		String displayedInfoString = "";
+		displayedInfoString = "";
 		if(activeAnimation){
 //			g.setColor(Color.white);
 			g.setColor(Color.black);
@@ -112,19 +113,21 @@ public class CIMAVertice extends Vertice{
 			g.setColor(stringColor);
 			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(stringVertice,g).getWidth());
 			g.drawString(stringVertice, xMiddle - stringWidth/2, yMiddle+diameter/4);
-		}
-		
+		}		
+
+	}
+
+	public static void drawDisplayInformation(Graphics g){
 		//draw the displayedInfo - string in upper right corner
 		Font defaulFont = g.getFont();
-		g.setFont(new Font("Arial", Font.BOLD, 12));
+		g.setFont(CIMAConstants.getTextFont());
 		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(displayedInfoString,g).getWidth());
 //		g.drawString(displayedInfoString, CIMAGui.getGui().getWidth() - stringWidth, CIMAGui.getGui().getHeight());
 		g.drawString(displayedInfoString, CIMAGui.getGui().getWidth() - 5 - stringWidth, 12);
 		g.setFont(defaulFont);
-		
-
 	}
-
+	
+	
 	@Override
 	protected void drawAllTreeLines(Graphics g) {
 		super.drawAllTreeLines(g);

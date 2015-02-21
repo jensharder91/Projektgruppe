@@ -269,22 +269,41 @@ public class MessageData {
 //			drawArrow(g);
 //			drawMessageInfo(g, animationOvalMitteX, animationOvalMitteY);
 //		}
+	}
+	
+	public void drawWriteCalcInfos(Graphics2D g){
 		
+		if(CIMAVertice.drawMu && CIMAVertice.activeAnimation){
+			return;
+		}
+		
+		if(!activeAnimation){
+			return;
+		}
 		
 		//schreibe oben in der Ecke welche Werte eine Rolle spielen
 		Font defaulFont = g.getFont();
 		int stringHeight = (int) Math.floor(g.getFontMetrics().getStringBounds("stringheight",g).getHeight());
-		g.setFont(new Font("Arial", Font.BOLD, 12));
+		g.setFont(CIMAConstants.getTextFont());
 		g.setColor(CIMAConstants.getMarkAsMaxColor());
 		if(edgeWeightUsed){
 			g.setColor(CIMAConstants.getMarkAsSecMaxColor());
 		}
+		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(max1String,g).getWidth());
+		g.fillRect(3, 12 - stringHeight +1, stringWidth, stringHeight);
+		g.setColor(Color.BLACK);
 		g.drawString(max1String, 3, 12);
 		g.setColor(CIMAConstants.getMarkAsSecMaxColor());
-		g.drawString(max2String, 3, (int) (12 + 1.5*stringHeight));
+		stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(max2String,g).getWidth());
+		g.fillRect(3, (int) (12 + 1.2*stringHeight) -stringHeight +1, stringWidth, stringHeight);
+		g.setColor(Color.BLACK);
+		g.drawString(max2String, 3, (int) (12 + 1.2*stringHeight));
 		if(edgeWeightUsed){
 			g.setColor(CIMAConstants.getMarkAsMaxColor());
-			g.drawString(lamdaValue+" aktuelles Kantengewichrt", 3, 12 + 3*stringHeight);
+			stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(lamdaValue+" aktuelles Kantengewichrt",g).getWidth());
+			g.fillRect(3, (int) (12 + 2.4*stringHeight) - stringHeight +1, stringWidth, stringHeight);
+			g.setColor(Color.BLACK);
+			g.drawString(lamdaValue+" aktuelles Kantengewichrt", 3, (int) (12 + 2.4*stringHeight));
 		}
 		g.setFont(defaulFont);
 	}

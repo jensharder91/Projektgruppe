@@ -218,6 +218,11 @@ public abstract class Gui extends JPanel{
 		g2.setColor(Color.white);
 		g2.fillRect(0, 0, (int)getSize().getWidth(), (int)getSize().getHeight());
 		
+		//draw calculation infos
+		for(MessageData msgData : CIMAVertice.messageDataList){
+			msgData.drawWriteCalcInfos(g2);
+		}
+		
 		//messageDataLine
 		for(MessageData msgData : CIMAVertice.messageDataList){
 			msgData.drawLine(g2);
@@ -249,6 +254,8 @@ public abstract class Gui extends JPanel{
 		for(MessageData msgData : CIMAVertice.messageDataList){
 			msgData.drawMessageData(g2); //TODO
 		}
+		
+		CIMAVertice.drawDisplayInformation(g2);
 		
 
 		
