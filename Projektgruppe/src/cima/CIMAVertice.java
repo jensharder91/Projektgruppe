@@ -81,6 +81,10 @@ public class CIMAVertice extends Vertice{
 			}else{
 				verticeColor = Color.white;
 			}
+		}else{
+			if(!MessageData.animationInProgress){
+				verticeColor = Color.white;
+			}
 		}
 		super.drawAllVertice(g, verticeColor);
 
@@ -111,9 +115,12 @@ public class CIMAVertice extends Vertice{
 		}
 		
 		//draw the displayedInfo - string in upper right corner
+		Font defaulFont = g.getFont();
+		g.setFont(new Font("Arial", Font.BOLD, 12));
 		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(displayedInfoString,g).getWidth());
 //		g.drawString(displayedInfoString, CIMAGui.getGui().getWidth() - stringWidth, CIMAGui.getGui().getHeight());
 		g.drawString(displayedInfoString, CIMAGui.getGui().getWidth() - 5 - stringWidth, 12);
+		g.setFont(defaulFont);
 		
 
 	}
