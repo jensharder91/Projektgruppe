@@ -1,6 +1,7 @@
 package cima;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Arc2D;
 
@@ -14,12 +15,16 @@ public class MessageData {
 	private MessageData calcMax1;
 	private MessageData calcMax2;
 	private int specialVerticeWeight;
+	private boolean edgeWeightUsed;
 	
 	//animation / graphic
 
 	private int xMiddleAnimationEndPosition;
 	private int yMiddleAnimationEndPosition;
 	private static int animationSpeed = 3;
+	
+	private String max1String = "";
+	private String max2String = "";
 	
 	private double angleSender;
 	private double angleReceiver;
@@ -49,13 +54,14 @@ public class MessageData {
 	private Color ovalColor = defaultOvalColor;
 
 
-	public MessageData(int lamdaValue, CIMAVertice sender, CIMAVertice receiver, MessageData calcMax1, MessageData calcMax2, int specialVerticeWeight){
+	public MessageData(int lamdaValue, CIMAVertice sender, CIMAVertice receiver, MessageData calcMax1, MessageData calcMax2, int specialVerticeWeight, boolean edgeWeightUsed){
 		this.lamdaValue = lamdaValue;
 		this.sender = sender;
 		this.receiver = receiver;
 		this.calcMax1 = calcMax1;
 		this.calcMax2 = calcMax2;
 		this.specialVerticeWeight = specialVerticeWeight;
+		this.edgeWeightUsed = edgeWeightUsed;
 
 		if(getSender() != null && getReceiver() != null){
 			calcArc();
@@ -263,6 +269,24 @@ public class MessageData {
 //			drawArrow(g);
 //			drawMessageInfo(g, animationOvalMitteX, animationOvalMitteY);
 //		}
+		
+		
+		//schreibe oben in der Ecke welche Werte eine Rolle spielen
+		Font defaulFont = g.getFont();
+		int stringHeight = (int) Math.floor(g.getFontMetrics().getStringBounds("stringheight",g).getHeight());
+		g.setFont(new Font("Arial", Font.BOLD, 12));
+		g.setColor(CIMAConstants.getMarkAsMaxColor());
+		if(edgeWeightUsed){
+			g.setColor(CIMAConstants.getMarkAsSecMaxColor());
+		}
+		g.drawString(max1String, 3, 12);
+		g.setColor(CIMAConstants.getMarkAsSecMaxColor());
+		g.drawString(max2String, 3, (int) (12 + 1.5*stringHeight));
+		if(edgeWeightUsed){
+			g.setColor(CIMAConstants.getMarkAsMaxColor());
+			g.drawString(lamdaValue+" aktuelles Kantengewichrt", 3, 12 + 3*stringHeight);
+		}
+		g.setFont(defaulFont);
 	}
 
 	private void drawMessageInfo(Graphics2D g, int ovalMitteX, int ovalMitteY){
@@ -355,25 +379,48 @@ public class MessageData {
 	public void markAllColors(){
 		if(calcMax1 != null){
 			calcMax1.markAsMax();
+			if(edgeWeightUsed){
+				calcMax1.markAsSecMax();
+			}
+			max1String = calcMax1.getLamdaValue()+" von der ersten Kante";
 		}
 		if(calcMax2 != null){
 			calcMax2.markAsMax();
+			if(edgeWeightUsed){
+				calcMax2.markAsSecMax();
+			}
 			sender.markAsMax(specialVerticeWeight);
+			max1String = calcMax2.getLamdaValue()+" + "+specialVerticeWeight +" = " + (calcMax2.getLamdaValue() + specialVerticeWeight) +"  von der zweiten Kante und vom Senderknoten";
 		}
 		if(calcMax1 != null && calcMax2 != null){
 			if(calcMax1.getLamdaValue() >= calcMax2.getLamdaValue() + sender.getVerticeWeight()){
 				calcMax1.markAsMax();
+				if(edgeWeightUsed){
+					calcMax1.markAsSecMax();
+				}
 				calcMax2.markAsSecMax();
 				sender.markAsSecMax(specialVerticeWeight);
+				max1String = calcMax1.getLamdaValue()+" von der ersten Kante";
+				max2String = calcMax2.getLamdaValue()+" + "+specialVerticeWeight +" = " + (calcMax2.getLamdaValue() + specialVerticeWeight) +"  von der zweiten Kante und vom Senderknoten";
 			}else{
 				calcMax1.markAsSecMax();
 				calcMax2.markAsMax();
 				sender.markAsMax(specialVerticeWeight);
+				if(edgeWeightUsed){
+					calcMax2.markAsSecMax();
+					sender.markAsSecMax(specialVerticeWeight);
+				}
+				max1String = calcMax2.getLamdaValue()+" + "+specialVerticeWeight +" = " + (calcMax2.getLamdaValue() + specialVerticeWeight) +"  von der zweiten Kante und vom Senderknoten";
+				max2String = calcMax1.getLamdaValue()+" von der ersten Kante";
 			}
 		}
 		if(calcMax1 == null && calcMax2 == null){
 			//has to be a leaf
 			sender.markAsMax(specialVerticeWeight);
+			if(edgeWeightUsed){
+				sender.markAsSecMax(specialVerticeWeight);
+			}
+			max1String = specialVerticeWeight+" vom Blattknoten";
 		}
 	}
 	
