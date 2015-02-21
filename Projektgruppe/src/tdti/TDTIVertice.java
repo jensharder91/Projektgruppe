@@ -14,6 +14,7 @@ public class TDTIVertice extends Vertice{
 	protected Color decontaminatedColor = new Color(255,255,255);
 	private int immunityTime = 0;
 	private boolean contaminated = true;
+	private TDTIAgentCoordinator coordinator = TDTIAgentCoordinator.getCoordinator();
 
 	public enum states {
 		READY, COMPUTING, DONE
@@ -346,11 +347,32 @@ public class TDTIVertice extends Vertice{
 	}
 
 	public void decreaseImmunityTimesOfSubtree(){
-		immunityTime = Math.max(0,immunityTime-1);
+		if(coordinator.getAgentsAtVertice(this).size() == 0){
+			immunityTime = Math.max(0,immunityTime-1);
+		} else {
+			// Some Agent is currently staying on this vertice
+			// -> do not decrease immunity time
+		}
 		for(Vertice child : children){
 			if(child instanceof TDTIVertice){
 				((TDTIVertice)child).decreaseImmunityTimesOfSubtree();
 			}
 		}
+	}
+
+	public int numberOfContaminatedNeighbors(){
+		int contaminatedNeighbors = 0;
+		List<Vertice> neighbors = this.getNeighbors();
+		for(Vertice neighbor : neighbors){
+			if(neighbor instanceof TDTIVertice){
+				TDTIVertice n = (TDTIVertice)neighbor;
+				if(n.isContaminated()){
+					contaminatedNeighbors++;
+				}
+			} else {
+				System.out.println("# ERROR: Neighbor is not a TDTIVertice");
+			}
+		}
+		return contaminatedNeighbors;
 	}
 }

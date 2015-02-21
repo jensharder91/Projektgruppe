@@ -11,6 +11,8 @@ public class TDTIAgent {
   private int numberOfAgents = 1;
   private int id = 0;
 
+  private TDTIVertice nextVertice = null;
+
   private Color[] colors = new Color[]{new Color(0xff,0x55,0x00),new Color(0xcc,0x11,0x00),new Color(0x99,0x00,0x33)};
 
   public TDTIAgent(TDTIVertice sender, TDTIVertice receiver, int id, int numberOfAgents){
@@ -60,5 +62,16 @@ public class TDTIAgent {
 
   public int getId(){
     return id;
+  }
+
+  public void setNextVertice(TDTIVertice vertice){
+    nextVertice = vertice;
+  }
+
+  public void move(){
+    if(nextVertice != null){
+      setVertice(nextVertice);
+      nextVertice = null;
+    }
   }
 }

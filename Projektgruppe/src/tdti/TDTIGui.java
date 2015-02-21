@@ -86,8 +86,8 @@ public class TDTIGui extends Gui{
 		}
 		if(MAX_STEPS >= numberOfSteps()+1){
 			btnPrev.setEnabled(false);
-			updateVertices();
 			updateAgents();
+			updateVertices();
 		} else {
 			coordinator.clear();
 			btnNext.setEnabled(true);
