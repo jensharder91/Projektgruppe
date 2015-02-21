@@ -1,6 +1,7 @@
 package cima;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,27 +84,37 @@ public class CIMAVertice extends Vertice{
 		}
 		super.drawAllVertice(g, verticeColor);
 
+		String stringVertice;
+		String displayedInfoString = "";
 		if(activeAnimation){
 //			g.setColor(Color.white);
 			g.setColor(Color.black);
-			String string = String.valueOf(currentAgents);
-			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
-			g.drawString(string, xMiddle - stringWidth/2, yMiddle+diameter/4);
+			stringVertice = String.valueOf(currentAgents);
+			displayedInfoString = "aktuelle Agentenanzahl";
+			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(stringVertice,g).getWidth());
+			g.drawString(stringVertice, xMiddle - stringWidth/2, yMiddle+diameter/4);
 		}else{
-			String string;
 			if(drawMu){
-				string = String.valueOf(mu);
+				stringVertice = String.valueOf(mu);
+				displayedInfoString = "minimale Agenten als Homebase";
 			}else{
 				calcGeneralVerticeWeight();
-				string = String.valueOf(verticeWeight);
+				stringVertice = String.valueOf(verticeWeight);
+				displayedInfoString = "Knotengewichte";
 				if(MessageData.animationInProgress && marked){
-					string = String.valueOf(specialVerticeWeight);
+					stringVertice = String.valueOf(specialVerticeWeight);
 				}
 			}
 			g.setColor(stringColor);
-			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
-			g.drawString(string, xMiddle - stringWidth/2, yMiddle+diameter/4);
+			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(stringVertice,g).getWidth());
+			g.drawString(stringVertice, xMiddle - stringWidth/2, yMiddle+diameter/4);
 		}
+		
+		//draw the displayedInfo - string in upper right corner
+		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(displayedInfoString,g).getWidth());
+//		g.drawString(displayedInfoString, CIMAGui.getGui().getWidth() - stringWidth, CIMAGui.getGui().getHeight());
+		g.drawString(displayedInfoString, CIMAGui.getGui().getWidth() - 5 - stringWidth, 12);
+		
 
 	}
 
