@@ -22,6 +22,7 @@ public class MessageData {
 	private int xMiddleAnimationEndPosition;
 	private int yMiddleAnimationEndPosition;
 	private static int animationSpeed = 3;
+	private static MessageData displayCalcInfos;
 	
 	private String max1String = "";
 	private String max2String = "";
@@ -277,7 +278,7 @@ public class MessageData {
 			return;
 		}
 		
-		if(!activeAnimation){
+		if(displayCalcInfos != this){
 			return;
 		}
 		
@@ -318,7 +319,10 @@ public class MessageData {
 		g.setColor(Color.black);
 		String string = String.valueOf(lamdaValue);
 		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
+		Font defaultFont = g.getFont();
+		g.setFont(CIMAConstants.getTextFont());
 		g.drawString(string, ovalMitteX - stringWidth/2, ovalMitteY+messageDataRadius/2);
+		g.setFont(defaultFont);
 	}
 
 //	private void drawArrow(Graphics g){
@@ -379,6 +383,9 @@ public class MessageData {
 		if(animationSpeed >= 0 && animationSpeed <= 10){
 			MessageData.animationSpeed = animationSpeed;
 		}
+	}
+	public static void resetDisplayCalcInfos(){
+		displayCalcInfos = null;
 	}
 	
 	public void markAsAnimationColor(){
@@ -462,6 +469,7 @@ public class MessageData {
 	public SendMessageAnimationTimer animation(){
 		SendMessageAnimationTimer timer = new SendMessageAnimationTimer();
 		timer.start();
+		displayCalcInfos = this;
 		return timer;
 	}
 

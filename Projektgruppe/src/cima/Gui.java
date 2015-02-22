@@ -37,7 +37,7 @@ public abstract class Gui extends JPanel{
 //	protected JButton buttonAnimation = new JButton("Animation berechnen");
 	protected JButton buttonClear = new JButton("Clear");
 	protected JButton buttonBack = new JButton("Zurück");
-//	protected JToggleButton toggleAutoAlgo = new JToggleButton("AutoCalc");
+	protected JToggleButton togglePause = new JToggleButton("\u25AE\u25AE");
 	private JButton buttonNextAgentAnimationStep = new JButton("\u25BA");//RightArrow
 	private JButton buttonNextCalculateAnimationStep = new JButton("\u25BA");
 	protected JButton buttonCompleteAgentAnimation = new JButton("Baum dekontaminieren");
@@ -162,19 +162,21 @@ public abstract class Gui extends JPanel{
 			}
 		});
 
-//		toggleAutoAlgo.addItemListener(new ItemListener() {
-//
-//			@Override
-//			public void itemStateChanged(ItemEvent e) {
-//				if(e.getStateChange() == ItemEvent.SELECTED){
-//					autoAlgo = true;
-//					calcAlgorithmus(true);
-//				}else if(e.getStateChange() == ItemEvent.DESELECTED){
-//					autoAlgo = false;
-//				}
-//			}
-//		});
+		togglePause.addItemListener(new ItemListener() {
 
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED){
+					CIMAVertice.setAnimationSpeed(0);
+					MessageData.setAnimationSpeed(0);
+				}else if(e.getStateChange() == ItemEvent.DESELECTED){
+					CIMAVertice.setAnimationSpeed((int) spinnerAnimationSpeed.getValue());
+					MessageData.setAnimationSpeed((int) spinnerAnimationSpeed.getValue());
+				}
+			}
+		});
+
+		buttonBar.add(togglePause);
 		buttonBar.add(spinnerAnimationSpeed);
 		buttonBar.add(buttonBack);
 		buttonBar.add(buttonCalculate);
@@ -184,7 +186,6 @@ public abstract class Gui extends JPanel{
 		buttonBar.add(buttonNextAgentAnimationStep);
 		buttonBar.add(buttonNextCalculateAnimationStep);
 		buttonBar.add(buttonClear);
-//		buttonBar.add(toggleAutoAlgo);
 		this.add(buttonBar, "South");
 		
 		
@@ -273,6 +274,7 @@ public abstract class Gui extends JPanel{
 		buttonSetEnabled(buttonCompleteAgentAnimation, false);
 //		buttonAnimation.setText("Animation berechnen");
 		spinnerAnimationSpeed.setVisible(false);
+		togglePause.setVisible(false);
 		
 		if(rootVertice == null || rootVertice.getChildren().size() < 1){
 //			buttonBack.setVisible(false);
@@ -290,6 +292,7 @@ public abstract class Gui extends JPanel{
 			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
 			buttonSetEnabled(buttonCompleteAgentAnimation, false);
 			spinnerAnimationSpeed.setVisible(false);
+			togglePause.setVisible(false);
 		}
 
 		
@@ -302,6 +305,7 @@ public abstract class Gui extends JPanel{
 			buttonSetEnabled(buttonClear, false);
 			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
 			spinnerAnimationSpeed.setVisible(true);
+			togglePause.setVisible(true);
 //			spinnerAnimationSpeed.setVisible(false);
 			
 			if(CIMAAnimation.singeAnimationModus){
@@ -334,6 +338,7 @@ public abstract class Gui extends JPanel{
 			buttonSetEnabled(buttonClear, false);
 			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
 			spinnerAnimationSpeed.setVisible(false);
+			togglePause.setVisible(false);
 		}
 		
 		if(CIMAVertice.activeAnimation){
@@ -356,6 +361,7 @@ public abstract class Gui extends JPanel{
 			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
 			buttonSetEnabled(buttonCompleteAgentAnimation, true);
 			spinnerAnimationSpeed.setVisible(true);
+			togglePause.setVisible(true);
 			
 			if(CIMAAnimation.singeAnimationModus){
 //				buttonNextAgentAnimationStep.setVisible(true);

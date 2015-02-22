@@ -97,7 +97,10 @@ public class CIMAVertice extends Vertice{
 			stringVertice = String.valueOf(currentAgents);
 			displayedInfoString = "aktuelle Agentenanzahl";
 			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(stringVertice,g).getWidth());
+			Font defaultFont = g.getFont();
+			g.setFont(CIMAConstants.getTextFont());
 			g.drawString(stringVertice, xMiddle - stringWidth/2, yMiddle+diameter/4);
+			g.setFont(defaultFont);
 		}else{
 			if(drawMu){
 				stringVertice = String.valueOf(mu);
@@ -112,7 +115,10 @@ public class CIMAVertice extends Vertice{
 			}
 			g.setColor(stringColor);
 			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(stringVertice,g).getWidth());
+			Font defaultFont = g.getFont();
+			g.setFont(CIMAConstants.getTextFont());
 			g.drawString(stringVertice, xMiddle - stringWidth/2, yMiddle+diameter/4);
+			g.setFont(defaultFont);
 		}		
 
 	}
@@ -133,15 +139,18 @@ public class CIMAVertice extends Vertice{
 		super.drawAllTreeLines(g);
 
 		if(parent != null){
-			g.setColor(Color.lightGray);
+			g.setColor(lineColor);
 			ovalMiddleX = Math.min(xMiddle, parent.getMiddleX()) + Math.abs(xMiddle - parent.getMiddleX()) / 2;
 			ovalMiddleY = Math.min(yMiddle, parent.getMiddleY()) + Math.abs(yMiddle - parent.getMiddleY()) / 2;
 			g.fillOval(ovalMiddleX - ovalWidth/2, ovalMiddleY - ovalWidth/2, ovalWidth, ovalWidth);
 
-			g.setColor(Color.black);
+			g.setColor(Color.WHITE);
 			String string = String.valueOf(edgeWeightToParent);
 			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
+			Font defaultFont = g.getFont();
+			g.setFont(CIMAConstants.getTextFont());
 			g.drawString(string, ovalMiddleX - stringWidth/2, ovalMiddleY+diameter/4);
+			g.setFont(defaultFont);
 
 
 //			g.drawString(""+edgeWeightToParent, Math.min(xMiddle, parent.getMiddleX()) + Math.abs(xMiddle - parent.getMiddleX()) / 2, Math.min(yMiddle, parent.getMiddleY()) + Math.abs(yMiddle - parent.getMiddleY()) / 2);
@@ -164,7 +173,10 @@ public class CIMAVertice extends Vertice{
 			g.setColor(Color.black);
 			String string = String.valueOf(moveAgentCounter);
 			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
+			Font defaultFont = g.getFont();
+			g.setFont(CIMAConstants.getTextFont());
 			g.drawString(string, (int)(xMiddleAnimation - stringWidth/2), (int)(yMiddleAnimation + diameter/4));
+			g.setFont(defaultFont);
     	}
 	        
 		for(Vertice child : children){

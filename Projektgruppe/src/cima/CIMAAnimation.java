@@ -111,6 +111,7 @@ public class CIMAAnimation {
 	
 	public void stopSendMessageAnimation(){
 		breakThread = true;
+		MessageData.resetDisplayCalcInfos();
 //		index = 0;	
 		MessageData.animationInProgress = false;
 		activeAgent = false;
@@ -258,6 +259,7 @@ public class CIMAAnimation {
 
 				if(index < 0){
 					index = 0;
+					MessageData.resetDisplayCalcInfos();
 				}
 
 				//bis size - 1 weil der letzte schritt die animation null -> homebase ist und übersprungen werden muss
@@ -275,6 +277,7 @@ public class CIMAAnimation {
 						msgData.resetAllColors();
 					}
 					index = 0;
+					MessageData.resetDisplayCalcInfos();
 				}
 				
 
@@ -304,6 +307,7 @@ public class CIMAAnimation {
 					msgData.resetAllColors();
 				}
 				index = 0;
+				MessageData.resetDisplayCalcInfos();
 				MessageData.animationInProgress = false;
 				if(breakThread){
 					MessageData.clearGui = true;
