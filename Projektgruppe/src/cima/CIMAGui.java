@@ -23,15 +23,12 @@ public class CIMAGui extends Gui{
 		return gui;
 	}
 
-
-
 	@Override
 	protected void calcAlgorithmus(boolean repaintBool) {
 
 		if(rootVertice instanceof CIMAVertice){
 			((CIMAVertice) rootVertice).algorithmus();
 			homeBase = ((CIMAVertice) rootVertice).findHomeBase();
-//			((CIMAVertice) homeBase).calcAgentsMove();
 		}
 
 		if(repaintBool){
@@ -44,32 +41,19 @@ public class CIMAGui extends Gui{
 		addMouseListener(new MouseListener() {
 
 			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+			public void mouseReleased(MouseEvent e) {}
 
 			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-			}
+			public void mousePressed(MouseEvent e) {}
 
 			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+			public void mouseExited(MouseEvent e) {}
 
 			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+			public void mouseEntered(MouseEvent e) {}
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
-//				CIMAAnimation.getCIMAAnimation().stopAllAnimations();
 
 				if(SwingUtilities.isRightMouseButton(e)){
 					if(rootVertice != null){

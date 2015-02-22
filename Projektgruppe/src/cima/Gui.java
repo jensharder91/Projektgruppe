@@ -25,7 +25,6 @@ public abstract class Gui extends JPanel{
 
 	protected static final long serialVersionUID = 1L;
 
-//	protected Vertice rootVertice = null;
 	public static Vertice rootVertice = null;
 	protected Vertice homeBase = null;
 	protected Vertice currentVertice = null;
@@ -56,7 +55,6 @@ public abstract class Gui extends JPanel{
 	private boolean buttonNextAgentAnimationStepBoolean = false;
 	private boolean buttonNextCalculateAnimationStepBoolean = false;
 	private boolean buttonCompleteAgentAnimationBoolean = false;
-	private boolean spinnerModelBoolean = false;
 	private boolean spinnerAnimationSpeedBoolean = false;
 	private boolean checkboxShowMessageDataBoolean = false;
 	
@@ -65,17 +63,11 @@ public abstract class Gui extends JPanel{
 	protected boolean autoAlgo = false;
 
 	protected Gui(){
-//		super(true);
 
 		createGui();
 
 		addGuiMouseListener();
 	}
-	
-//	public void makeStrate(){
-//		this.createBufferStrategy(2);
-//		strat = getBufferStrategy();
-//	}
 
 	protected void createGui(){
 
@@ -138,24 +130,6 @@ public abstract class Gui extends JPanel{
 
 			}
 		});
-		
-//		buttonAnimation.addActionListener(new ActionListener() {
-//
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//
-////				homeBase = ((CIMAVertice) rootVertice).findHomeBase();
-//				((CIMAVertice) homeBase).calcAgentsMove();
-//				
-//				if(calcAgentMovesReady){
-//					calcAgentMovesReady = false;
-//				}else{
-//					calcAgentMovesReady = true;
-//				}
-//				repaint();
-//
-//			}
-//		});
 		
 		buttonCompleteAgentAnimation.addActionListener(new ActionListener() {
 			
@@ -226,7 +200,6 @@ public abstract class Gui extends JPanel{
 		buttonBar.add(buttonShowMu);
 		buttonBar.add(buttonCalculate);
 		buttonBar.add(buttonCalculateAnimation);
-//		buttonBar.add(buttonAnimation);
 		buttonBar.add(buttonCompleteAgentAnimation);
 		buttonBar.add(buttonNextAgentAnimationStep);
 		buttonBar.add(buttonNextCalculateAnimationStep);
@@ -306,96 +279,50 @@ public abstract class Gui extends JPanel{
 
 		
 		//disable / enable buttons
-//		buttonBack.setVisible(false);
-//		buttonSetEnabled(buttonBack, false);
+
 		buttonBackBoolean = false;
 		buttonShowMuBoolean = false;
-//		buttonCalculate.setVisible(true);
-//		buttonSetEnabled(buttonCalculate, true);
 		buttonCalculateBoolean = true;
-//		buttonCalculateAnimation.setVisible(true);
-//		buttonSetEnabled(buttonCalculateAnimation, true);
 		buttonCalculateAnimationBoolean = true;
 		if(!buttonCalculateAnimation.getText().equals("Berechnung animieren")){
 			buttonCalculateAnimation.setText("Berechnung animieren");
 		}
-//		buttonClear.setVisible(true);
-//		buttonSetEnabled(buttonClear, true);
 		buttonClearBoolean = true;
-//		toggleAutoAlgo.setVisible(true);
-//		buttonNextAgentAnimationStep.setVisible(false);
-//		buttonSetEnabled(buttonNextAgentAnimationStep, false);
 		buttonNextAgentAnimationStepBoolean = false;
-//		buttonNextCalculateAnimationStep.setVisible(true);
-//		buttonSetEnabled(buttonNextCalculateAnimationStep, true);
 		buttonNextCalculateAnimationStepBoolean = true;
-//		buttonCompleteAgentAnimation.setVisible(false);
-//		buttonSetEnabled(buttonCompleteAgentAnimation, false);
 		buttonCompleteAgentAnimationBoolean = false;
-//		buttonAnimation.setText("Animation berechnen");
-//		spinnerAnimationSpeed.setVisible(false);
 		spinnerAnimationSpeedBoolean = false;
-//		togglePause.setVisible(false);
 		togglePauseBoolean = false;
 		checkboxShowMessageDataBoolean = false;
 		
 		if(rootVertice == null || rootVertice.getChildren().size() < 1){
-//			buttonBack.setVisible(false);
-//			buttonCalculate.setVisible(false);
-//			buttonCalculateAnimation.setVisible(false);
-//			buttonClear.setVisible(false);
-//			buttonNextAgentAnimationStep.setVisible(false);
-//			buttonNextCalculateAnimationStep.setVisible(false);
-//			buttonCompleteAgentAnimation.setVisible(false);
-//			buttonSetEnabled(buttonBack, false);
 			buttonBackBoolean = false;
-//			buttonSetEnabled(buttonCalculate, false);
 			buttonCalculateBoolean = false;
-//			buttonSetEnabled(buttonCalculateAnimation, false);
 			buttonCalculateAnimationBoolean  = false;
-//			buttonSetEnabled(buttonClear, false);
 			buttonClearBoolean = false;
-//			buttonSetEnabled(buttonNextAgentAnimationStep, false);
 			buttonNextAgentAnimationStepBoolean = false;
-//			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
 			buttonNextCalculateAnimationStepBoolean = false;
-//			buttonSetEnabled(buttonCompleteAgentAnimation, false);
 			buttonCompleteAgentAnimationBoolean = false;
-//			spinnerAnimationSpeed.setVisible(false);
 			spinnerAnimationSpeedBoolean = false;
-//			togglePause.setVisible(false);
 			togglePauseBoolean = false;
 		}
 
 		
 		if(MessageData.animationInProgress){
-//			buttonCalculate.setVisible(false);
 			if(!buttonCalculateAnimation.getText().equals("Animation abbrechen")){
 				buttonCalculateAnimation.setText("Animation abbrechen");
 			}
-//			buttonClear.setVisible(false);
-//			buttonNextCalculateAnimationStep.setVisible(false);
-//			buttonSetEnabled(buttonCalculate, false);
 			buttonCalculateBoolean  = false;
-//			buttonSetEnabled(buttonClear, false);
 			buttonClearBoolean = false;
-//			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
 			buttonNextCalculateAnimationStepBoolean = false;
-//			spinnerAnimationSpeed.setVisible(true);
 			spinnerAnimationSpeedBoolean = true;
-//			togglePause.setVisible(true);
 			togglePauseBoolean = true;
-//			spinnerAnimationSpeed.setVisible(false);
 			
 			if(CIMAAnimation.singeAnimationModus){
-//				buttonNextCalculateAnimationStep.setVisible(true);
-//				buttonCalculateAnimation.setVisible(true);//TODO let the complete animation finish the step by step modus
 				if(!buttonCalculateAnimation.getText().equals("komplette Animation")){
 					buttonCalculateAnimation.setText("komplette Animation");
 				}
-//				buttonSetEnabled(buttonNextCalculateAnimationStep, true);
 				buttonNextCalculateAnimationStepBoolean = true;
-//				buttonSetEnabled(buttonCalculateAnimation, true);
 				buttonCalculateAnimationBoolean = true;
 			}
 		}
@@ -412,86 +339,43 @@ public abstract class Gui extends JPanel{
 			buttonCalculateBoolean = false;
 		}
 		
-//		if(calcAgentMovesReady){
 		if(CIMAVertice.drawMu == true){
-//			buttonBack.setVisible(true);
-//			buttonNextAgentAnimationStep.setVisible(true);
-//			buttonCompleteAgentAnimation.setVisible(true);
 			if(!buttonCompleteAgentAnimation.getText().equals("Baum dekontaminieren")){
 				buttonCompleteAgentAnimation.setText("Baum dekontaminieren");
 			}
-//			buttonCalculate.setVisible(false);
-//			buttonCalculateAnimation.setVisible(false);
-//			buttonClear.setVisible(false);
-//			buttonNextCalculateAnimationStep.setVisible(false);
-//			toggleAutoAlgo.setVisible(false);
-//			buttonAnimation.setText("Animation abbrechen");
-			
-//			buttonSetEnabled(buttonBack, true);
 			buttonBackBoolean = true;
-//			buttonSetEnabled(buttonNextAgentAnimationStep, true);
 			buttonNextAgentAnimationStepBoolean = true;
-//			buttonSetEnabled(buttonCompleteAgentAnimation, true);
 			buttonCompleteAgentAnimationBoolean = true;
-//			buttonSetEnabled(buttonCalculate, false);
 			buttonCalculateBoolean = false;
-//			buttonSetEnabled(buttonCalculateAnimation, false);
 			buttonCalculateAnimationBoolean = false;
-//			buttonSetEnabled(buttonClear, false);
 			buttonClearBoolean = false;
-//			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
 			buttonNextCalculateAnimationStepBoolean = false;
-//			spinnerAnimationSpeed.setVisible(false);
 			spinnerAnimationSpeedBoolean = false;
-//			togglePause.setVisible(false);
 			togglePauseBoolean = false;
 			checkboxShowMessageDataBoolean = true;
 		}
 		
 		if(CIMAVertice.activeAnimation){
-//			buttonBack.setVisible(false);
-//			buttonCalculate.setVisible(false);
-//			buttonCalculateAnimation.setVisible(false);
-//			buttonClear.setVisible(false);
-//			toggleAutoAlgo.setVisible(false);
-//			buttonNextAgentAnimationStep.setVisible(false);
-//			buttonNextCalculateAnimationStep.setVisible(false);
-//			buttonCompleteAgentAnimation.setVisible(true);
 			if(!buttonCompleteAgentAnimation.getText().equals("Animation abbrechen")){
 				buttonCompleteAgentAnimation.setText("Animation abbrechen");
 			}
-//			buttonAnimation.setText("Animation abbrechen");
-			
-//			buttonSetEnabled(buttonBack, false);
 			buttonBackBoolean = false;
-//			buttonSetEnabled(buttonCalculate, false);
 			buttonCalculateBoolean = false;
-//			buttonSetEnabled(buttonCalculateAnimation, false);
 			buttonCalculateAnimationBoolean = false;
-//			buttonSetEnabled(buttonClear, false);
 			buttonClearBoolean = false;
-//			buttonSetEnabled(buttonNextAgentAnimationStep, false);
 			buttonNextAgentAnimationStepBoolean = false;
-//			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
 			buttonNextCalculateAnimationStepBoolean = false;
-//			buttonSetEnabled(buttonCompleteAgentAnimation, true);
 			buttonCompleteAgentAnimationBoolean = true;
-//			spinnerAnimationSpeed.setVisible(true);
 			spinnerAnimationSpeedBoolean = true;
-//			togglePause.setVisible(true);
 			togglePauseBoolean = true;
 			checkboxShowMessageDataBoolean = true;
 			
 			if(CIMAAnimation.singeAnimationModus){
-//				buttonNextAgentAnimationStep.setVisible(true);
-//				buttonCompleteAgentAnimation.setVisible(true);//TODO let the complete animation finish the step by step modus
 				if(!buttonCompleteAgentAnimation.getText().equals("komplette Animation")){
 					buttonCompleteAgentAnimation.setText("komplette Animation");
 				}
 				
-//				buttonSetEnabled(buttonNextAgentAnimationStep, true);
 				buttonNextAgentAnimationStepBoolean  = true;
-//				buttonSetEnabled(buttonCompleteAgentAnimation, true);
 				buttonCompleteAgentAnimationBoolean = true;
 			}
 		}

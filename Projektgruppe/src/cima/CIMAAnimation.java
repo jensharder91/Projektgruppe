@@ -5,7 +5,6 @@ import java.util.List;
 
 import cima.MessageData.SendMessageAnimationTimer;
 import cima.Gui;
-import cima.Vertice;
 import cima.CIMAVertice.AgentAnimationTimer;
 
 public class CIMAAnimation {
@@ -163,7 +162,6 @@ public class CIMAAnimation {
 				//bis size - 1 weil der letzte schritt die animation null -> homebase ist und übersprungen werden muss
 				if(index >= agentsWayList.size() -1){
 					CIMAVertice.activeAnimation = false;
-//					Gui.calcAgentMovesReady = false;
 					index = 0;
 				}
 
@@ -173,8 +171,6 @@ public class CIMAAnimation {
 
 				//bis size - 1 weil der letzte schritt die animation null -> homebase ist und übersprungen werden muss
 				for(int i = index; i < agentsWayList.size() -1; i++){
-
-	//				Gui.rootVertice.logSubtree();
 
 					//breche bei bedarf die animation ab!
 					if(breakThread){
@@ -206,15 +202,12 @@ public class CIMAAnimation {
 
 			AgentAnimationTimer timer = agentsWayList.get(i).getSender().animation(agentsWayList.get(i).getReceiver(), agentsWayList.get(i).getAgentNumber());
 
-//	        synchronized(timer){
-				try {
-					timer.join();
-//					timer.wait();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-//	        }
+			try {
+				timer.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 			if(i < agentsWayList.size()){
 				agentsWayList.get(i).getReceiver().changeCurrentAgents(agentsWayList.get(i).getAgentNumber());
 			}
@@ -227,7 +220,6 @@ public class CIMAAnimation {
 			try {
 				Thread.sleep(1000 - 75*CIMAVertice.getAnimationSpeed());
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -274,15 +266,9 @@ public class CIMAAnimation {
 					if(breakThread){
 						MessageData.clearGui = true;
 					}else{
-//						CIMAVertice.drawMu = true;
 						CIMAAnimation.afterMessageDataCalc = true;
 					}
-//			
-//					for(MessageData msgData : messageDataList){
-//						msgData.resetAllColors();
-//					}
 					index = 0;
-//					MessageData.resetDisplayCalcInfos();
 				}
 				
 
@@ -291,10 +277,7 @@ public class CIMAAnimation {
 				breakThread = false;
 			
 			
-				for(int i = index; i < messageDataList.size(); i++){
-	
-	//				gui.repaint();
-					
+				for(int i = index; i < messageDataList.size(); i++){	
 	
 					doAnimation(i);
 					
@@ -305,16 +288,11 @@ public class CIMAAnimation {
 						break;
 					}
 				}
-//				for(MessageData msgData : messageDataList){
-//					msgData.resetAllColors();
-//				}
 				index = 0;
-//				MessageData.resetDisplayCalcInfos();
 				MessageData.animationInProgress = false;
 				if(breakThread){
 					MessageData.clearGui = true;
 				}else{
-//					CIMAVertice.drawMu = true;
 					CIMAAnimation.afterMessageDataCalc = true;
 				}
 			}
@@ -329,12 +307,7 @@ public class CIMAAnimation {
 			for(int j  = 0; j < i; j++){
 				messageDataList.get(j).animationFinished();
 			}
-
-//			if(i > 0){
-//				if(messageDataList.get(i-1) != null){
-//					messageDataList.get(i-1).resetAllColors();
-//				}
-//			}
+			
 			for(MessageData msgData : messageDataList){
 				msgData.resetAllColors();
 			}
@@ -345,9 +318,7 @@ public class CIMAAnimation {
 				if(i < messageDataList.size()){
 					messageDataList.get(i).animationFinished();
 				}
-//				timer.wait();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			

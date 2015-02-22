@@ -17,7 +17,6 @@ public class CIMAVertice extends Vertice{
 	private int specialVerticeWeight;
 	public static boolean drawMu = false;
 	private Color stringColor = Color.black;
-//	private boolean verticeStarted = false;
 	private int mu;
 	private List<MessageData> lamdas = new ArrayList<MessageData>();
 
@@ -63,7 +62,6 @@ public class CIMAVertice extends Vertice{
 	protected void drawSubtree(Graphics g, int areaX, int areaY, int areaWidth,
 			int areaHeight) {
 		super.drawSubtree(g, areaX, areaY, areaWidth, areaHeight);
-//		drawAnimation(g);
 	}
 
 	@Override
@@ -75,7 +73,6 @@ public class CIMAVertice extends Vertice{
 				if(decontaminated){
 					verticeColor = Color.GREEN;
 				}else{
-	//				verticeColor = Color.RED;
 					verticeColor = new Color(255, 50, 0);
 				}
 				
@@ -92,7 +89,6 @@ public class CIMAVertice extends Vertice{
 		String stringVertice;
 		displayedInfoString = "";
 		if(activeAnimation){
-//			g.setColor(Color.white);
 			g.setColor(Color.black);
 			stringVertice = String.valueOf(currentAgents);
 			displayedInfoString = "aktuelle Agentenanzahl";
@@ -128,7 +124,6 @@ public class CIMAVertice extends Vertice{
 		Font defaulFont = g.getFont();
 		g.setFont(CIMAConstants.getTextFont());
 		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(displayedInfoString,g).getWidth());
-//		g.drawString(displayedInfoString, CIMAGui.getGui().getWidth() - stringWidth, CIMAGui.getGui().getHeight());
 		g.drawString(displayedInfoString, CIMAGui.getGui().getWidth() - 5 - stringWidth, 12);
 		g.setFont(defaulFont);
 	}
@@ -151,21 +146,12 @@ public class CIMAVertice extends Vertice{
 			g.setFont(CIMAConstants.getTextFont());
 			g.drawString(string, ovalMiddleX - stringWidth/2, ovalMiddleY+diameter/4);
 			g.setFont(defaultFont);
-
-
-//			g.drawString(""+edgeWeightToParent, Math.min(xMiddle, parent.getMiddleX()) + Math.abs(xMiddle - parent.getMiddleX()) / 2, Math.min(yMiddle, parent.getMiddleY()) + Math.abs(yMiddle - parent.getMiddleY()) / 2);
 		}
 	}
 	
     public void drawAnimation(Graphics g) {
     	
-    	//no active Animation, probl animation canceled
-//    	if(!activeAnimation){
-//    		return;
-//    	}
-    	
     	if(activeAgent){
-//    		g.setColor(Color.black);
     		g.setColor(Color.green);
 	        g.fillOval((int)(xMiddleAnimation - diameter/2), (int)(yMiddleAnimation - diameter/2), diameter, diameter);
 			g.setColor(new Color(0x33,0x44,0x55));
@@ -227,7 +213,6 @@ public class CIMAVertice extends Vertice{
 
 	public void reset(){
 		lamdas.clear();
-//		verticeStarted = false;
 		for(MessageData msgData : messageDataList){
 			msgData.resetAllColors();
 		}
@@ -249,11 +234,8 @@ public class CIMAVertice extends Vertice{
 	private void startAlgo(){
 		if(children.size() == 0 && parent != null){
 			//got a ready leaf -> send message
-//			if(verticeStarted == false){
-//				verticeStarted = true;
 			specialVerticeWeight = calcSpecialVerticeWeight((CIMAVertice)parent);
 				((CIMAVertice) parent).receive(new MessageData(specialVerticeWeight, this, (CIMAVertice) parent, null, null, specialVerticeWeight, false));
-//			}
 		}else{
 			for(Vertice child : children){
 				if(!(child instanceof CIMAVertice)){
@@ -262,13 +244,6 @@ public class CIMAVertice extends Vertice{
 				((CIMAVertice) child).startAlgo();
 			}
 		}
-
-//		if(children.size() == 0 && parent != null){
-//got a ready leaf -> send message
-//			((CIMAVertice) parent).receive(new MessageData(verticeWeight, this));
-//		}else{
-//			((CIMAVertice) children.get(0)).startAlgo();
-//		}
 	}
 
 	private void receive(MessageData data){
@@ -276,16 +251,10 @@ public class CIMAVertice extends Vertice{
 		messageDataList.add(data);
 
 		if(lamdas.size() == numberOfNeighbors() -1){
-			//TODO *
 			computeLamdasAndSendTo(getMissingNeightbour());
 		}else if(lamdas.size() == numberOfNeighbors()){
-			//TODO **
 			if(lamdas.size() == 1 && children.size() == 0){
-				//leaf, dont send aganin ? (-> check if it has started)
-//				if(verticeStarted == false){
-//					verticeStarted = true;
-//					computeLamdasAndSendTo(data.getSender());
-//				}
+				
 			}else if(lamdas.size() == 1 && children.size() > 0){
 				//root with just one child
 				computeLamdasAndSendTo(data.getSender());
@@ -328,16 +297,13 @@ public class CIMAVertice extends Vertice{
 		}
 		MessageData max1 = new MessageData(0, null, null, null, null, 0, false);
 		MessageData max2 = new MessageData(0, null, null, null, null, 0, false);
-//		int otherVerticeWeight = 0;
 		if(maximums.size() >= 1){
 			max1 = maximums.get(0);
 		}
 		if(maximums.size() >= 2){
 			max2 = maximums.get(1);
-//			otherVerticeWeight = maximums.get(1).getSender().getVerticeWeight();
 		}
 
-		//int maxValue = Math.max(max1.getLamdaValue(), max2.getLamdaValue() + verticeWeight);//TODO get verticeWeight from other vertice
 		MessageData calcMessageData;
 		specialVerticeWeight = calcSpecialVerticeWeight(receiverNode);
 		if(max1.getLamdaValue() >= max2.getLamdaValue() + specialVerticeWeight){
@@ -460,8 +426,6 @@ public class CIMAVertice extends Vertice{
 	private void calcAgentsMove(){
 
 		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
-		
-//		MessageData.animationInProgress = false;
 
 		//animation läuft schon.... breche neue animation ab
 		if(activeAnimation){
@@ -470,7 +434,6 @@ public class CIMAVertice extends Vertice{
 		}
 
 		agentWayList.clear();
-//		messageDataList.clear();
 		
 		CIMAVertice homeBase = findHomeBase();
 		homeBase.resetAllVerticeAnimation();
@@ -506,9 +469,6 @@ public class CIMAVertice extends Vertice{
 		}
 
 		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
-//		if(!activeAnimation){
-//			calcAgentsMove();
-//		}
 		
 		if(!MessageData.animationInProgress){
 			algorithmus();
@@ -522,9 +482,6 @@ public class CIMAVertice extends Vertice{
 		if(CIMAAnimation.breakThread){
 			return;
 		}
-		
-		//make sure the algo is calced //TODO
-//		algorithmus();
 
 		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
 
@@ -537,7 +494,6 @@ public class CIMAVertice extends Vertice{
 			calcAgentsMove();
 		}
 
-//		calcAgentsMove();
 		animation.startAgentAnimation(agentWayList);
 	}
 
@@ -655,18 +611,15 @@ public class CIMAVertice extends Vertice{
 	}
 	public void markAsMax(int specialVerticeWeight){
 		this.specialVerticeWeight = specialVerticeWeight;
-//		stringColor = CIMAConstants.getMarkAsMaxColor();
 		verticeColor = CIMAConstants.getMarkAsMaxColor();
 		marked = true;
 	}
 	public void markAsSecMax(int specialVerticeWeight){
 		this.specialVerticeWeight = specialVerticeWeight;
-//		stringColor = CIMAConstants.getMarkAsSecMaxColor();
 		verticeColor = CIMAConstants.getMarkAsSecMaxColor();
 		marked = true;
 	}
 	public void resetColor(){
-//		stringColor = Color.black;
 		verticeColor = Color.white;
 		marked = false;
 	}

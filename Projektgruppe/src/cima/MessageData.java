@@ -34,10 +34,8 @@ public class MessageData {
 	private int MiddlepunktKreisX;
 	private int MiddlepunktKreisY;
 	private int messageDataRadius = 8;
-	private int segmentMitteX;
-	private int segmentMitteY;
-	
-	//testing
+
+	//calc animation coords
 	int X_segMitteGewollt;
 	int Y_segMitteGewollt;
 	int X_mitte_segMitteGewollt_sender;
@@ -90,7 +88,7 @@ public class MessageData {
 		MiddlepunktKreisX = MiddlepunktX + orthVektorX;
 		MiddlepunktKreisY = MiddlepunktY + orthVektorY;
 		
-		//////TODO
+	
 		double orthLength = Math.sqrt(orthVektorX*orthVektorX + orthVektorY*orthVektorY);
 		X_segMitteGewollt = (int) (MiddlepunktX - orthVektorX/orthLength * 15);
 		Y_segMitteGewollt = (int) (MiddlepunktY - orthVektorY/orthLength * 15);
@@ -123,22 +121,15 @@ public class MessageData {
     
      
     
-        tatsächlicherKreisMiddlepunkt_X = (int) (((x3-x4)*(x1*y2-y1*x2)-(x1-x2)*(x3*y4-y3*x4))/d);
-    
+        tatsächlicherKreisMiddlepunkt_X = (int) (((x3-x4)*(x1*y2-y1*x2)-(x1-x2)*(x3*y4-y3*x4))/d);  
         tatsächlicherKreisMiddlepunkt_Y = (int) (((y3-y4)*(x1*y2-y1*x2)-(y1-y2)*(x3*y4-y3*x4))/d);
         
         MiddlepunktKreisX = tatsächlicherKreisMiddlepunkt_X;
         MiddlepunktKreisY = tatsächlicherKreisMiddlepunkt_Y;
 
-		
-		//
-
-//		g.drawLine(MiddlepunktX, MiddlepunktY, startOrthVektorX, startOrthVektorY);
 
 		int vektorKreisMitteSenderX = getSender().getMiddleX() - MiddlepunktKreisX;
 		int vektorKreisMitteSenderY = getSender().getMiddleY() - MiddlepunktKreisY;
-//		int vektorKreisMitteReceiverX = getReceiver().getMiddleX() - MiddlepunktKreisX;
-//		int vektorKreisMitteReiciverY = getReceiver().getMiddleY() - MiddlepunktKreisY;
 		int vektorKreisMitteReceiverX = xMiddleAnimationEndPosition - MiddlepunktKreisX;
 		int vektorKreisMitteReiciverY = yMiddleAnimationEndPosition - MiddlepunktKreisY;
 
@@ -159,8 +150,6 @@ public class MessageData {
 		double längeVektorKreisMitteMiddleinie = Math.sqrt(vektorKreisMitteMiddleinieX*vektorKreisMitteMiddleinieX + vektorKreisMitteMiddleinieY*vektorKreisMitteMiddleinieY);
 		int vektorKreisMitteSegmentMitteX = (int) (vektorKreisMitteMiddleinieX/längeVektorKreisMitteMiddleinie * radius);
 		int vektorKreisMitteSegmentMitteY = (int) (vektorKreisMitteMiddleinieY/längeVektorKreisMitteMiddleinie * radius);
-		segmentMitteX = MiddlepunktKreisX + vektorKreisMitteSegmentMitteX;
-		segmentMitteY = MiddlepunktKreisY + vektorKreisMitteSegmentMitteY;
 	}
 	
 	public void drawLine(Graphics2D g){
@@ -173,7 +162,6 @@ public class MessageData {
 			clearGui = false;
 			markAsAnimationColor();
 			drawAnimationLine(g);
-//			resetColor();//TODO
 		}else{
 			if(clearGui || CIMAAnimation.breakThread){
 				return;
@@ -181,23 +169,11 @@ public class MessageData {
 			if((animationInProgress && animationFinished) || !animationInProgress){
 				g.setColor(ovalColor);
 				g.draw(new Arc2D.Double(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, Math.toDegrees(angleSender), Math.toDegrees(angleReceiver - angleSender), Arc2D.OPEN));
-//				g.drawArc(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, (int)Math.toDegrees(angleSender), (int)Math.toDegrees(angleReceiver - angleSender));
 			}
 		}
 	}
 
 	public void drawMessageData(Graphics2D g){
-
-//		g.drawOval(segmentMitteX -10, MiddlepunktKreisY + segmentMitteY - 10, 20, 20);
-		
-		/////TODO
-//		g.setColor(Color.RED);
-//		g.drawOval(X_segMitteGewollt-5, Y_segMitteGewollt-5, 10, 10);
-//		g.setColor(Color.BLUE);
-//		g.drawOval(X_mitte_segMitteGewollt_sender-5, Y_mitte_segMitteGewollt_sender-5, 10, 10);
-//		g.drawLine(X_mitte_segMitteGewollt_sender, Y_mitte_segMitteGewollt_sender, X_möglMiddlepunkt, Y_möglMiddlepunkt);
-//		g.setColor(Color.MAGENTA);
-//		g.drawOval(xMiddleAnimationEndPosition-5, yMiddleAnimationEndPosition-5, 10, 10);
 				
 		//after calc dont draw
 		if(CIMAVertice.drawMu && CIMAVertice.activeAnimation && !showMessageData){
@@ -208,26 +184,18 @@ public class MessageData {
 			clearGui = false;
 			markAsAnimationColor();
 			drawAnimation(g);
-//			resetColor();//TODO
 		}else{
 			if(clearGui || CIMAAnimation.breakThread){
 				return;
 			}
 			if((animationInProgress && animationFinished) || !animationInProgress){
-//				g.setColor(ovalColor);
-//				g.setColor(Color.YELLOW);
-//				g.setColor(ovalColor);
-//				g.drawArc(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, (int)Math.toDegrees(angleSender), (int)Math.toDegrees(angleReceiver - angleSender));
-//				drawArrow(g);
-//				drawMessageInfo(g, segmentMitteX, segmentMitteY);
-				
+
 				double angle = getStopMessageDataAngle();
 				
 				int ovalMitteX = (int) (MiddlepunktKreisX + Math.cos(angle) * radius);
 				int ovalMitteY = (int) (MiddlepunktKreisY - Math.sin(angle) * radius);
 				
 				drawMessageInfo(g, ovalMitteX, ovalMitteY);
-				//
 			}
 		}
 
@@ -235,19 +203,10 @@ public class MessageData {
 
 	public void drawAnimationLine(Graphics2D g){
 		g.setColor(ovalColor);
-//		g.setColor(CIMAConstants.getMarkAsMaxColor());
 		g.draw(new Arc2D.Double(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, Math.toDegrees(angleSender), Math.toDegrees(animationAngle), Arc2D.OPEN));
-//		g.drawArc(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, (int)Math.toDegrees(angleSender), (int)Math.toDegrees(animationAngle));
-
 	}
 	public void drawAnimation(Graphics2D g){		
 
-//		g.setColor(ovalColor);
-////		g.setColor(CIMAConstants.getMarkAsMaxColor());
-//		g.draw(new Arc2D.Double(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, Math.toDegrees(angleSender), Math.toDegrees(animationAngle), Arc2D.OPEN));
-////		g.drawArc(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, (int)Math.toDegrees(angleSender), (int)Math.toDegrees(animationAngle));
-
-		//teste: messageInfo wird im kreissegment verschoben TODO 
 		double kreisSegmentEndeAngle = angleSender + animationAngle;
 		
 		if(kreisSegmentEndeAngle >= getStopMessageDataAngle()){
@@ -261,15 +220,7 @@ public class MessageData {
 		int kreisSegmentEndeX = (int) (MiddlepunktKreisX + Math.cos(kreisSegmentEndeAngle) * radius);
 		int kreisSegmentEndeY = (int) (MiddlepunktKreisY - Math.sin(kreisSegmentEndeAngle) * radius);
 		
-//		drawMessageInfo(g, 100, kreisSegmentEndeY);
 		drawMessageInfo(g, kreisSegmentEndeX, kreisSegmentEndeY);
-		
-//		//falls schon über die hälfte des kreissegment gezeichnet wurde:
-//		if(animationAngle >= (angleReceiver - angleSender)/2){
-//			g.setColor(ovalColor);
-//			drawArrow(g);
-//			drawMessageInfo(g, animationOvalMitteX, animationOvalMitteY);
-//		}
 	}
 	
 	public void drawWriteCalcInfos(Graphics2D g){
@@ -314,7 +265,6 @@ public class MessageData {
 		
 		
 		g.setColor(ovalColor);
-//		g.setColor(CIMAConstants.getMarkAsMaxColor());
 		g.fillOval(ovalMitteX - messageDataRadius, ovalMitteY - messageDataRadius, 2*messageDataRadius, 2*messageDataRadius);
 
 		g.setColor(Color.black);
@@ -325,16 +275,6 @@ public class MessageData {
 		g.drawString(string, ovalMitteX - stringWidth/2, ovalMitteY+messageDataRadius/2);
 		g.setFont(defaultFont);
 	}
-
-//	private void drawArrow(Graphics g){
-//		//TODO pfeilspitze muss verbessert werden
-//		int pfeillänge = 10;
-//		double a = (int) (Math.PI/4 - Math.atan2((segmentMitteY - getSender().getMiddleY()),(segmentMitteX - getSender().getMiddleX())));
-//		int c = (int) (Math.cos(a)*pfeillänge);
-//		int s = (int) (Math.sin(a)*pfeillänge);
-//		g.drawLine(segmentMitteX, segmentMitteY, segmentMitteX-s, segmentMitteY-c);
-//		g.drawLine(segmentMitteX, segmentMitteY, segmentMitteX-c, segmentMitteY+s);
-//	}
 
 	private double getAngle(int x, int y){
 
@@ -351,13 +291,6 @@ public class MessageData {
 	private double getStopMessageDataAngle(){
 		
 		return angleReceiver;
-		
-//		int abstand = (int) ((2*messageDataRadius + CIMAVertice.RADIUS) / 1.8); //20 hardcoded verticewidth
-//		double angle = getAngle(radius, -abstand);
-//		
-//		angle = angleReceiver - angle;
-//		
-//		return angle;
 	}
 
 	@Override
@@ -390,7 +323,6 @@ public class MessageData {
 	}
 	
 	public void markAsAnimationColor(){
-//		markAsMax();
 		ovalColor = new Color(140, 220, 230);
 	}
 	public void markAsMax(){
@@ -490,41 +422,11 @@ public class MessageData {
 
 			activeAnimation = true;
 			animationAngle = 0;
-			
-			//mark the MessageData from the calc
-//			if(calcMax1 != null){
-//				calcMax1.markAsMax();
-//			}
-//			if(calcMax2 != null){
-//				calcMax2.markAsMax();
-//				sender.markAsMax();
-//			}
-//			if(calcMax1 != null && calcMax2 != null){
-//				if(calcMax1.getLamdaValue() >= calcMax2.getLamdaValue() + sender.getVerticeWeight()){
-//					calcMax1.markAsMax();
-//					calcMax2.markAsSecMax();
-//					sender.markAsSecMax();
-//				}else{
-//					calcMax1.markAsSecMax();
-//					calcMax2.markAsMax();
-//					sender.markAsMax();
-//				}
-//			}
-//			if(calcMax1 == null && calcMax2 == null){
-//				//has to be a leaf
-//				sender.markAsMax();
-//			}
 
 			while(isInterrupted() == false){
-
-//				animationAngle += Math.toRadians(1);
-				
-//				animationAngle += 2f/radius;
 				
 				double calcAngle = 2f/radius;
 				animationAngle += animationSpeed * calcAngle / 4;
-				
-//				animationAngle = Math.toRadians(Math.ceil(Math.toDegrees(animationAngle)));
 
 				gui.repaint();
 
@@ -540,19 +442,6 @@ public class MessageData {
 					break;
 				}
 			}
-
-			//reset the MessageData from the calc (rest color)
-//			if(calcMax1 != null){
-//				calcMax1.resetColor();
-//			}
-//			if(calcMax2 != null){
-//				calcMax2.resetColor();
-//				sender.resetColor();
-//			}
-//			if(calcMax1 == null && calcMax2 == null){
-//				//has to be a leaf
-//				sender.resetColor();
-//			}
 			
 			activeAnimation = false;
 			gui.repaint();
