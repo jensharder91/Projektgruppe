@@ -316,7 +316,9 @@ public abstract class Gui extends JPanel{
 //		buttonCalculateAnimation.setVisible(true);
 //		buttonSetEnabled(buttonCalculateAnimation, true);
 		buttonCalculateAnimationBoolean = true;
-		buttonCalculateAnimation.setText("Berechnung animieren");
+		if(!buttonCalculateAnimation.getText().equals("Berechnung animieren")){
+			buttonCalculateAnimation.setText("Berechnung animieren");
+		}
 //		buttonClear.setVisible(true);
 //		buttonSetEnabled(buttonClear, true);
 		buttonClearBoolean = true;
@@ -368,7 +370,9 @@ public abstract class Gui extends JPanel{
 		
 		if(MessageData.animationInProgress){
 //			buttonCalculate.setVisible(false);
-			buttonCalculateAnimation.setText("Animation abbrechen");
+			if(!buttonCalculateAnimation.getText().equals("Animation abbrechen")){
+				buttonCalculateAnimation.setText("Animation abbrechen");
+			}
 //			buttonClear.setVisible(false);
 //			buttonNextCalculateAnimationStep.setVisible(false);
 //			buttonSetEnabled(buttonCalculate, false);
@@ -386,7 +390,9 @@ public abstract class Gui extends JPanel{
 			if(CIMAAnimation.singeAnimationModus){
 //				buttonNextCalculateAnimationStep.setVisible(true);
 //				buttonCalculateAnimation.setVisible(true);//TODO let the complete animation finish the step by step modus
-				buttonCalculateAnimation.setText("komplette Animation");
+				if(!buttonCalculateAnimation.getText().equals("komplette Animation")){
+					buttonCalculateAnimation.setText("komplette Animation");
+				}
 //				buttonSetEnabled(buttonNextCalculateAnimationStep, true);
 				buttonNextCalculateAnimationStepBoolean = true;
 //				buttonSetEnabled(buttonCalculateAnimation, true);
@@ -411,7 +417,9 @@ public abstract class Gui extends JPanel{
 //			buttonBack.setVisible(true);
 //			buttonNextAgentAnimationStep.setVisible(true);
 //			buttonCompleteAgentAnimation.setVisible(true);
-			buttonCompleteAgentAnimation.setText("Baum dekontaminieren");
+			if(!buttonCompleteAgentAnimation.getText().equals("Baum dekontaminieren")){
+				buttonCompleteAgentAnimation.setText("Baum dekontaminieren");
+			}
 //			buttonCalculate.setVisible(false);
 //			buttonCalculateAnimation.setVisible(false);
 //			buttonClear.setVisible(false);
@@ -449,7 +457,9 @@ public abstract class Gui extends JPanel{
 //			buttonNextAgentAnimationStep.setVisible(false);
 //			buttonNextCalculateAnimationStep.setVisible(false);
 //			buttonCompleteAgentAnimation.setVisible(true);
-			buttonCompleteAgentAnimation.setText("Animation abbrechen");
+			if(!buttonCompleteAgentAnimation.getText().equals("Animation abbrechen")){
+				buttonCompleteAgentAnimation.setText("Animation abbrechen");
+			}
 //			buttonAnimation.setText("Animation abbrechen");
 			
 //			buttonSetEnabled(buttonBack, false);
@@ -475,7 +485,9 @@ public abstract class Gui extends JPanel{
 			if(CIMAAnimation.singeAnimationModus){
 //				buttonNextAgentAnimationStep.setVisible(true);
 //				buttonCompleteAgentAnimation.setVisible(true);//TODO let the complete animation finish the step by step modus
-				buttonCompleteAgentAnimation.setText("komplette Animation");
+				if(!buttonCompleteAgentAnimation.getText().equals("komplette Animation")){
+					buttonCompleteAgentAnimation.setText("komplette Animation");
+				}
 				
 //				buttonSetEnabled(buttonNextAgentAnimationStep, true);
 				buttonNextAgentAnimationStepBoolean  = true;
