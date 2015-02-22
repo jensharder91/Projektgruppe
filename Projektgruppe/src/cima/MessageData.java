@@ -301,10 +301,11 @@ public class MessageData {
 		g.drawString(max2String, 3, (int) (12 + 1.2*stringHeight));
 		if(edgeWeightUsed){
 			g.setColor(CIMAConstants.getMarkAsMaxColor());
-			stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(lamdaValue+" aktuelles Kantengewichrt",g).getWidth());
+			String kantengewichtString = lamdaValue+" Kantengewicht";
+			stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(kantengewichtString,g).getWidth());
 			g.fillRect(3, (int) (12 + 2.4*stringHeight) - stringHeight +1, stringWidth, stringHeight);
 			g.setColor(Color.BLACK);
-			g.drawString(lamdaValue+" aktuelles Kantengewichrt", 3, (int) (12 + 2.4*stringHeight));
+			g.drawString(kantengewichtString, 3, (int) (12 + 2.4*stringHeight));
 		}
 		g.setFont(defaulFont);
 	}
@@ -408,7 +409,7 @@ public class MessageData {
 			if(edgeWeightUsed){
 				calcMax1.markAsSecMax();
 			}
-			max1String = calcMax1.getLamdaValue()+" von der ersten Kante";
+			max1String = calcMax1.getLamdaValue()+" max1";
 		}
 		if(calcMax2 != null){
 			calcMax2.markAsMax();
@@ -416,7 +417,7 @@ public class MessageData {
 				calcMax2.markAsSecMax();
 			}
 			sender.markAsMax(specialVerticeWeight);
-			max1String = calcMax2.getLamdaValue()+" + "+specialVerticeWeight +" = " + (calcMax2.getLamdaValue() + specialVerticeWeight) +"  von der zweiten Kante und vom Senderknoten";
+			max1String = (calcMax2.getLamdaValue() + specialVerticeWeight) + " = "+calcMax2.getLamdaValue()+" + "+specialVerticeWeight +"  max2 + Knotengewicht";
 		}
 		if(calcMax1 != null && calcMax2 != null){
 			if(calcMax1.getLamdaValue() >= calcMax2.getLamdaValue() + sender.getVerticeWeight()){
@@ -426,8 +427,8 @@ public class MessageData {
 				}
 				calcMax2.markAsSecMax();
 				sender.markAsSecMax(specialVerticeWeight);
-				max1String = calcMax1.getLamdaValue()+" von der ersten Kante";
-				max2String = calcMax2.getLamdaValue()+" + "+specialVerticeWeight +" = " + (calcMax2.getLamdaValue() + specialVerticeWeight) +"  von der zweiten Kante und vom Senderknoten";
+				max1String = calcMax1.getLamdaValue()+" max1";
+				max2String = (calcMax2.getLamdaValue() + specialVerticeWeight) + " = "+calcMax2.getLamdaValue()+" + "+specialVerticeWeight +"  max2 + Knotengewicht";
 			}else{
 				calcMax1.markAsSecMax();
 				calcMax2.markAsMax();
@@ -436,8 +437,8 @@ public class MessageData {
 					calcMax2.markAsSecMax();
 					sender.markAsSecMax(specialVerticeWeight);
 				}
-				max1String = calcMax2.getLamdaValue()+" + "+specialVerticeWeight +" = " + (calcMax2.getLamdaValue() + specialVerticeWeight) +"  von der zweiten Kante und vom Senderknoten";
-				max2String = calcMax1.getLamdaValue()+" von der ersten Kante";
+				max1String = (calcMax2.getLamdaValue() + specialVerticeWeight) + " = "+calcMax2.getLamdaValue()+" + "+specialVerticeWeight +"  max2 + Knotengewicht";
+				max2String = calcMax1.getLamdaValue()+" max1";
 			}
 		}
 		if(calcMax1 == null && calcMax2 == null){
@@ -446,7 +447,7 @@ public class MessageData {
 			if(edgeWeightUsed){
 				sender.markAsSecMax(specialVerticeWeight);
 			}
-			max1String = specialVerticeWeight+" vom Blattknoten";
+			max1String = specialVerticeWeight+" Knotengewicht (Blatt)";
 		}
 	}
 	
