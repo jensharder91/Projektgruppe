@@ -272,7 +272,6 @@ public abstract class Gui extends JPanel{
 		
 		//messageData
 		for(MessageData msgData : CIMAVertice.messageDataList){
-			System.out.println("msgData!");
 			msgData.drawMessageData(g2); //TODO
 		}
 		

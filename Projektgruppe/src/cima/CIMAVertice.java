@@ -481,6 +481,10 @@ public class CIMAVertice extends Vertice{
 	
 	public void doCompleteSendMessageAnimation(){
 		
+		if(CIMAAnimation.breakThread){
+			return;
+		}
+		
 		//animation läuft schon.... breche die animation ab
 		if(MessageData.animationInProgress && !CIMAAnimation.singeAnimationModus){
 			CIMAAnimation.getCIMAAnimation().stopSendMessageAnimation();
@@ -496,6 +500,10 @@ public class CIMAVertice extends Vertice{
 	}
 	
 	public void doStepSendMessageAnimation(){
+		
+		if(CIMAAnimation.breakThread){
+			return;
+		}
 
 		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
 //		if(!activeAnimation){
@@ -510,6 +518,11 @@ public class CIMAVertice extends Vertice{
 	}
 
 	public void doCompleteAgentAnimation(){
+		
+		if(CIMAAnimation.breakThread){
+			return;
+		}
+		
 		//make sure the algo is calced //TODO
 //		algorithmus();
 
@@ -529,6 +542,10 @@ public class CIMAVertice extends Vertice{
 	}
 
 	public void doStepAgentAnimation(){
+		
+		if(CIMAAnimation.breakThread){
+			return;
+		}
 
 		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
 
