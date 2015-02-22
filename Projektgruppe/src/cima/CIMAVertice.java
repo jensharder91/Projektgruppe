@@ -63,7 +63,7 @@ public class CIMAVertice extends Vertice{
 	protected void drawSubtree(Graphics g, int areaX, int areaY, int areaWidth,
 			int areaHeight) {
 		super.drawSubtree(g, areaX, areaY, areaWidth, areaHeight);
-		drawAnimation(g);
+//		drawAnimation(g);
 	}
 
 	@Override
@@ -157,7 +157,7 @@ public class CIMAVertice extends Vertice{
 		}
 	}
 	
-    protected void drawAnimation(Graphics g) {
+    public void drawAnimation(Graphics g) {
     	
     	//no active Animation, probl animation canceled
 //    	if(!activeAnimation){
@@ -221,6 +221,7 @@ public class CIMAVertice extends Vertice{
 		calcMu();
 		logSubtree();
 
+		MessageData.clearGui = false;
 		drawMu = true;
 	}
 
@@ -469,7 +470,7 @@ public class CIMAVertice extends Vertice{
 		}
 
 		agentWayList.clear();
-		messageDataList.clear();
+//		messageDataList.clear();
 		
 		CIMAVertice homeBase = findHomeBase();
 		homeBase.resetAllVerticeAnimation();

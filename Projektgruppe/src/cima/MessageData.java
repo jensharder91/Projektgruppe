@@ -23,6 +23,7 @@ public class MessageData {
 	private int yMiddleAnimationEndPosition;
 	private static int animationSpeed = 3;
 	private static MessageData displayCalcInfos;
+	private static boolean showMessageData = false;
 	
 	private String max1String = "";
 	private String max2String = "";
@@ -164,7 +165,7 @@ public class MessageData {
 	
 	public void drawLine(Graphics2D g){
 		//after calc dont draw
-		if(CIMAVertice.drawMu && CIMAVertice.activeAnimation){
+		if(CIMAVertice.drawMu && CIMAVertice.activeAnimation && !showMessageData){
 			return;
 		}
 
@@ -197,13 +198,12 @@ public class MessageData {
 //		g.drawLine(X_mitte_segMitteGewollt_sender, Y_mitte_segMitteGewollt_sender, X_möglMiddlepunkt, Y_möglMiddlepunkt);
 //		g.setColor(Color.MAGENTA);
 //		g.drawOval(xMiddleAnimationEndPosition-5, yMiddleAnimationEndPosition-5, 10, 10);
-		
-		
+				
 		//after calc dont draw
-		if(CIMAVertice.drawMu && CIMAVertice.activeAnimation){
+		if(CIMAVertice.drawMu && CIMAVertice.activeAnimation && !showMessageData){
 			return;
 		}
-
+		
 		if(activeAnimation){
 			clearGui = false;
 			markAsAnimationColor();
@@ -401,6 +401,9 @@ public class MessageData {
 	}
 	public void resetColor(){
 		ovalColor = defaultOvalColor;
+	}
+	public static void setShowMessageData(boolean showMessageData){
+		MessageData.showMessageData = showMessageData;
 	}
 	
 	public void markAllColors(){

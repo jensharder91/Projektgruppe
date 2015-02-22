@@ -13,6 +13,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JToggleButton;
@@ -42,6 +43,7 @@ public abstract class Gui extends JPanel{
 	protected JButton buttonCompleteAgentAnimation = new JButton("Baum dekontaminieren");
 	private SpinnerNumberModel spinnerModel = new SpinnerNumberModel(3, 0, 10, 1);
 	private JSpinner spinnerAnimationSpeed = new JSpinner(spinnerModel);
+	private JCheckBox checkboxShowMessageData = new JCheckBox("zeige die Berechnung an");
 	
 	/** bollean if gui element should be visible*/
 	private boolean buttonCalculateBoolean = false;
@@ -54,6 +56,7 @@ public abstract class Gui extends JPanel{
 	private boolean buttonCompleteAgentAnimationBoolean = false;
 	private boolean spinnerModelBoolean = false;
 	private boolean spinnerAnimationSpeedBoolean = false;
+	private boolean checkboxShowMessageDataBoolean = false;
 	
 	
 	
@@ -187,6 +190,14 @@ public abstract class Gui extends JPanel{
 				}
 			}
 		});
+		
+		checkboxShowMessageData.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				MessageData.setShowMessageData(checkboxShowMessageData.isSelected());
+			}
+		});
 
 		buttonBar.add(togglePause);
 		buttonBar.add(spinnerAnimationSpeed);
@@ -198,6 +209,7 @@ public abstract class Gui extends JPanel{
 		buttonBar.add(buttonNextAgentAnimationStep);
 		buttonBar.add(buttonNextCalculateAnimationStep);
 		buttonBar.add(buttonClear);
+		buttonBar.add(checkboxShowMessageData);
 		this.add(buttonBar, "South");
 		
 		
@@ -260,7 +272,12 @@ public abstract class Gui extends JPanel{
 		
 		//messageData
 		for(MessageData msgData : CIMAVertice.messageDataList){
+			System.out.println("msgData!");
 			msgData.drawMessageData(g2); //TODO
+		}
+		
+		if(rootVertice != null){
+			((CIMAVertice) rootVertice).drawAnimation(g2);
 		}
 		
 		CIMAVertice.drawDisplayInformation(g2);
@@ -296,6 +313,7 @@ public abstract class Gui extends JPanel{
 		spinnerAnimationSpeedBoolean = false;
 //		togglePause.setVisible(false);
 		togglePauseBoolean = false;
+		checkboxShowMessageDataBoolean = false;
 		
 		if(rootVertice == null || rootVertice.getChildren().size() < 1){
 //			buttonBack.setVisible(false);
@@ -385,6 +403,7 @@ public abstract class Gui extends JPanel{
 			spinnerAnimationSpeedBoolean = false;
 //			togglePause.setVisible(false);
 			togglePauseBoolean = false;
+			checkboxShowMessageDataBoolean = true;
 		}
 		
 		if(CIMAVertice.activeAnimation){
@@ -417,6 +436,7 @@ public abstract class Gui extends JPanel{
 			spinnerAnimationSpeedBoolean = true;
 //			togglePause.setVisible(true);
 			togglePauseBoolean = true;
+			checkboxShowMessageDataBoolean = true;
 			
 			if(CIMAAnimation.singeAnimationModus){
 //				buttonNextAgentAnimationStep.setVisible(true);
@@ -440,6 +460,7 @@ public abstract class Gui extends JPanel{
 		buttonSetEnabled(buttonCompleteAgentAnimation, buttonCompleteAgentAnimationBoolean);
 		togglePause.setVisible(togglePauseBoolean);
 		spinnerAnimationSpeed.setVisible(spinnerAnimationSpeedBoolean);
+		checkboxShowMessageData.setVisible(checkboxShowMessageDataBoolean);
 		
 		
 	}

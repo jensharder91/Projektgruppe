@@ -36,6 +36,7 @@ public class CIMAAnimation {
 	public void stopAllAnimations(){
 		
 		if(CIMAVertice.activeAnimation || MessageData.animationInProgress){
+			index = 0;
 			stopAgentAnimation();
 			stopSendMessageAnimation();
 		}
