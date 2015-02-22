@@ -34,7 +34,6 @@ public abstract class Gui extends JPanel{
 	/** Buttons */
 	protected JButton buttonCalculate = new JButton("Sofort berechnen");
 	protected JButton buttonCalculateAnimation = new JButton("Berechnung animieren");
-//	protected JButton buttonAnimation = new JButton("Animation berechnen");
 	protected JButton buttonClear = new JButton("Clear");
 	protected JButton buttonBack = new JButton("Zurück");
 	protected JToggleButton togglePause = new JToggleButton("\u25AE\u25AE");
@@ -44,8 +43,21 @@ public abstract class Gui extends JPanel{
 	private SpinnerNumberModel spinnerModel = new SpinnerNumberModel(3, 0, 10, 1);
 	private JSpinner spinnerAnimationSpeed = new JSpinner(spinnerModel);
 	
+	/** bollean if gui element should be visible*/
+	private boolean buttonCalculateBoolean = false;
+	private boolean buttonCalculateAnimationBoolean = false;
+	private boolean buttonClearBoolean = false;
+	private boolean buttonBackBoolean = false;
+	private boolean togglePauseBoolean = false;
+	private boolean buttonNextAgentAnimationStepBoolean = false;
+	private boolean buttonNextCalculateAnimationStepBoolean = false;
+	private boolean buttonCompleteAgentAnimationBoolean = false;
+	private boolean spinnerModelBoolean = false;
+	private boolean spinnerAnimationSpeedBoolean = false;
+	
+	
+	
 	protected boolean autoAlgo = false;
-//	public static boolean calcAgentMovesReady = false;
 
 	protected Gui(){
 //		super(true);
@@ -257,24 +269,33 @@ public abstract class Gui extends JPanel{
 		
 		//disable / enable buttons
 //		buttonBack.setVisible(false);
-		buttonSetEnabled(buttonBack, false);
+//		buttonSetEnabled(buttonBack, false);
+		buttonBackBoolean = false;
 //		buttonCalculate.setVisible(true);
-		buttonSetEnabled(buttonCalculate, true);
+//		buttonSetEnabled(buttonCalculate, true);
+		buttonCalculateBoolean = true;
 //		buttonCalculateAnimation.setVisible(true);
-		buttonSetEnabled(buttonCalculateAnimation, true);
+//		buttonSetEnabled(buttonCalculateAnimation, true);
+		buttonCalculateAnimationBoolean = true;
 		buttonCalculateAnimation.setText("Berechnung animieren");
 //		buttonClear.setVisible(true);
-		buttonSetEnabled(buttonClear, true);
+//		buttonSetEnabled(buttonClear, true);
+		buttonClearBoolean = true;
 //		toggleAutoAlgo.setVisible(true);
 //		buttonNextAgentAnimationStep.setVisible(false);
-		buttonSetEnabled(buttonNextAgentAnimationStep, false);
+//		buttonSetEnabled(buttonNextAgentAnimationStep, false);
+		buttonNextAgentAnimationStepBoolean = false;
 //		buttonNextCalculateAnimationStep.setVisible(true);
-		buttonSetEnabled(buttonNextCalculateAnimationStep, true);
+//		buttonSetEnabled(buttonNextCalculateAnimationStep, true);
+		buttonNextCalculateAnimationStepBoolean = true;
 //		buttonCompleteAgentAnimation.setVisible(false);
-		buttonSetEnabled(buttonCompleteAgentAnimation, false);
+//		buttonSetEnabled(buttonCompleteAgentAnimation, false);
+		buttonCompleteAgentAnimationBoolean = false;
 //		buttonAnimation.setText("Animation berechnen");
-		spinnerAnimationSpeed.setVisible(false);
-		togglePause.setVisible(false);
+//		spinnerAnimationSpeed.setVisible(false);
+		spinnerAnimationSpeedBoolean = false;
+//		togglePause.setVisible(false);
+		togglePauseBoolean = false;
 		
 		if(rootVertice == null || rootVertice.getChildren().size() < 1){
 //			buttonBack.setVisible(false);
@@ -284,15 +305,24 @@ public abstract class Gui extends JPanel{
 //			buttonNextAgentAnimationStep.setVisible(false);
 //			buttonNextCalculateAnimationStep.setVisible(false);
 //			buttonCompleteAgentAnimation.setVisible(false);
-			buttonSetEnabled(buttonBack, false);
-			buttonSetEnabled(buttonCalculate, false);
-			buttonSetEnabled(buttonCalculateAnimation, false);
-			buttonSetEnabled(buttonClear, false);
-			buttonSetEnabled(buttonNextAgentAnimationStep, false);
-			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
-			buttonSetEnabled(buttonCompleteAgentAnimation, false);
-			spinnerAnimationSpeed.setVisible(false);
-			togglePause.setVisible(false);
+//			buttonSetEnabled(buttonBack, false);
+			buttonBackBoolean = false;
+//			buttonSetEnabled(buttonCalculate, false);
+			buttonCalculateBoolean = false;
+//			buttonSetEnabled(buttonCalculateAnimation, false);
+			buttonCalculateAnimationBoolean  = false;
+//			buttonSetEnabled(buttonClear, false);
+			buttonClearBoolean = false;
+//			buttonSetEnabled(buttonNextAgentAnimationStep, false);
+			buttonNextAgentAnimationStepBoolean = false;
+//			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
+			buttonNextCalculateAnimationStepBoolean = false;
+//			buttonSetEnabled(buttonCompleteAgentAnimation, false);
+			buttonCompleteAgentAnimationBoolean = false;
+//			spinnerAnimationSpeed.setVisible(false);
+			spinnerAnimationSpeedBoolean = false;
+//			togglePause.setVisible(false);
+			togglePauseBoolean = false;
 		}
 
 		
@@ -301,19 +331,26 @@ public abstract class Gui extends JPanel{
 			buttonCalculateAnimation.setText("Animation abbrechen");
 //			buttonClear.setVisible(false);
 //			buttonNextCalculateAnimationStep.setVisible(false);
-			buttonSetEnabled(buttonCalculate, false);
-			buttonSetEnabled(buttonClear, false);
-			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
-			spinnerAnimationSpeed.setVisible(true);
-			togglePause.setVisible(true);
+//			buttonSetEnabled(buttonCalculate, false);
+			buttonCalculateBoolean  = false;
+//			buttonSetEnabled(buttonClear, false);
+			buttonClearBoolean = false;
+//			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
+			buttonNextCalculateAnimationStepBoolean = false;
+//			spinnerAnimationSpeed.setVisible(true);
+			spinnerAnimationSpeedBoolean = true;
+//			togglePause.setVisible(true);
+			togglePauseBoolean = true;
 //			spinnerAnimationSpeed.setVisible(false);
 			
 			if(CIMAAnimation.singeAnimationModus){
 //				buttonNextCalculateAnimationStep.setVisible(true);
 //				buttonCalculateAnimation.setVisible(true);//TODO let the complete animation finish the step by step modus
 				buttonCalculateAnimation.setText("komplette Animation");
-				buttonSetEnabled(buttonNextCalculateAnimationStep, true);
-				buttonSetEnabled(buttonCalculateAnimation, true);
+//				buttonSetEnabled(buttonNextCalculateAnimationStep, true);
+				buttonNextCalculateAnimationStepBoolean = true;
+//				buttonSetEnabled(buttonCalculateAnimation, true);
+				buttonCalculateAnimationBoolean = true;
 			}
 		}
 		
@@ -330,15 +367,24 @@ public abstract class Gui extends JPanel{
 //			toggleAutoAlgo.setVisible(false);
 //			buttonAnimation.setText("Animation abbrechen");
 			
-			buttonSetEnabled(buttonBack, true);
-			buttonSetEnabled(buttonNextAgentAnimationStep, true);
-			buttonSetEnabled(buttonCompleteAgentAnimation, true);
-			buttonSetEnabled(buttonCalculate, false);
-			buttonSetEnabled(buttonCalculateAnimation, false);
-			buttonSetEnabled(buttonClear, false);
-			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
-			spinnerAnimationSpeed.setVisible(false);
-			togglePause.setVisible(false);
+//			buttonSetEnabled(buttonBack, true);
+			buttonBackBoolean = true;
+//			buttonSetEnabled(buttonNextAgentAnimationStep, true);
+			buttonNextAgentAnimationStepBoolean = true;
+//			buttonSetEnabled(buttonCompleteAgentAnimation, true);
+			buttonCompleteAgentAnimationBoolean = true;
+//			buttonSetEnabled(buttonCalculate, false);
+			buttonCalculateBoolean = false;
+//			buttonSetEnabled(buttonCalculateAnimation, false);
+			buttonCalculateAnimationBoolean = false;
+//			buttonSetEnabled(buttonClear, false);
+			buttonClearBoolean = false;
+//			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
+			buttonNextCalculateAnimationStepBoolean = false;
+//			spinnerAnimationSpeed.setVisible(false);
+			spinnerAnimationSpeedBoolean = false;
+//			togglePause.setVisible(false);
+			togglePauseBoolean = false;
 		}
 		
 		if(CIMAVertice.activeAnimation){
@@ -353,25 +399,49 @@ public abstract class Gui extends JPanel{
 			buttonCompleteAgentAnimation.setText("Animation abbrechen");
 //			buttonAnimation.setText("Animation abbrechen");
 			
-			buttonSetEnabled(buttonBack, false);
-			buttonSetEnabled(buttonCalculate, false);
-			buttonSetEnabled(buttonCalculateAnimation, false);
-			buttonSetEnabled(buttonClear, false);
-			buttonSetEnabled(buttonNextAgentAnimationStep, false);
-			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
-			buttonSetEnabled(buttonCompleteAgentAnimation, true);
-			spinnerAnimationSpeed.setVisible(true);
-			togglePause.setVisible(true);
+//			buttonSetEnabled(buttonBack, false);
+			buttonBackBoolean = false;
+//			buttonSetEnabled(buttonCalculate, false);
+			buttonCalculateBoolean = false;
+//			buttonSetEnabled(buttonCalculateAnimation, false);
+			buttonCalculateAnimationBoolean = false;
+//			buttonSetEnabled(buttonClear, false);
+			buttonClearBoolean = false;
+//			buttonSetEnabled(buttonNextAgentAnimationStep, false);
+			buttonNextAgentAnimationStepBoolean = false;
+//			buttonSetEnabled(buttonNextCalculateAnimationStep, false);
+			buttonNextCalculateAnimationStepBoolean = false;
+//			buttonSetEnabled(buttonCompleteAgentAnimation, true);
+			buttonCompleteAgentAnimationBoolean = true;
+//			spinnerAnimationSpeed.setVisible(true);
+			spinnerAnimationSpeedBoolean = true;
+//			togglePause.setVisible(true);
+			togglePauseBoolean = true;
 			
 			if(CIMAAnimation.singeAnimationModus){
 //				buttonNextAgentAnimationStep.setVisible(true);
 //				buttonCompleteAgentAnimation.setVisible(true);//TODO let the complete animation finish the step by step modus
 				buttonCompleteAgentAnimation.setText("komplette Animation");
 				
-				buttonSetEnabled(buttonNextAgentAnimationStep, true);
-				buttonSetEnabled(buttonCompleteAgentAnimation, true);
+//				buttonSetEnabled(buttonNextAgentAnimationStep, true);
+				buttonNextAgentAnimationStepBoolean  = true;
+//				buttonSetEnabled(buttonCompleteAgentAnimation, true);
+				buttonCompleteAgentAnimationBoolean = true;
 			}
 		}
+		
+		
+		buttonSetEnabled(buttonCalculate, buttonCalculateBoolean);
+		buttonSetEnabled(buttonCalculateAnimation, buttonCalculateAnimationBoolean);
+		buttonSetEnabled(buttonClear, buttonClearBoolean);
+		buttonSetEnabled(buttonBack, buttonBackBoolean);
+		buttonSetEnabled(buttonNextAgentAnimationStep, buttonNextAgentAnimationStepBoolean);
+		buttonSetEnabled(buttonNextCalculateAnimationStep, buttonNextCalculateAnimationStepBoolean);
+		buttonSetEnabled(buttonCompleteAgentAnimation, buttonCompleteAgentAnimationBoolean);
+		togglePause.setVisible(togglePauseBoolean);
+		spinnerAnimationSpeed.setVisible(spinnerAnimationSpeedBoolean);
+		
+		
 	}
 	
 	private void buttonSetEnabled(JButton button, boolean shouldBeVisible){
