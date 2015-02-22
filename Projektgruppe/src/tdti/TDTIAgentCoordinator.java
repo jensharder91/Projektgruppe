@@ -41,27 +41,17 @@ public class TDTIAgentCoordinator {
   }
 
   public void moveAgents(){
-    TDTIAgent agent = this.agents.get(0);
-    TDTIVertice currentVertice = agent.getVertice();
+    TDTIAgent mainAgent = this.agents.get(0);
+    TDTIVertice currentVertice = mainAgent.getVertice();
     TDTIVertice nextVertice = currentVertice.getContaminatedNeighborWithSmallestMessage();
-    MessageData msg = agent.getVertice().getSmallestContaminatedNeighborMessage();
-    /*
-    for(TDTIAgent oscAgent : agentsOscillating){
-      oscAgent.move();
-    }
-    */
+    MessageData msg = mainAgent.getVertice().getSmallestContaminatedNeighborMessage();
+
     if(nextVertice != null){
       if(msg != null){
         // check if we need to come back
         if(currentVertice.numberOfContaminatedNeighbors() > 1){
           // somebody needs to come back after IMMUNITY_TIME to keep this vertice decontaminated
-          /*
-          TDTIGui gui = TDTIGui.getGui();
-          if(agents.size() > 1 && gui.IMMUNITY_TIME == 2){
-            agentsOscillating.add(agents.get(1));
-            agents.get(1).setNextVertice(currentVertice);
-          }
-          */
+          System.out.println("Somebody needs to come back to "+currentVertice);
         }
         for(int a=0; a<msg.getA(); a++){
           agents.get(a).setVertice(nextVertice);

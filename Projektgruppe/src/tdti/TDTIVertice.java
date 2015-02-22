@@ -139,8 +139,6 @@ public class TDTIVertice extends Vertice{
 		}
 		gui.remainingSteps--;
 
-		System.out.println("Received data from "+data.getSender());
-
 		this.dataReceived.add(data);
 		int neighborCount = this.numberOfNeighbors();
 		int dataCount = this.dataReceived.size();
@@ -194,12 +192,10 @@ public class TDTIVertice extends Vertice{
 
 	private void redirectReceivedDataExceptTo(TDTIVertice exceptTo){
 		List<Vertice> neighbors = getNeighbors();
-		System.out.println("Redirect Data except to "+exceptTo);
 
 		for(Vertice neighbor : neighbors){
 			if(neighbor != exceptTo && checkVerticeType(neighbor)){
 				// send this neighbor the data computed from the other neighbors
-				//System.out.println("Redirecting to "+(TDTIVertice)neighbor);
 				((TDTIVertice) neighbor).receive(this.computeDataExceptFromNeighbor((TDTIVertice) neighbor));
 			}
 		}
@@ -247,7 +243,6 @@ public class TDTIVertice extends Vertice{
 		Color fillColor = getColor();
 
 		if(immunityTime > 0){
-			System.out.println("Drawing Immunity Timer "+immunityTime);
 			g.setColor(new Color(0x00,0x00,0x00,0xaa));
 			g.fillArc(xMiddle-diameter/2-3,yMiddle-diameter/2-3,diameter+6,diameter+6,90,360*immunityTime/gui.IMMUNITY_TIME);
 		}
