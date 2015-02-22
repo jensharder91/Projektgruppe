@@ -15,7 +15,7 @@ public class CIMAConstants {
 	}
 	
 	public static Font getTextFont(){
-		return new Font("Arial", Font.BOLD, 13);
+		return new Font("Arial", Font.BOLD, 14);
 	}
 	
 
