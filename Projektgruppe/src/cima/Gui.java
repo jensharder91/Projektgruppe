@@ -37,6 +37,7 @@ public abstract class Gui extends JPanel{
 	protected JButton buttonCalculateAnimation = new JButton("Berechnung animieren");
 	protected JButton buttonClear = new JButton("Clear");
 	protected JButton buttonBack = new JButton("Zurück");
+	protected JButton buttonShowMu = new JButton("berechne minimale Agenten");
 	protected JToggleButton togglePause = new JToggleButton("\u25AE\u25AE");
 	private JButton buttonNextAgentAnimationStep = new JButton("\u25BA");//RightArrow
 	private JButton buttonNextCalculateAnimationStep = new JButton("\u25BA");
@@ -50,6 +51,7 @@ public abstract class Gui extends JPanel{
 	private boolean buttonCalculateAnimationBoolean = false;
 	private boolean buttonClearBoolean = false;
 	private boolean buttonBackBoolean = false;
+	private boolean buttonShowMuBoolean = false;
 	private boolean togglePauseBoolean = false;
 	private boolean buttonNextAgentAnimationStepBoolean = false;
 	private boolean buttonNextCalculateAnimationStepBoolean = false;
@@ -84,6 +86,24 @@ public abstract class Gui extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				CIMAVertice.drawMu = false;
+				CIMAAnimation.afterMessageDataCalc = false;
+				for(MessageData msgData : CIMAVertice.messageDataList){
+					msgData.resetAllColors();
+				}
+				MessageData.resetDisplayCalcInfos();
+				repaint();
+			}
+		});
+		buttonShowMu.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				CIMAVertice.drawMu = true;
+				CIMAAnimation.afterMessageDataCalc = false;
+				for(MessageData msgData : CIMAVertice.messageDataList){
+					msgData.resetAllColors();
+				}
+				MessageData.resetDisplayCalcInfos();
 				repaint();
 			}
 		});
@@ -199,9 +219,11 @@ public abstract class Gui extends JPanel{
 			}
 		});
 
+	
 		buttonBar.add(togglePause);
 		buttonBar.add(spinnerAnimationSpeed);
 		buttonBar.add(buttonBack);
+		buttonBar.add(buttonShowMu);
 		buttonBar.add(buttonCalculate);
 		buttonBar.add(buttonCalculateAnimation);
 //		buttonBar.add(buttonAnimation);
@@ -287,6 +309,7 @@ public abstract class Gui extends JPanel{
 //		buttonBack.setVisible(false);
 //		buttonSetEnabled(buttonBack, false);
 		buttonBackBoolean = false;
+		buttonShowMuBoolean = false;
 //		buttonCalculate.setVisible(true);
 //		buttonSetEnabled(buttonCalculate, true);
 		buttonCalculateBoolean = true;
@@ -369,6 +392,18 @@ public abstract class Gui extends JPanel{
 //				buttonSetEnabled(buttonCalculateAnimation, true);
 				buttonCalculateAnimationBoolean = true;
 			}
+		}
+		
+		if(CIMAAnimation.afterMessageDataCalc){
+			buttonBackBoolean = true;
+			buttonShowMuBoolean = true;
+			
+			spinnerAnimationSpeedBoolean = false;
+			togglePauseBoolean = false;
+			buttonCalculateAnimationBoolean = false;
+			buttonNextCalculateAnimationStepBoolean  = false;
+			buttonClearBoolean = false;
+			buttonCalculateBoolean = false;
 		}
 		
 //		if(calcAgentMovesReady){
@@ -454,6 +489,7 @@ public abstract class Gui extends JPanel{
 		buttonSetEnabled(buttonCalculateAnimation, buttonCalculateAnimationBoolean);
 		buttonSetEnabled(buttonClear, buttonClearBoolean);
 		buttonSetEnabled(buttonBack, buttonBackBoolean);
+		buttonSetEnabled(buttonShowMu, buttonShowMuBoolean);
 		buttonSetEnabled(buttonNextAgentAnimationStep, buttonNextAgentAnimationStepBoolean);
 		buttonSetEnabled(buttonNextCalculateAnimationStep, buttonNextCalculateAnimationStepBoolean);
 		buttonSetEnabled(buttonCompleteAgentAnimation, buttonCompleteAgentAnimationBoolean);

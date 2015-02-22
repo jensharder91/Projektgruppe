@@ -17,6 +17,7 @@ public class CIMAAnimation {
 
 	private boolean activeAgent = false;
 	public static boolean singeAnimationModus = false;
+	public static boolean afterMessageDataCalc = false;
 
 	/**Singleton*/
 	public static CIMAAnimation getCIMAAnimation(){
@@ -61,7 +62,9 @@ public class CIMAAnimation {
 	}
 
 	public void stopAgentAnimation(){
-		breakThread = true;
+		if(activeAgent){
+			breakThread = true;
+		}
 		CIMAVertice.activeAnimation = false;
 		activeAgent = false;
 		gui.repaint();
@@ -111,7 +114,9 @@ public class CIMAAnimation {
 	}
 	
 	public void stopSendMessageAnimation(){
-		breakThread = true;
+		if(activeAgent){
+			breakThread = true;
+		}
 		MessageData.resetDisplayCalcInfos();
 //		index = 0;	
 		MessageData.animationInProgress = false;
@@ -269,16 +274,15 @@ public class CIMAAnimation {
 					if(breakThread){
 						MessageData.clearGui = true;
 					}else{
-						CIMAVertice.drawMu = true;
+//						CIMAVertice.drawMu = true;
+						CIMAAnimation.afterMessageDataCalc = true;
 					}
-//					if(messageDataList.get(index-1) != null){
-//						messageDataList.get(index-1).resetAllColors();
+//			
+//					for(MessageData msgData : messageDataList){
+//						msgData.resetAllColors();
 //					}
-					for(MessageData msgData : messageDataList){
-						msgData.resetAllColors();
-					}
 					index = 0;
-					MessageData.resetDisplayCalcInfos();
+//					MessageData.resetDisplayCalcInfos();
 				}
 				
 
@@ -301,19 +305,17 @@ public class CIMAAnimation {
 						break;
 					}
 				}
-//				if(messageDataList.get(messageDataList.size() - 1) != null){
-//					messageDataList.get(messageDataList.size() - 1).resetAllColors();
+//				for(MessageData msgData : messageDataList){
+//					msgData.resetAllColors();
 //				}
-				for(MessageData msgData : messageDataList){
-					msgData.resetAllColors();
-				}
 				index = 0;
-				MessageData.resetDisplayCalcInfos();
+//				MessageData.resetDisplayCalcInfos();
 				MessageData.animationInProgress = false;
 				if(breakThread){
 					MessageData.clearGui = true;
 				}else{
-					CIMAVertice.drawMu = true;
+//					CIMAVertice.drawMu = true;
+					CIMAAnimation.afterMessageDataCalc = true;
 				}
 			}
 			gui.repaint();
