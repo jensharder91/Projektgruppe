@@ -12,11 +12,15 @@ public class MessageData implements IMarkable{
 	private int lamdaValue;
 	private CIMAVertice sender;
 	private CIMAVertice receiver;
-	private IMarkable calcMax1;
-	private IMarkable calcMax2;
+	private IMarkable edgeMax1;
+	private IMarkable edgeMax2;	
 	private int specialVerticeWeight;
-	private boolean edgeWeightUsed;
+	private IMarkable maxMsgData;
+	private IMarkable msgEdge;
 	private CIMAEdgeWeight edge;
+	
+	private maxState maxState;
+	private enum maxState { EDGEMAX, MAXMSGDATA, MSGEDGE};
 	
 	//animation / graphic
 
@@ -26,8 +30,10 @@ public class MessageData implements IMarkable{
 	private static MessageData displayCalcInfos;
 	private static boolean showMessageData = false;
 	
-	private String max1String = "";
-	private String max2String = "";
+	private String edgeMax1String = "";
+	private String edgeMax2String = "";
+	private String maxMsgDataString = "";
+	private String mshEdgeString = "";
 	
 	private double angleSender;
 	private double angleReceiver;
@@ -56,17 +62,26 @@ public class MessageData implements IMarkable{
 
 
 	public MessageData(){
-		this(0, null, null, null, null, null, 0, false);
+		this(0, null, null, null, null, null, 0, null, null);
 	}
-	public MessageData(int lamdaValue, CIMAVertice sender, CIMAVertice receiver, CIMAEdgeWeight edge, IMarkable calcMax1, IMarkable calcMax2, int specialVerticeWeight, boolean edgeWeightUsed){
+	public MessageData(int lamdaValue, CIMAVertice sender, CIMAVertice receiver, CIMAEdgeWeight edge, IMarkable edgeMax1, IMarkable edgeMax2, int specialVerticeWeight, IMarkable maxMsgData, IMarkable msgEdge){
 		this.lamdaValue = lamdaValue;
 		this.sender = sender;
 		this.receiver = receiver;
-		this.calcMax1 = calcMax1;
-		this.calcMax2 = calcMax2;
+		this.edgeMax1 = edgeMax1;
+		this.edgeMax2 = edgeMax2;
 		this.specialVerticeWeight = specialVerticeWeight;
-		this.edgeWeightUsed = edgeWeightUsed;
+		this.maxMsgData = maxMsgData;
+		this.msgEdge = msgEdge;
 		this.edge = edge;
+		
+		if(msgEdge != null){
+			maxState = maxState.MSGEDGE;
+		}else if(maxMsgData != null){
+			maxState = maxState.MAXMSGDATA;
+		}else{
+			maxState = maxState.EDGEMAX;
+		}
 
 		if(getSender() != null && getReceiver() != null){
 			calcArc();
@@ -231,31 +246,78 @@ public class MessageData implements IMarkable{
 			return;
 		}
 		
+//		//schreibe oben in der Ecke welche Werte eine Rolle spielen
+//		Font defaulFont = g.getFont();
+//		int stringHeight = (int) Math.floor(g.getFontMetrics().getStringBounds("stringheight",g).getHeight());
+//		g.setFont(CIMAConstants.getTextFont());
+//		g.setColor(CIMAConstants.getMarkAsMaxColor());
+//		if(edgeWeightUsed){
+//			g.setColor(CIMAConstants.getMarkAsSecMaxColor());
+//		}
+//		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(max1String,g).getWidth());
+//		g.fillRect(3, 12 - stringHeight +1, stringWidth, stringHeight);
+//		g.setColor(Color.BLACK);
+//		g.drawString(max1String, 3, 12);
+//		g.setColor(CIMAConstants.getMarkAsSecMaxColor());
+//		stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(max2String,g).getWidth());
+//		g.fillRect(3, (int) (12 + 1.2*stringHeight) -stringHeight +1, stringWidth, stringHeight);
+//		g.setColor(Color.BLACK);
+//		g.drawString(max2String, 3, (int) (12 + 1.2*stringHeight));
+//		if(edgeWeightUsed){
+//			g.setColor(CIMAConstants.getMarkAsMaxColor());
+//			String kantengewichtString = lamdaValue+" Kantengewicht";
+//			stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(kantengewichtString,g).getWidth());
+//			g.fillRect(3, (int) (12 + 2.4*stringHeight) - stringHeight +1, stringWidth, stringHeight);
+//			g.setColor(Color.BLACK);
+//			g.drawString(kantengewichtString, 3, (int) (12 + 2.4*stringHeight));
+//		}
+//		g.setFont(defaulFont);
+		
+		
+		//////////
+		
 		//schreibe oben in der Ecke welche Werte eine Rolle spielen
 		Font defaulFont = g.getFont();
 		int stringHeight = (int) Math.floor(g.getFontMetrics().getStringBounds("stringheight",g).getHeight());
 		g.setFont(CIMAConstants.getTextFont());
 		g.setColor(CIMAConstants.getMarkAsMaxColor());
-		if(edgeWeightUsed){
-			g.setColor(CIMAConstants.getMarkAsSecMaxColor());
+		
+		
+		if(edgeMax1 != null){
+			g.setColor(edgeMax1.getColor());
 		}
-		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(max1String,g).getWidth());
+		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(edgeMax1String,g).getWidth());
 		g.fillRect(3, 12 - stringHeight +1, stringWidth, stringHeight);
 		g.setColor(Color.BLACK);
-		g.drawString(max1String, 3, 12);
-		g.setColor(CIMAConstants.getMarkAsSecMaxColor());
-		stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(max2String,g).getWidth());
+		g.drawString(edgeMax1String, 3, 12);
+		
+		if(edgeMax2 != null){
+			g.setColor(edgeMax2.getColor());
+		}
+		stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(edgeMax2String,g).getWidth());
 		g.fillRect(3, (int) (12 + 1.2*stringHeight) -stringHeight +1, stringWidth, stringHeight);
 		g.setColor(Color.BLACK);
-		g.drawString(max2String, 3, (int) (12 + 1.2*stringHeight));
-		if(edgeWeightUsed){
-			g.setColor(CIMAConstants.getMarkAsMaxColor());
-			String kantengewichtString = lamdaValue+" Kantengewicht";
-			stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(kantengewichtString,g).getWidth());
+		g.drawString(edgeMax2String, 3, (int) (12 + 1.2*stringHeight));
+		
+		if(maxState == maxState.MAXMSGDATA){
+			g.setColor(maxMsgData.getColor());
+			stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(maxMsgDataString,g).getWidth());
 			g.fillRect(3, (int) (12 + 2.4*stringHeight) - stringHeight +1, stringWidth, stringHeight);
 			g.setColor(Color.BLACK);
-			g.drawString(kantengewichtString, 3, (int) (12 + 2.4*stringHeight));
+			g.drawString(maxMsgDataString, 3, (int) (12 + 2.4*stringHeight));
 		}
+		if(maxState == maxState.MSGEDGE){
+			g.setColor(msgEdge.getColor());
+			stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(mshEdgeString,g).getWidth());
+			g.fillRect(3, (int) (12 + 2.4*stringHeight) - stringHeight +1, stringWidth, stringHeight);
+			g.setColor(Color.BLACK);
+			g.drawString(mshEdgeString, 3, (int) (12 + 2.4*stringHeight));
+		}
+		
+		
+		
+
+		
 		g.setFont(defaulFont);
 	}
 
@@ -336,6 +398,10 @@ public class MessageData implements IMarkable{
 	public void resetColor(){
 		ovalColor = defaultOvalColor;
 	}
+	@Override
+	public Color getColor() {
+		return ovalColor;
+	}
 	public static void setShowMessageData(boolean showMessageData){
 		MessageData.showMessageData = showMessageData;
 	}
@@ -344,64 +410,131 @@ public class MessageData implements IMarkable{
 	}
 	
 	public void markAllColors(){
-		if(calcMax1 != null){
-			calcMax1.markAsMax();
-			if(edgeWeightUsed){
-				calcMax1.markAsSecMax();
-			}
-			max1String = calcMax1.getLamdaValue()+" max1";
-		}
-		if(calcMax2 != null){
-			calcMax2.markAsMax();
-			if(edgeWeightUsed){
-				calcMax2.markAsSecMax();
-			}
-			sender.markAsMax(specialVerticeWeight);
-			max1String = (calcMax2.getLamdaValue() + specialVerticeWeight) + " = "+calcMax2.getLamdaValue()+" + "+specialVerticeWeight +"  max2 + Knotengewicht";
-		}
-		if(calcMax1 != null && calcMax2 != null){
-			if(calcMax1.getLamdaValue() >= calcMax2.getLamdaValue() + sender.getVerticeWeight()){
-				calcMax1.markAsMax();
-				if(edgeWeightUsed){
-					calcMax1.markAsSecMax();
-				}
-				calcMax2.markAsSecMax();
-				sender.markAsSecMax(specialVerticeWeight);
-				max1String = calcMax1.getLamdaValue()+" max1";
-				max2String = (calcMax2.getLamdaValue() + specialVerticeWeight) + " = "+calcMax2.getLamdaValue()+" + "+specialVerticeWeight +"  max2 + Knotengewicht";
-			}else{
-				calcMax1.markAsSecMax();
-				calcMax2.markAsMax();
+		
+		//only edges are relevant
+		if(maxState == maxState.EDGEMAX){
+			//leaf
+			if(edgeMax1 == null){
 				sender.markAsMax(specialVerticeWeight);
-				if(edgeWeightUsed){
-					calcMax2.markAsSecMax();
-					sender.markAsSecMax(specialVerticeWeight);
-				}
-				max1String = (calcMax2.getLamdaValue() + specialVerticeWeight) + " = "+calcMax2.getLamdaValue()+" + "+specialVerticeWeight +"  max2 + Knotengewicht";
-				max2String = calcMax1.getLamdaValue()+" max1";
-			}
-		}
-		if(calcMax1 == null && calcMax2 == null){
-			//has to be a leaf
-			sender.markAsMax(specialVerticeWeight);
-			if(edgeWeightUsed){
+				edgeMax1String = specialVerticeWeight+" Knotengewicht (Blatt)";
+				
+			//just 1 relevant edge
+			}else if(edgeMax2 == null){
+				edgeMax1.markAsMax();
 				sender.markAsSecMax(specialVerticeWeight);
+				edgeMax1String = edgeMax1.getLamdaValue()+" max1";
+				edgeMax2String = (edgeMax2.getLamdaValue() + specialVerticeWeight) + " = "+edgeMax2.getLamdaValue()+" + "+specialVerticeWeight +"  max2 + Knotengewicht";
+				
+			//both edges relevamt
+			}else{
+				if(edgeMax1.getLamdaValue() >= (edgeMax2.getLamdaValue() + specialVerticeWeight)){
+					edgeMax1.markAsMax();
+					edgeMax2.markAsSecMax();
+					sender.markAsSecMax(specialVerticeWeight);
+					edgeMax1String = edgeMax1.getLamdaValue()+" max1";
+					edgeMax2String = (edgeMax2.getLamdaValue() + specialVerticeWeight) + " = "+edgeMax2.getLamdaValue()+" + "+specialVerticeWeight +"  max2 + Knotengewicht";
+				}else{
+					edgeMax1.markAsSecMax();
+					edgeMax2.markAsMax();
+					sender.markAsMax(specialVerticeWeight);
+					edgeMax1String = edgeMax1.getLamdaValue()+" max1";
+					edgeMax2String = (edgeMax2.getLamdaValue() + specialVerticeWeight) + " = "+edgeMax2.getLamdaValue()+" + "+specialVerticeWeight +"  max2 + Knotengewicht";
+				}
 			}
-			max1String = specialVerticeWeight+" Knotengewicht (Blatt)";
+			
+		//the two edges are not relevant -> mark as secMax, if edge != null
+		}else{
+			if(edgeMax1 != null){
+				edgeMax1.markAsSecMax();
+				edgeMax1String = edgeMax1.getLamdaValue()+" max1";
+			}
+			if(edgeMax2 != null){
+				edgeMax2.markAsSecMax();
+				sender.markAsSecMax(specialVerticeWeight);
+				edgeMax2String = (edgeMax2.getLamdaValue() + specialVerticeWeight) + " = "+edgeMax2.getLamdaValue()+" + "+specialVerticeWeight +"  max2 + Knotengewicht";
+			}
 		}
+		
+		//the biggest msgData is relevamt
+		if(maxState == maxState.MAXMSGDATA){
+			maxMsgData.markAsMax();
+			maxMsgDataString = maxMsgData.getLamdaValue()+" maximale Nachricht";
+		}
+		
+		//the edge for the message is relevant
+		if(maxState == maxState.MSGEDGE){
+			msgEdge.markAsMax();
+			mshEdgeString = msgEdge.getLamdaValue()+" aktelles Kantengewicht";
+		}
+		
+		
+		
+		
+		///////
+//		if(calcMax1 != null){
+//			calcMax1.markAsMax();
+//			if(edgeWeightUsed){
+//				calcMax1.markAsSecMax();
+//			}
+//			max1String = calcMax1.getLamdaValue()+" max1";
+//		}
+//		if(calcMax2 != null){
+//			calcMax2.markAsMax();
+//			if(edgeWeightUsed){
+//				calcMax2.markAsSecMax();
+//			}
+//			sender.markAsMax(specialVerticeWeight);
+//			max1String = (calcMax2.getLamdaValue() + specialVerticeWeight) + " = "+calcMax2.getLamdaValue()+" + "+specialVerticeWeight +"  max2 + Knotengewicht";
+//		}
+//		if(calcMax1 != null && calcMax2 != null){
+//			if(calcMax1.getLamdaValue() >= calcMax2.getLamdaValue() + sender.getVerticeWeight()){
+//				calcMax1.markAsMax();
+//				if(edgeWeightUsed){
+//					calcMax1.markAsSecMax();
+//				}
+//				calcMax2.markAsSecMax();
+//				sender.markAsSecMax(specialVerticeWeight);
+//				max1String = calcMax1.getLamdaValue()+" max1";
+//				max2String = (calcMax2.getLamdaValue() + specialVerticeWeight) + " = "+calcMax2.getLamdaValue()+" + "+specialVerticeWeight +"  max2 + Knotengewicht";
+//			}else{
+//				calcMax1.markAsSecMax();
+//				calcMax2.markAsMax();
+//				sender.markAsMax(specialVerticeWeight);
+//				if(edgeWeightUsed){
+//					calcMax2.markAsSecMax();
+//					sender.markAsSecMax(specialVerticeWeight);
+//				}
+//				max1String = (calcMax2.getLamdaValue() + specialVerticeWeight) + " = "+calcMax2.getLamdaValue()+" + "+specialVerticeWeight +"  max2 + Knotengewicht";
+//				max2String = calcMax1.getLamdaValue()+" max1";
+//			}
+//		}
+//		if(calcMax1 == null && calcMax2 == null){
+//			//has to be a leaf
+//			sender.markAsMax(specialVerticeWeight);
+//			if(edgeWeightUsed){
+//				sender.markAsSecMax(specialVerticeWeight);
+//			}
+//			max1String = specialVerticeWeight+" Knotengewicht (Blatt)";
+//		}
 	}
 	
 	public void resetAllColors(){
-		if(calcMax1 != null){
-			calcMax1.resetColor();
+		if(edgeMax1 != null){
+			edgeMax1.resetColor();
 		}
-		if(calcMax2 != null){
-			calcMax2.resetColor();
+		if(edgeMax2 != null){
+			edgeMax2.resetColor();
 			sender.resetColor();
 		}
-		if(calcMax1 == null && calcMax2 == null){
+		if(edgeMax1 == null && edgeMax2 == null){
 			//has to be a leaf
 			sender.resetColor();
+		}
+		if(maxMsgData != null){
+			maxMsgData.resetColor();
+		}
+		if(msgEdge != null){
+			msgEdge.resetColor();
 		}
 		resetColor();
 	}
@@ -452,5 +585,4 @@ public class MessageData implements IMarkable{
 			gui.repaint();
 		}
 	}
-
 }

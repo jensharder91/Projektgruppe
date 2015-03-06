@@ -11,6 +11,8 @@ public class CIMAEdgeWeight implements IMarkable{
 	private int edgeWeightValue;
 	private Color defaultOvalColor = /*new Color(240, 240, 240)*/new Color(0x33,0x44,0x55);
 	private Color ovalColor = defaultOvalColor;
+	private Color defaultTextColor = Color.WHITE;
+	private Color textColor = defaultTextColor;
 	
 	//weightField
 	int ovalWidth = 17;
@@ -32,7 +34,7 @@ public class CIMAEdgeWeight implements IMarkable{
 		ovalMiddleY = Math.min(vertice.getMiddleY(), parent.getMiddleY()) + Math.abs(vertice.getMiddleY() - parent.getMiddleY()) / 2;
 		g.fillOval(ovalMiddleX - ovalWidth/2, ovalMiddleY - ovalWidth/2, ovalWidth, ovalWidth);
 
-		g.setColor(Color.WHITE);
+		g.setColor(textColor);
 		String string = String.valueOf(edgeWeightValue);
 		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
 		Font defaultFont = g.getFont();
@@ -45,11 +47,13 @@ public class CIMAEdgeWeight implements IMarkable{
 	@Override
 	public void markAsMax() {
 		ovalColor = CIMAConstants.getMarkAsMaxColor();
+		textColor = Color.BLACK;
 	}
 
 	@Override
 	public void markAsSecMax() {
 		ovalColor = CIMAConstants.getMarkAsSecMaxColor();
+		textColor = Color.BLACK;
 	}
 
 	@Override
@@ -60,6 +64,12 @@ public class CIMAEdgeWeight implements IMarkable{
 	@Override
 	public void resetColor() {
 		ovalColor = defaultOvalColor;
+		textColor = defaultTextColor;
+	}
+	
+	@Override
+	public Color getColor() {
+		return ovalColor;
 	}
 	
 	public boolean onEdgeWeightClick(int x, int y){
@@ -86,5 +96,6 @@ public class CIMAEdgeWeight implements IMarkable{
 	public void setEdgeWeightToParent(int edgeWeight){
 		this.edgeWeightValue = edgeWeight;
 	}
+
 
 }
