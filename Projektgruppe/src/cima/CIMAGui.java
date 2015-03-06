@@ -73,7 +73,7 @@ public class CIMAGui extends Gui{
 						//check if its a edgeWeightOval ->edgeWeight -1
 						Vertice edgeWeigthOwner = ((CIMAVertice) rootVertice).edgeWeightOvalExists(e.getX(), e.getY());
 						if(edgeWeigthOwner != null){
-							((CIMAVertice) edgeWeigthOwner).edgeWeightDepress();
+							((CIMAVertice) edgeWeigthOwner).getEdgeWeightToParent().edgeWeightDepress();
 							treeChanged();
 						}
 					}
@@ -104,7 +104,7 @@ public class CIMAGui extends Gui{
 						//check if its a edgeWeightOval ->edgeWeight +1
 						Vertice edgeWeigthOwner = ((CIMAVertice) rootVertice).edgeWeightOvalExists(e.getX(), e.getY());
 						if(edgeWeigthOwner != null){
-							((CIMAVertice) edgeWeigthOwner).edgeWeightIncrease();;
+							((CIMAVertice) edgeWeigthOwner).getEdgeWeightToParent().edgeWeightIncrease();;
 							treeChanged();
 						}
 					}
@@ -117,6 +117,7 @@ public class CIMAGui extends Gui{
 	
 	private void treeChanged(){
 		CIMAVertice.drawMu = false;
+		CIMAAnimation.afterMessageDataCalc = false;
 		CIMAAnimation.getCIMAAnimation().stopAllAnimations();
 		if(rootVertice != null){
 			((CIMAVertice) rootVertice).reset();

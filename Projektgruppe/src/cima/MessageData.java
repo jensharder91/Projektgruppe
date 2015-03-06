@@ -7,13 +7,13 @@ import java.awt.geom.Arc2D;
 
 import cima.Gui;
 
-public class MessageData {
+public class MessageData implements IMarkable{
 
 	private int lamdaValue;
 	private CIMAVertice sender;
 	private CIMAVertice receiver;
-	private MessageData calcMax1;
-	private MessageData calcMax2;
+	private IMarkable calcMax1;
+	private IMarkable calcMax2;
 	private int specialVerticeWeight;
 	private boolean edgeWeightUsed;
 	
@@ -54,7 +54,7 @@ public class MessageData {
 	private Color ovalColor = defaultOvalColor;
 
 
-	public MessageData(int lamdaValue, CIMAVertice sender, CIMAVertice receiver, MessageData calcMax1, MessageData calcMax2, int specialVerticeWeight, boolean edgeWeightUsed){
+	public MessageData(int lamdaValue, CIMAVertice sender, CIMAVertice receiver, IMarkable calcMax1, IMarkable calcMax2, int specialVerticeWeight, boolean edgeWeightUsed){
 		this.lamdaValue = lamdaValue;
 		this.sender = sender;
 		this.receiver = receiver;
@@ -143,13 +143,6 @@ public class MessageData {
 		if(angleReceiver < angleSender){
 			angleReceiver += 2*Math.PI;
 		}
-
-
-		int vektorKreisMitteMiddleinieX = MiddlepunktX - MiddlepunktKreisX;
-		int vektorKreisMitteMiddleinieY = MiddlepunktY - MiddlepunktKreisY;
-		double längeVektorKreisMitteMiddleinie = Math.sqrt(vektorKreisMitteMiddleinieX*vektorKreisMitteMiddleinieX + vektorKreisMitteMiddleinieY*vektorKreisMitteMiddleinieY);
-		int vektorKreisMitteSegmentMitteX = (int) (vektorKreisMitteMiddleinieX/längeVektorKreisMitteMiddleinie * radius);
-		int vektorKreisMitteSegmentMitteY = (int) (vektorKreisMitteMiddleinieY/längeVektorKreisMitteMiddleinie * radius);
 	}
 	
 	public void drawLine(Graphics2D g){
@@ -298,6 +291,7 @@ public class MessageData {
 		return "Sender : "+sender.getName()+"  Empfänger : "+receiver.getName()+"  LamdaValue: "+lamdaValue;
 	}
 
+	@Override
 	public int getLamdaValue(){
 		return lamdaValue;
 	}
@@ -325,12 +319,15 @@ public class MessageData {
 	public void markAsAnimationColor(){
 		ovalColor = new Color(140, 220, 230);
 	}
+	@Override
 	public void markAsMax(){
 		ovalColor = CIMAConstants.getMarkAsMaxColor();
 	}
+	@Override
 	public void markAsSecMax(){
 		ovalColor = CIMAConstants.getMarkAsSecMaxColor();
 	}
+	@Override
 	public void resetColor(){
 		ovalColor = defaultOvalColor;
 	}
