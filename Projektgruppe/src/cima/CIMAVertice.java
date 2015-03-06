@@ -220,7 +220,7 @@ public class CIMAVertice extends Vertice{
 		if(children.size() == 0 && parent != null){
 			//got a ready leaf -> send message
 			specialVerticeWeight = calcSpecialVerticeWeight((CIMAVertice)parent);
-				((CIMAVertice) parent).receive(new MessageData(specialVerticeWeight, this, (CIMAVertice) parent, null, null, specialVerticeWeight, false));
+				((CIMAVertice) parent).receive(new MessageData(specialVerticeWeight, this, (CIMAVertice) parent, edgeWeightToParent, null, null, specialVerticeWeight, false));
 		}else{
 			for(Vertice child : children){
 				if(!(child instanceof CIMAVertice)){
@@ -270,8 +270,13 @@ public class CIMAVertice extends Vertice{
 
 	//interpreation OLD
 	private void computeLamdasAndSendTo(CIMAVertice receiverNode){
-
-		System.out.println("###########################\n "+name+" -> "+receiverNode.getName());
+		
+		CIMAEdgeWeight edgeToReceiverNode = null;
+		if(receiverNode == parent){
+			edgeToReceiverNode = edgeWeightToParent;
+		}else{
+			edgeToReceiverNode = receiverNode.getEdgeWeightToParent();
+		}
 		
 		Collections.sort(lamdas, new MessageDataComparator());
 		List<MessageData> maximums = new ArrayList<MessageData>();
@@ -284,7 +289,7 @@ public class CIMAVertice extends Vertice{
 			}
 		}
 		
-		MessageData biggestMsgData = new MessageData(0, null, null, null, null, 0, false);
+		MessageData biggestMsgData = new MessageData();
 		if(maximums.size() >= 1){
 			biggestMsgData = maximums.get(0);
 		}
@@ -292,94 +297,33 @@ public class CIMAVertice extends Vertice{
 		CIMAEdgeWeight max1 = calcMaxOrSecmaxEdge(receiverNode, true);
 		CIMAEdgeWeight max2 = calcMaxOrSecmaxEdge(receiverNode, false);
 		
-		System.out.println("vertex name: "+name+"   max1 : "+max1.getEdgeWeightValue() + " / max2 : "+max2.getEdgeWeightValue());
-
 		MessageData calcMessageData;
 		specialVerticeWeight = calcSpecialVerticeWeight(receiverNode);
 		if(max1.getLamdaValue() >= max2.getLamdaValue() + specialVerticeWeight){
-			calcMessageData = new MessageData(max1.getLamdaValue(), this, receiverNode, max1, max2, specialVerticeWeight, false);
+			calcMessageData = new MessageData(max1.getLamdaValue(), this, receiverNode, edgeToReceiverNode, max1, max2, specialVerticeWeight, false);
 		}else{
-			calcMessageData = new MessageData(max2.getLamdaValue() + specialVerticeWeight, this, receiverNode, max1, max2, specialVerticeWeight, false);
+			calcMessageData = new MessageData(max2.getLamdaValue() + specialVerticeWeight, this, receiverNode, edgeToReceiverNode, max1, max2, specialVerticeWeight, false);
 		}
 		
 		//make sure the lamdaValue is not less the biggest msgData
 		if(biggestMsgData.getLamdaValue() > calcMessageData.getLamdaValue()){
 //			calcMessageData = biggestMsgData;
-			calcMessageData = new MessageData(biggestMsgData.getLamdaValue(), this, receiverNode, max1, max2, specialVerticeWeight, false);
+			calcMessageData = new MessageData(biggestMsgData.getLamdaValue(), this, receiverNode, edgeToReceiverNode, max1, max2, specialVerticeWeight, false);
 		}
 		
 		//make sure the lamdaValue is not less then the edgeWeight
 		if(receiverNode == parent){
 			if(edgeWeightToParent.getEdgeWeightValue() > calcMessageData.getLamdaValue()){
-				calcMessageData = new MessageData(edgeWeightToParent.getEdgeWeightValue(), this, receiverNode, max1, max2, specialVerticeWeight, true);
+				calcMessageData = new MessageData(edgeWeightToParent.getEdgeWeightValue(), this, receiverNode, edgeToReceiverNode, max1, max2, specialVerticeWeight, true);
 			}
 		}else{
 			if(receiverNode.getEdgeWeightToParent().getEdgeWeightValue() > calcMessageData.getLamdaValue()){
-				calcMessageData = new MessageData(receiverNode.getEdgeWeightToParent().getEdgeWeightValue(), this, receiverNode, max1, max2, specialVerticeWeight, true);
+				calcMessageData = new MessageData(receiverNode.getEdgeWeightToParent().getEdgeWeightValue(), this, receiverNode, edgeToReceiverNode, max1, max2, specialVerticeWeight, true);
 			}
 		}
 
 		receiverNode.receive(calcMessageData);
 	}
-	
-//	//interpreation NEW 
-//	private void computeLamdasAndSendTo(CIMAVertice receiverNode){
-//		
-//		System.out.println("###########################\n "+name+" -> "+receiverNode.getName());
-//
-//		Collections.sort(lamdas, new MessageDataComparator());
-//		List<MessageData> maximums = new ArrayList<MessageData>();
-//		for(MessageData data : lamdas){
-//			if(data.getSender() != receiverNode){
-//				maximums.add(data);
-//			}
-//			if(maximums.size() == 2){
-//				break;
-//			}
-//		}
-//		
-//		MessageData maxMessageData = new MessageData(0, null, null, null, null, 0, false);
-//		if(maximums.size() >= 1){
-//			maxMessageData = maximums.get(0);
-//		}
-//		
-//		int max1 = calcMaxOrSecmaxEdge(receiverNode, true);
-//		int max2 = calcMaxOrSecmaxEdge(receiverNode, false);
-//		
-//		System.out.println("vertex name: "+name+"   max1 : "+max1 + " / max2 : "+max2);
-//		
-//
-//		MessageData calcMessageData;
-//		specialVerticeWeight = calcSpecialVerticeWeight(receiverNode);
-//		if(max1 >= max2 + specialVerticeWeight){
-//			System.out.println("calc A");
-//			calcMessageData = new MessageData(max1, this, receiverNode);
-//		}else{
-//			System.out.println("calc B");
-//			calcMessageData = new MessageData(max2 + specialVerticeWeight, this, receiverNode);
-//		}
-//		
-//		//make sure the lamdaValue is not less then the edgeWeight
-//		if(receiverNode == parent){
-//			if(edgeWeightToParent.getEdgeWeightValue() > calcMessageData.getLamdaValue()){
-//				System.out.println("less then edgeWeight (1)");
-//				calcMessageData = new MessageData(edgeWeightToParent.getEdgeWeightValue(), this, receiverNode);
-//			}
-//		}else{
-//			if(receiverNode.getEdgeWeightToParent().getEdgeWeightValue() > calcMessageData.getLamdaValue()){
-//				System.out.println("less then edgeWeight (2)");
-//				calcMessageData = new MessageData(receiverNode.getEdgeWeightToParent().getEdgeWeightValue(), this, receiverNode);
-//			}
-//		}
-//		
-//		//make sure the lamdaValue is not less then the bigest inc messageData
-//		if(maxMessageData.getLamdaValue() > calcMessageData.getLamdaValue()){
-//			System.out.println("less then bigest mesgdata");
-//			calcMessageData = maxMessageData;
-//		}
-//
-//		receiverNode.receive(calcMessageData);
-//	}
 
 	private CIMAVertice getMissingNeightbour(){
 		for(Vertice neighbor : children){
@@ -471,20 +415,24 @@ public class CIMAVertice extends Vertice{
 	}
 	
 
-	private void calcMu(){
+	private void calcMu(){		
+
 		Collections.sort(lamdas, new MessageDataComparator());
-		MessageData max1 = new MessageData(0, null, null, null, null, 0, false);
-		MessageData max2 = new MessageData(0, null, null, null, null, 0, false);
+		MessageData biggestMsgData = new MessageData();
 		if(lamdas.size() >= 1){
-			max1 = lamdas.get(0);
+			biggestMsgData = lamdas.get(0);
 		}
-		if(lamdas.size() >= 2){
-			max2 = lamdas.get(1);
-		}
+		
+		CIMAEdgeWeight max1 = calcMaxOrSecmaxEdge(null, true);
+		CIMAEdgeWeight max2 = calcMaxOrSecmaxEdge(null, false);
 
 		calcGeneralVerticeWeight();
 		mu = Math.max(max1.getLamdaValue(), max2.getLamdaValue() + verticeWeight);
 
+		//make sure mu is not less the biggest msgData
+		if(mu <  biggestMsgData.getLamdaValue()){
+			mu = biggestMsgData.getLamdaValue();
+		}
 
 		for(Vertice child : children){
 			if(!(child instanceof CIMAVertice)){
@@ -604,11 +552,13 @@ public class CIMAVertice extends Vertice{
 		for(int i = lamdas.size() - 1; i >= 0; i--){
 
 			if(sender == null  || !(lamdas.get(i).getSender().equals(sender))){
+				System.out.println("/////  "+name+" -> "+lamdas.get(i).getSender().getName());
 				agentWayList.add(new AgentWayData(this, lamdas.get(i).getSender(), lamdas.get(i).getLamdaValue()));
 				lamdas.get(i).getSender().moveAgents(this, lamdas.get(i).getLamdaValue());
 			}
 		}
 
+		System.out.println("/////  "+name+" -> "+(sender==null?"null":sender.getName()));
 		agentWayList.add(new AgentWayData(this, sender, agentNumber));
 		return agentNumber;
 	}

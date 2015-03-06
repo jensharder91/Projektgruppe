@@ -16,6 +16,7 @@ public class MessageData implements IMarkable{
 	private IMarkable calcMax2;
 	private int specialVerticeWeight;
 	private boolean edgeWeightUsed;
+	private CIMAEdgeWeight edge;
 	
 	//animation / graphic
 
@@ -54,7 +55,10 @@ public class MessageData implements IMarkable{
 	private Color ovalColor = defaultOvalColor;
 
 
-	public MessageData(int lamdaValue, CIMAVertice sender, CIMAVertice receiver, IMarkable calcMax1, IMarkable calcMax2, int specialVerticeWeight, boolean edgeWeightUsed){
+	public MessageData(){
+		this(0, null, null, null, null, null, 0, false);
+	}
+	public MessageData(int lamdaValue, CIMAVertice sender, CIMAVertice receiver, CIMAEdgeWeight edge, IMarkable calcMax1, IMarkable calcMax2, int specialVerticeWeight, boolean edgeWeightUsed){
 		this.lamdaValue = lamdaValue;
 		this.sender = sender;
 		this.receiver = receiver;
@@ -62,6 +66,7 @@ public class MessageData implements IMarkable{
 		this.calcMax2 = calcMax2;
 		this.specialVerticeWeight = specialVerticeWeight;
 		this.edgeWeightUsed = edgeWeightUsed;
+		this.edge = edge;
 
 		if(getSender() != null && getReceiver() != null){
 			calcArc();
@@ -333,6 +338,9 @@ public class MessageData implements IMarkable{
 	}
 	public static void setShowMessageData(boolean showMessageData){
 		MessageData.showMessageData = showMessageData;
+	}
+	public CIMAEdgeWeight getEdge(){
+		return edge;
 	}
 	
 	public void markAllColors(){
