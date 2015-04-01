@@ -3,8 +3,12 @@ package cima;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CIMAEdgeWeight implements IMarkable{
+import javax.naming.PartialResultException;
+
+public class CIMAEdgeWeight implements IMarkable, Comparable<CIMAEdgeWeight>{
 	
 	private CIMAVertice vertice;
 	private CIMAVertice parent;
@@ -13,6 +17,7 @@ public class CIMAEdgeWeight implements IMarkable{
 	private Color ovalColor = defaultOvalColor;
 	private Color defaultTextColor = Color.WHITE;
 	private Color textColor = defaultTextColor;
+	private List<CIMAVertice> potentialVertices = new ArrayList<CIMAVertice>();
 	
 	//weightField
 	int ovalWidth = 17;
@@ -95,6 +100,26 @@ public class CIMAEdgeWeight implements IMarkable{
 	}
 	public void setEdgeWeightToParent(int edgeWeight){
 		this.edgeWeightValue = edgeWeight;
+	}
+	
+	public void addToPotentialList(CIMAVertice newVertice){
+		potentialVertices.add(newVertice);
+	}
+	public void cleanPotentialList(){
+		potentialVertices.clear();
+	}
+	public String getEdgeName(){
+		return vertice.getName() + " - " + parent.getName();
+	}
+	
+	@Override
+	/** 
+	 *
+	 *  order from HIGH to LOW (!)
+	 * 
+	 */	
+	public int compareTo(CIMAEdgeWeight o) {
+		return o.getEdgeWeightValue() - edgeWeightValue;
 	}
 
 

@@ -18,6 +18,7 @@ public class MessageData implements IMarkable{
 	private IMarkable maxMsgData;
 	private IMarkable msgEdge;
 	private CIMAEdgeWeight edge;
+	private PotentialData potentialData;
 	
 	private maxState maxState;
 	private enum maxState { EDGEMAX, MAXMSGDATA, MSGEDGE};
@@ -62,9 +63,9 @@ public class MessageData implements IMarkable{
 
 
 	public MessageData(){
-		this(0, null, null, null, null, null, 0, null, null);
+		this(0, null, null, null, null, null, 0, null, null,  null);
 	}
-	public MessageData(int lamdaValue, CIMAVertice sender, CIMAVertice receiver, CIMAEdgeWeight edge, IMarkable edgeMax1, IMarkable edgeMax2, int specialVerticeWeight, IMarkable maxMsgData, IMarkable msgEdge){
+	public MessageData(int lamdaValue, CIMAVertice sender, CIMAVertice receiver, CIMAEdgeWeight edge, IMarkable edgeMax1, IMarkable edgeMax2, int specialVerticeWeight, IMarkable maxMsgData, IMarkable msgEdge, PotentialData potentialData){
 		this.lamdaValue = lamdaValue;
 		this.sender = sender;
 		this.receiver = receiver;
@@ -74,6 +75,7 @@ public class MessageData implements IMarkable{
 		this.maxMsgData = maxMsgData;
 		this.msgEdge = msgEdge;
 		this.edge = edge;
+		this.potentialData = potentialData;
 		
 		if(msgEdge != null){
 			maxState = maxState.MSGEDGE;
@@ -361,6 +363,9 @@ public class MessageData implements IMarkable{
 	@Override
 	public int getLamdaValue(){
 		return lamdaValue;
+	}
+	public PotentialData getPotentialData(){
+		return potentialData;
 	}
 	public CIMAVertice getSender(){
 		return sender;
