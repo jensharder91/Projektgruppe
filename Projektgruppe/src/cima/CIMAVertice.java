@@ -33,6 +33,7 @@ public class CIMAVertice extends Vertice{
     private boolean marked = false;
     private static int animationSpeed = 3;
     private static String displayedInfoString ="";
+    private boolean drawPotentialData = false;
     
     protected int currentAgents = 0;
     protected int moveAgentCounter = 0;
@@ -66,21 +67,24 @@ public class CIMAVertice extends Vertice{
 	@Override
 	protected void drawAllVertice(Graphics g){
 
-		//chose color
-		if(CIMAVertice.drawMu){
-			if(activeAnimation){
-				if(decontaminated){
-					verticeColor = Color.GREEN;
+		//check if color should be chosen
+		if(!drawPotentialData){
+			//chose color
+			if(CIMAVertice.drawMu){
+				if(activeAnimation){
+					if(decontaminated){
+						verticeColor = Color.GREEN;
+					}else{
+						verticeColor = new Color(255, 50, 0);
+					}
+					
 				}else{
-					verticeColor = new Color(255, 50, 0);
+					verticeColor = Color.white;
 				}
-				
 			}else{
-				verticeColor = Color.white;
-			}
-		}else{
-			if(!MessageData.animationInProgress){
-				verticeColor = Color.white;
+				if(!MessageData.animationInProgress){
+					verticeColor = Color.white;
+				}
 			}
 		}
 		super.drawAllVertice(g, verticeColor);
@@ -136,6 +140,20 @@ public class CIMAVertice extends Vertice{
 			edgeWeightToParent.draw(g);
 		}
 	}
+	
+//	protected void drawPotentialData(Graphics g){
+//		
+//		System.out.println("name : "+name);
+//		 
+//		if(drawPotentialData){
+//			System.out.println("draw potential??");
+//			potentialData.draw(g);
+//		}
+//		
+//		for(Vertice child : children){
+//			((CIMAVertice)child).drawPotentialData(g);
+//		}
+//	}
 	
     public void drawAnimation(Graphics g) {
     	
@@ -387,10 +405,10 @@ public class CIMAVertice extends Vertice{
 		
 		List<Vertice> allNeighbors = getNeighbors();
 		
-		if(allNeighbors.size() == 1){
-//			maxEdgeWeight.setEdgeWeightToParent(verticeWeight);
-		}
-		else{
+//		if(allNeighbors.size() == 1){
+////			maxEdgeWeight.setEdgeWeightToParent(verticeWeight);
+//		}
+//		else{
 			for(Vertice vertice : allNeighbors){
 				if((CIMAVertice)vertice != exeptVertice){
 					if(vertice == parent){
@@ -426,7 +444,7 @@ public class CIMAVertice extends Vertice{
 					}
 				}
 			}
-		}		
+//		}		
 	
 //		if(maxEdge){
 //			return maxEdgeWeight;
@@ -461,6 +479,11 @@ public class CIMAVertice extends Vertice{
 //		CIMAEdgeWeight max2 = calcMaxOrSecmaxEdge(null, false);
 		
 		System.out.println("Vertice : "+name);
+		
+		System.out.println("max1: "+ max1.getEdgeWeightValue());
+		System.out.println("max2: "+ max2.getEdgeWeightValue());
+		System.out.println("max3: "+ max3.getEdgeWeightValue());
+		
 		if(max1.getEdgeWeightValue() == max3.getEdgeWeightValue()){
 			potentialData = new PotentialData(this, true);
 			System.out.println("case a");
@@ -479,11 +502,31 @@ public class CIMAVertice extends Vertice{
 		if(mu <=  biggestMsgData.getLamdaValue()){
 			
 			if(mu == biggestMsgData.getLamdaValue()){
-				potentialData = new PotentialData(this, true);
-				System.out.println("case d");
+				
+				System.out.println("show edges:");
+				System.out.println("potentialData: "+ potentialData.getPotentialEdgeWeights());
+				System.out.println("biggest.potential: "+biggestMsgData.getPotentialData().getPotentialEdgeWeights());
+				
+				//check if both potentialData has same number of edges
+				if(potentialData.getNumberOfpotentialEdgeWeights() == biggestMsgData.getPotentialData().getNumberOfpotentialEdgeWeights()){
+					for(CIMAEdgeWeight edge : biggestMsgData.getPotentialData().getPotentialEdgeWeights()){
+						if(potentialData.hasSameEdge(edge)){
+							//potential data shouldnt change
+							System.out.println("case d_1");
+						}else{
+							potentialData = new PotentialData(this, true);
+							System.out.println("case d_2");
+						}
+					}
+				}else{
+					potentialData = new PotentialData(this, true);
+					System.out.println("case d_3");
+				}
+				
+				
 			}
 			else{
-				potentialData = biggestMsgData.getPotentialData().getPotentialDataCopy();
+				potentialData = biggestMsgData.getPotentialData().getPotentialDataCopy(this);
 				System.out.println("case e");
 			}
 			
@@ -674,6 +717,17 @@ public class CIMAVertice extends Vertice{
 	public List<MessageData> getLamdas(){
 		return lamdas;
 	}
+	public void setDrawPotentialData(boolean drawPotentialData){
+		
+		resetDrawPotentialData();
+		
+		this.drawPotentialData = drawPotentialData;
+		potentialData.prepareDraw();
+		System.out.println("draw potential : "+drawPotentialData);
+	}
+	public void markColor(Color color){
+		verticeColor = color;
+	}
 	public void markAsMax(int specialVerticeWeight){
 		this.specialVerticeWeight = specialVerticeWeight;
 		verticeColor = CIMAConstants.getMarkAsMaxColor();
@@ -687,6 +741,16 @@ public class CIMAVertice extends Vertice{
 	public void resetColor(){
 		verticeColor = Color.white;
 		marked = false;
+	}
+	public void resetDrawPotentialData(){
+		
+		resetColor();
+		potentialData.resetDraw();
+		drawPotentialData = false;
+		
+		for(Vertice child : children){
+			((CIMAVertice)child).resetDrawPotentialData();
+		}
 	}
 	public boolean isDecontaminated(){
 		return decontaminated;

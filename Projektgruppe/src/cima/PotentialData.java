@@ -1,5 +1,7 @@
 package cima;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +9,7 @@ public class PotentialData {
 	
 	private boolean flag = false;
 	private List<CIMAEdgeWeight> potentialEdgeWeights = new ArrayList<CIMAEdgeWeight>();
-	private CIMAVertice vertice;
+	private CIMAVertice vertice = null;
 	
 	
 	//constructors
@@ -37,6 +39,29 @@ public class PotentialData {
 		potentialEdgeWeight2.addToPotentialList(vertice);
 		this.vertice = vertice;
 	}
+	
+	
+	//draw
+	
+	public void prepareDraw(){
+		System.out.println("in draw");
+		if(flag){
+			System.out.println("flag");
+			vertice.markColor(Color.RED);
+		}
+		else{
+			for(CIMAEdgeWeight edge : potentialEdgeWeights){
+				System.out.println("edge");
+				edge.markColor(Color.GREEN);
+			}
+		}
+	}
+	
+	public void resetDraw(){
+		for(CIMAEdgeWeight edge : potentialEdgeWeights){
+			edge.resetColor();
+		}
+	}
 
 	
 	
@@ -62,6 +87,20 @@ public class PotentialData {
 		}
 	}
 	
+	//check
+	
+	public boolean hasSameEdge(CIMAEdgeWeight newEdgeWeight){
+		
+		
+		for(CIMAEdgeWeight edgeWeight : potentialEdgeWeights){
+			if(edgeWeight.equals(newEdgeWeight)){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	
 	//getter
 	
@@ -81,17 +120,20 @@ public class PotentialData {
 	//copy
 	
 	public PotentialData getPotentialDataCopy(){
+		return getPotentialDataCopy(null);
+	}
+	public PotentialData getPotentialDataCopy(CIMAVertice vertice){
 		if(flag){
-			return new PotentialData(flag);
+			return new PotentialData(vertice, flag);
 		}else{
 			if(potentialEdgeWeights.size() == 1){
-				return new PotentialData(potentialEdgeWeights.get(0));
+				return new PotentialData(vertice, potentialEdgeWeights.get(0));
 			}else{
-				return new PotentialData(potentialEdgeWeights.get(0), potentialEdgeWeights.get(1));
+				return new PotentialData(vertice, potentialEdgeWeights.get(0), potentialEdgeWeights.get(1));
 			}
 		}
 	}
-	
+		
 	
 	@Override
 	public String toString() {

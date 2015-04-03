@@ -65,6 +65,12 @@ public class CIMAEdgeWeight implements IMarkable, Comparable<CIMAEdgeWeight>{
 	public int getLamdaValue() {
 		return edgeWeightValue;
 	}
+	public CIMAVertice getParent(){
+		return parent;
+	}
+	public CIMAVertice getVertice(){ 
+		return vertice;
+	}
 
 	@Override
 	public void resetColor() {
@@ -75,6 +81,11 @@ public class CIMAEdgeWeight implements IMarkable, Comparable<CIMAEdgeWeight>{
 	@Override
 	public Color getColor() {
 		return ovalColor;
+	}
+	
+	@Override
+	public void markColor(Color color) {
+		ovalColor = color;
 	}
 	
 	public boolean onEdgeWeightClick(int x, int y){
@@ -120,6 +131,20 @@ public class CIMAEdgeWeight implements IMarkable, Comparable<CIMAEdgeWeight>{
 	 */	
 	public int compareTo(CIMAEdgeWeight o) {
 		return o.getEdgeWeightValue() - edgeWeightValue;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+
+		if(obj instanceof CIMAEdgeWeight){
+			if(((CIMAEdgeWeight) obj).getParent().equals(parent)){
+				if(((CIMAEdgeWeight) obj).getVertice().equals(vertice)){
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 

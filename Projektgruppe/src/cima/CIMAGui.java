@@ -55,64 +55,93 @@ public class CIMAGui extends Gui{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
-				if(SwingUtilities.isRightMouseButton(e)){
-					if(rootVertice != null){
-						//check if its a vertice  -> LÖSCHEN
-						Vertice selectedVertice = rootVertice.getPoint(e.getX(), e.getY());
-						if(selectedVertice != null){
-							if(selectedVertice == rootVertice){
-								clearGui();
-							}else{
-								MessageData.clearGui = true;
-								selectedVertice.delete();
-							}
-							treeChanged();
-						}
-					}
-					if(rootVertice != null){
-						//check if its a edgeWeightOval ->edgeWeight -1
-						Vertice edgeWeigthOwner = ((CIMAVertice) rootVertice).edgeWeightOvalExists(e.getX(), e.getY());
-						if(edgeWeigthOwner != null){
-							((CIMAVertice) edgeWeigthOwner).getEdgeWeightToParent().edgeWeightDepress();
-							treeChanged();
-						}
-					}
-				//linksklick
+				if(editorOn){
+					editTree(e);
 				}else{
-
-					// kein root ?  -> neues Kind
-					if(rootVertice == null){
-						verticeCoutner  = 1;
-						rootVertice = new CIMAVertice(""+verticeCoutner, null);
-						verticeCoutner++;
-						treeChanged();
-					//add child
-					}else if(rootVertice.getPoint(e.getX(), e.getY()) != null){
-						// add a child to this point
-						CIMAVertice parent = null;
-						parent = (CIMAVertice) rootVertice.getPoint(e.getX(), e.getY());
-						if(parent != null){
-						}
-						if(parent instanceof CIMAVertice){
-							new CIMAVertice(""+verticeCoutner, parent);
-							MessageData.clearGui = true;
-							verticeCoutner++;
-							treeChanged();
-						}
-					
-					}else {
-						//check if its a edgeWeightOval ->edgeWeight +1
-						Vertice edgeWeigthOwner = ((CIMAVertice) rootVertice).edgeWeightOvalExists(e.getX(), e.getY());
-						if(edgeWeigthOwner != null){
-							((CIMAVertice) edgeWeigthOwner).getEdgeWeightToParent().edgeWeightIncrease();;
-							treeChanged();
-						}
-					}
+					showInfos(e);
 				}
 
 				repaint();
 			}
 		});
+	}
+	
+	private void editTree(MouseEvent e){
+		if(SwingUtilities.isRightMouseButton(e)){
+			if(rootVertice != null){
+				//check if its a vertice  -> LÖSCHEN
+				Vertice selectedVertice = rootVertice.getPoint(e.getX(), e.getY());
+				if(selectedVertice != null){
+					if(selectedVertice == rootVertice){
+						clearGui();
+					}else{
+						MessageData.clearGui = true;
+						selectedVertice.delete();
+					}
+					treeChanged();
+				}
+			}
+			if(rootVertice != null){
+				//check if its a edgeWeightOval ->edgeWeight -1
+				Vertice edgeWeigthOwner = ((CIMAVertice) rootVertice).edgeWeightOvalExists(e.getX(), e.getY());
+				if(edgeWeigthOwner != null){
+					((CIMAVertice) edgeWeigthOwner).getEdgeWeightToParent().edgeWeightDepress();
+					treeChanged();
+				}
+			}
+		//linksklick
+		}else{
+
+			// kein root ?  -> neues Kind
+			if(rootVertice == null){
+				verticeCoutner  = 1;
+				rootVertice = new CIMAVertice(""+verticeCoutner, null);
+				verticeCoutner++;
+				treeChanged();
+			//add child
+			}else if(rootVertice.getPoint(e.getX(), e.getY()) != null){
+				// add a child to this point
+				CIMAVertice parent = null;
+				parent = (CIMAVertice) rootVertice.getPoint(e.getX(), e.getY());
+				if(parent != null){
+				}
+				if(parent instanceof CIMAVertice){
+					new CIMAVertice(""+verticeCoutner, parent);
+					MessageData.clearGui = true;
+					verticeCoutner++;
+					treeChanged();
+				}
+			
+			}else {
+				//check if its a edgeWeightOval ->edgeWeight +1
+				Vertice edgeWeigthOwner = ((CIMAVertice) rootVertice).edgeWeightOvalExists(e.getX(), e.getY());
+				if(edgeWeigthOwner != null){
+					((CIMAVertice) edgeWeigthOwner).getEdgeWeightToParent().edgeWeightIncrease();;
+					treeChanged();
+				}
+			}
+		}
+	}
+	
+	private void showInfos(MouseEvent e){
+		
+		if(rootVertice != null){
+			((CIMAVertice) rootVertice).algorithmus();
+			((CIMAVertice) rootVertice).resetDrawPotentialData();
+		}
+		
+		CIMAVertice selectedVertex = (CIMAVertice) rootVertice.getPoint(e.getX(), e.getY());
+		if(selectedVertex != null){
+			selectedVertex.setDrawPotentialData(true);
+		}else{
+			if(rootVertice != null){
+				((CIMAVertice) rootVertice).resetDrawPotentialData();
+			}
+		}
+		
+		System.out.println("showInfos...");
+		
+		repaint();
 	}
 	
 	private void treeChanged(){

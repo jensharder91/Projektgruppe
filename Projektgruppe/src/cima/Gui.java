@@ -29,7 +29,8 @@ public abstract class Gui extends JPanel{
 	protected Vertice homeBase = null;
 	protected Vertice currentVertice = null;
 
-	protected JPanel buttonBar = new JPanel();
+	protected JPanel buttonBarSouth = new JPanel();
+	protected JPanel buttonBarNorth = new JPanel();
 
 	/** Buttons */
 	protected JButton buttonCalculate = new JButton("Sofort berechnen");
@@ -44,6 +45,7 @@ public abstract class Gui extends JPanel{
 	private SpinnerNumberModel spinnerModel = new SpinnerNumberModel(3, 0, 10, 1);
 	private JSpinner spinnerAnimationSpeed = new JSpinner(spinnerModel);
 	private JCheckBox checkboxShowMessageData = new JCheckBox("zeige die Berechnung an");
+	private JCheckBox checkboxEditor = new JCheckBox("editiere den Baum");
 	
 	/** bollean if gui element should be visible*/
 	private boolean buttonCalculateBoolean = false;
@@ -57,10 +59,11 @@ public abstract class Gui extends JPanel{
 	private boolean buttonCompleteAgentAnimationBoolean = false;
 	private boolean spinnerAnimationSpeedBoolean = false;
 	private boolean checkboxShowMessageDataBoolean = false;
-	
+	private boolean checkboxEditorBoolean = true;
 	
 	
 	protected boolean autoAlgo = false;
+	protected boolean editorOn = true;
 
 	protected Gui(){
 
@@ -192,20 +195,34 @@ public abstract class Gui extends JPanel{
 				MessageData.setShowMessageData(checkboxShowMessageData.isSelected());
 			}
 		});
+		
+		checkboxEditor.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				editorOn = checkboxEditor.isSelected();
+			}
+		});
+		checkboxEditor.setSelected(true);
 
 	
-		buttonBar.add(togglePause);
-		buttonBar.add(spinnerAnimationSpeed);
-		buttonBar.add(buttonBack);
-		buttonBar.add(buttonShowMu);
-		buttonBar.add(buttonCalculate);
-		buttonBar.add(buttonCalculateAnimation);
-		buttonBar.add(buttonCompleteAgentAnimation);
-		buttonBar.add(buttonNextAgentAnimationStep);
-		buttonBar.add(buttonNextCalculateAnimationStep);
-		buttonBar.add(buttonClear);
-		buttonBar.add(checkboxShowMessageData);
-		this.add(buttonBar, "South");
+//		buttonBarNorth.add(checkboxEditor);//TODO
+//		this.add(buttonBarNorth, "North");
+		
+		buttonBarSouth.add(checkboxEditor);
+	
+		buttonBarSouth.add(togglePause);
+		buttonBarSouth.add(spinnerAnimationSpeed);
+		buttonBarSouth.add(buttonBack);
+		buttonBarSouth.add(buttonShowMu);
+		buttonBarSouth.add(buttonCalculate);
+		buttonBarSouth.add(buttonCalculateAnimation);
+		buttonBarSouth.add(buttonCompleteAgentAnimation);
+		buttonBarSouth.add(buttonNextAgentAnimationStep);
+		buttonBarSouth.add(buttonNextCalculateAnimationStep);
+		buttonBarSouth.add(buttonClear);
+		buttonBarSouth.add(checkboxShowMessageData);
+		this.add(buttonBarSouth, "South");
 		
 		
 		repaint();
@@ -267,12 +284,16 @@ public abstract class Gui extends JPanel{
 		
 		//messageData
 		for(MessageData msgData : CIMAVertice.messageDataList){
-			msgData.drawMessageData(g2); //TODO
+			msgData.drawMessageData(g2);
 		}
 		
 		if(rootVertice != null){
 			((CIMAVertice) rootVertice).drawAnimation(g2);
 		}
+		
+//		if(rootVertice != null){
+//			((CIMAVertice) rootVertice).drawPotentialData(g2);
+//		}
 		
 		CIMAVertice.drawDisplayInformation(g2);
 		
@@ -392,6 +413,7 @@ public abstract class Gui extends JPanel{
 		togglePause.setVisible(togglePauseBoolean);
 		spinnerAnimationSpeed.setVisible(spinnerAnimationSpeedBoolean);
 		checkboxShowMessageData.setVisible(checkboxShowMessageDataBoolean);
+		checkboxEditor.setVisible(checkboxEditorBoolean);
 		
 		
 	}

@@ -407,6 +407,10 @@ public class MessageData implements IMarkable{
 	public Color getColor() {
 		return ovalColor;
 	}
+	@Override
+	public void markColor(Color color) {
+		ovalColor = color;
+	}
 	public static void setShowMessageData(boolean showMessageData){
 		MessageData.showMessageData = showMessageData;
 	}
@@ -590,4 +594,5 @@ public class MessageData implements IMarkable{
 			gui.repaint();
 		}
 	}
+
 }
