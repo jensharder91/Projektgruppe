@@ -127,15 +127,18 @@ public class CIMAGui extends Gui{
 		
 		if(rootVertice != null){
 			((CIMAVertice) rootVertice).algorithmus();
-			((CIMAVertice) rootVertice).resetDrawPotentialData();
+			((CIMAVertice) rootVertice).resetDrawPotentialData(); //TODO reset for edges
 		}
 		
+		//clicked on a node?
 		CIMAVertice selectedVertex = (CIMAVertice) rootVertice.getPoint(e.getX(), e.getY());
 		if(selectedVertex != null){
-			selectedVertex.setDrawPotentialData(true);
+			selectedVertex.drawPotentialDataForThisNode(true);
 		}else{
-			if(rootVertice != null){
-				((CIMAVertice) rootVertice).resetDrawPotentialData();
+			//clicked on a edgeWeightOval?
+			Vertice edgeWeigthOwner = ((CIMAVertice) rootVertice).edgeWeightOvalExists(e.getX(), e.getY());
+			if(edgeWeigthOwner != null){
+				((CIMAVertice) edgeWeigthOwner).getEdgeWeightToParent().setDrawPotentialData(true);
 			}
 		}
 		

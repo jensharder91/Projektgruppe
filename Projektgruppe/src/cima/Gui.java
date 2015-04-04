@@ -46,6 +46,7 @@ public abstract class Gui extends JPanel{
 	private JSpinner spinnerAnimationSpeed = new JSpinner(spinnerModel);
 	private JCheckBox checkboxShowMessageData = new JCheckBox("zeige die Berechnung an");
 	private JCheckBox checkboxEditor = new JCheckBox("editiere den Baum");
+	protected JButton buttonDrawAllPotentialEdges = new JButton("Färbe alle möglichen Kanten");
 	
 	/** bollean if gui element should be visible*/
 	private boolean buttonCalculateBoolean = false;
@@ -60,6 +61,7 @@ public abstract class Gui extends JPanel{
 	private boolean spinnerAnimationSpeedBoolean = false;
 	private boolean checkboxShowMessageDataBoolean = false;
 	private boolean checkboxEditorBoolean = true;
+	private boolean buttonDrawAllPotentialEdgesBoolean = true;
 	
 	
 	protected boolean autoAlgo = false;
@@ -204,12 +206,25 @@ public abstract class Gui extends JPanel{
 			}
 		});
 		checkboxEditor.setSelected(true);
+		
+		buttonDrawAllPotentialEdges.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+
+				((CIMAVertice) rootVertice).algorithmus();
+				((CIMAVertice) rootVertice).drawAllPotentialEdges();
+				
+				repaint();
+
+			}
+		});
 
 	
 //		buttonBarNorth.add(checkboxEditor);//TODO
 //		this.add(buttonBarNorth, "North");
 		
 		buttonBarSouth.add(checkboxEditor);
+		buttonBarSouth.add(buttonDrawAllPotentialEdges);
 	
 		buttonBarSouth.add(togglePause);
 		buttonBarSouth.add(spinnerAnimationSpeed);
@@ -414,6 +429,7 @@ public abstract class Gui extends JPanel{
 		spinnerAnimationSpeed.setVisible(spinnerAnimationSpeedBoolean);
 		checkboxShowMessageData.setVisible(checkboxShowMessageDataBoolean);
 		checkboxEditor.setVisible(checkboxEditorBoolean);
+		buttonDrawAllPotentialEdges.setVisible(buttonDrawAllPotentialEdgesBoolean);
 		
 		
 	}

@@ -54,6 +54,27 @@ public class CIMAEdgeWeight implements IMarkable, Comparable<CIMAEdgeWeight>{
 		ovalColor = CIMAConstants.getMarkAsMaxColor();
 		textColor = Color.BLACK;
 	}
+	
+	public void setDrawPotentialData(boolean drawPotentialData){
+		
+		System.out.println("IN EDGE  ("+getEdgeName()+")");
+				
+		if(potentialVertices.size() > 0){
+			System.out.println("edge case a");
+			ovalColor = Color.GREEN;
+			
+			for(CIMAVertice vertice : potentialVertices){
+				System.out.println("edge case b");
+				System.out.println(vertice.getName());
+				vertice.markColor(Color.GREEN);
+				vertice.setDrawPotentialData(true);
+				
+			}
+		}else{
+			System.out.println("edge case c");
+			ovalColor = Color.RED;
+		}
+	}
 
 	@Override
 	public void markAsSecMax() {
@@ -114,7 +135,9 @@ public class CIMAEdgeWeight implements IMarkable, Comparable<CIMAEdgeWeight>{
 	}
 	
 	public void addToPotentialList(CIMAVertice newVertice){
-		potentialVertices.add(newVertice);
+		if(!potentialVertices.contains(newVertice)){
+			potentialVertices.add(newVertice);
+		}
 	}
 	public void cleanPotentialList(){
 		potentialVertices.clear();

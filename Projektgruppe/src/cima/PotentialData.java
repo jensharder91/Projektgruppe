@@ -31,13 +31,17 @@ public class PotentialData {
 	public PotentialData(CIMAVertice vertice, CIMAEdgeWeight potentialEdgeWeight1){
 		this(potentialEdgeWeight1);
 		this.vertice = vertice;
-		potentialEdgeWeight1.addToPotentialList(vertice);
+//		if(vertice != null){
+//			potentialEdgeWeight1.addToPotentialList(vertice);
+//		}
 	}
 	public PotentialData(CIMAVertice vertice, CIMAEdgeWeight potentialEdgeWeight1, CIMAEdgeWeight potentialEdgeWeight2){
 		this(potentialEdgeWeight1, potentialEdgeWeight2);
-		potentialEdgeWeight1.addToPotentialList(vertice);
-		potentialEdgeWeight2.addToPotentialList(vertice);
 		this.vertice = vertice;
+//		if(vertice != null){
+//			potentialEdgeWeight1.addToPotentialList(vertice);
+//			potentialEdgeWeight2.addToPotentialList(vertice);
+//		}
 	}
 	
 	
@@ -52,7 +56,14 @@ public class PotentialData {
 		else{
 			for(CIMAEdgeWeight edge : potentialEdgeWeights){
 				System.out.println("edge");
-				edge.markColor(Color.GREEN);
+				if(edge.getEdgeWeightValue() > 1){
+					edge.markColor(Color.GREEN);
+				}else{
+					edge.markColor(Color.YELLOW);
+				}
+			}
+			if(potentialEdgeWeights.size() > 0){
+				vertice.markColor(Color.GREEN);
 			}
 		}
 	}
@@ -81,9 +92,30 @@ public class PotentialData {
 	public void setPotentialEdgeWeight(CIMAEdgeWeight potentialEdgeWeight1, CIMAEdgeWeight potentialEdgeWeight2){
 		flag = false;
 		potentialEdgeWeights.clear();
-		potentialEdgeWeights.add(potentialEdgeWeight1);
+		if(potentialEdgeWeight1.getEdgeWeightValue() > 0){
+			potentialEdgeWeights.add(potentialEdgeWeight1);
+		}
 		if(potentialEdgeWeight2 != null){
-			potentialEdgeWeights.add(potentialEdgeWeight2);
+			if(potentialEdgeWeight2.getEdgeWeightValue() > 0){
+				potentialEdgeWeights.add(potentialEdgeWeight2);
+			}
+		}
+		
+		//maybe no edge was added, because of edgevalue 1?
+		if(potentialEdgeWeights.size() == 0){
+			setFlag();
+		}
+	}
+	
+	//register
+	
+	public void registerPotentialVertice(CIMAVertice vertice){
+		if(flag){
+			//dont register if flag is set
+			return;
+		}
+		for(CIMAEdgeWeight edgeWeight : potentialEdgeWeights){
+			edgeWeight.addToPotentialList(vertice);
 		}
 	}
 	

@@ -22,6 +22,8 @@ public class CIMAVertice extends Vertice{
 	private int mu;
 	private List<MessageData> lamdas = new ArrayList<MessageData>();
 	private PotentialData potentialData;
+	private static int minimalMu;
+	private static List<CIMAEdgeWeight> potentialEdges= new ArrayList<CIMAEdgeWeight>();
 
 	
 	//animation
@@ -68,7 +70,9 @@ public class CIMAVertice extends Vertice{
 	protected void drawAllVertice(Graphics g){
 
 		//check if color should be chosen
-		if(!drawPotentialData){
+		if(drawPotentialData){
+//			drawPotentialMessage(g);//TODO
+		}else{
 			//chose color
 			if(CIMAVertice.drawMu){
 				if(activeAnimation){
@@ -210,6 +214,7 @@ public class CIMAVertice extends Vertice{
 		reset();
 		startAlgo();
 
+		minimalMu = Integer.MAX_VALUE;
 		calcMu();
 		logSubtree();
 
@@ -484,19 +489,21 @@ public class CIMAVertice extends Vertice{
 		System.out.println("max2: "+ max2.getEdgeWeightValue());
 		System.out.println("max3: "+ max3.getEdgeWeightValue());
 		
+
+		calcGeneralVerticeWeight();
+
+		//default case max1 + max2
 		if(max1.getEdgeWeightValue() == max3.getEdgeWeightValue()){
 			potentialData = new PotentialData(this, true);
 			System.out.println("case a");
-		}else if(max1.getEdgeWeightValue() == max2.getEdgeWeightValue()){
-			potentialData = new PotentialData(this, max1, max2);
+		}else if(max2.getEdgeWeightValue() == 0){
+			potentialData = new PotentialData(this, max1);
 			System.out.println("case b");
 		}else{
-			potentialData = new PotentialData(this, max1);
+			potentialData = new PotentialData(this, max1, max2);
 			System.out.println("case c");
 		}
-
-		calcGeneralVerticeWeight();
-		mu = Math.max(max1.getLamdaValue(), max2.getLamdaValue() + verticeWeight);
+		mu = max1.getLamdaValue() + max2.getLamdaValue();
 
 		//make sure mu is not less the biggest msgData
 		if(mu <=  biggestMsgData.getLamdaValue()){
@@ -528,9 +535,27 @@ public class CIMAVertice extends Vertice{
 			else{
 				potentialData = biggestMsgData.getPotentialData().getPotentialDataCopy(this);
 				System.out.println("case e");
+				System.out.println(biggestMsgData.getPotentialData());
+				System.out.println(potentialData);
 			}
-			
+						
 			mu = biggestMsgData.getLamdaValue();
+		}
+		
+		potentialData.registerPotentialVertice(this);
+		
+		if(mu < minimalMu){//save the minimal MU
+			minimalMu = mu;
+			potentialEdges.clear();
+		}
+		
+		//save all edges which decrement the minimal mu:
+		if(mu == minimalMu){
+			for(CIMAEdgeWeight edge : potentialData.getPotentialEdgeWeights()){
+				if(!potentialEdges.contains(edge)){
+					potentialEdges.add(edge);
+				}
+			}
 		}
 
 		for(Vertice child : children){
@@ -717,7 +742,7 @@ public class CIMAVertice extends Vertice{
 	public List<MessageData> getLamdas(){
 		return lamdas;
 	}
-	public void setDrawPotentialData(boolean drawPotentialData){
+	public void drawPotentialDataForThisNode(boolean drawPotentialData){
 		
 		resetDrawPotentialData();
 		
@@ -742,9 +767,41 @@ public class CIMAVertice extends Vertice{
 		verticeColor = Color.white;
 		marked = false;
 	}
+	public void drawAllPotentialEdges(){
+		resetDrawPotentialData();
+		
+		drawPotentialData = true;
+		
+		for(CIMAEdgeWeight edge : potentialEdges){
+			if(edge.getEdgeWeightValue() > 1){
+				edge.markColor(Color.ORANGE);
+			}else{
+				edge.markColor(Color.YELLOW);
+			}
+		}
+	}
+	
+	public void drawPotentialMessage(Graphics g){
+		if(potentialEdges.size() == 0){
+			Font defaulFont = g.getFont();
+			int stringHeight = (int) Math.floor(g.getFontMetrics().getStringBounds("stringheight",g).getHeight());
+			g.setFont(CIMAConstants.getTextFont());
+			g.setColor(CIMAConstants.getMarkAsMaxColor());
+
+			String string = "Agentenanzahl kann nicht optimiert werden";
+			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
+			g.fillRect(3, 12 - stringHeight +1, stringWidth, stringHeight);
+			g.setColor(Color.ORANGE);
+			g.drawString(string, 3, 12);
+			g.setFont(defaulFont);
+		}
+	}
 	public void resetDrawPotentialData(){
 		
 		resetColor();
+		if(edgeWeightToParent != null){
+			edgeWeightToParent.resetColor();
+		}
 		potentialData.resetDraw();
 		drawPotentialData = false;
 		
@@ -759,6 +816,9 @@ public class CIMAVertice extends Vertice{
 		if(animationSpeed >= 0 && animationSpeed <= 10){
 			CIMAVertice.animationSpeed = animationSpeed;
 		}
+	}
+	public void setDrawPotentialData(boolean bool){
+		drawPotentialData = bool;
 	}
 	public static int getAnimationSpeed(){
 		return animationSpeed;
