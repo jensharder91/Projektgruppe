@@ -210,6 +210,10 @@ public abstract class Gui extends JPanel{
 		buttonDrawAllPotentialEdges.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
+				
+				if(rootVertice == null){
+					return;
+				}
 
 				((CIMAVertice) rootVertice).algorithmus();
 				((CIMAVertice) rootVertice).drawAllPotentialEdges();
@@ -220,11 +224,12 @@ public abstract class Gui extends JPanel{
 		});
 
 	
-//		buttonBarNorth.add(checkboxEditor);//TODO
-//		this.add(buttonBarNorth, "North");
+		buttonBarNorth.add(checkboxEditor);
+		buttonBarNorth.add(buttonDrawAllPotentialEdges);
+		this.add(buttonBarNorth, "North");
 		
-		buttonBarSouth.add(checkboxEditor);
-		buttonBarSouth.add(buttonDrawAllPotentialEdges);
+//		buttonBarSouth.add(checkboxEditor);
+//		buttonBarSouth.add(buttonDrawAllPotentialEdges);
 	
 		buttonBarSouth.add(togglePause);
 		buttonBarSouth.add(spinnerAnimationSpeed);
@@ -294,7 +299,7 @@ public abstract class Gui extends JPanel{
 
 		//draw all vertices recursively
 		if(rootVertice != null){
-			((CIMAVertice) rootVertice).drawTree(g2,10,10,getWidth()-20,getHeight()-50);
+			((CIMAVertice) rootVertice).drawTree(g2,10,10 + buttonBarNorth.getHeight(),getWidth()-20,getHeight()-50);
 		}
 		
 		//messageData
@@ -330,6 +335,8 @@ public abstract class Gui extends JPanel{
 		spinnerAnimationSpeedBoolean = false;
 		togglePauseBoolean = false;
 		checkboxShowMessageDataBoolean = false;
+		checkboxEditorBoolean = true;
+		buttonDrawAllPotentialEdgesBoolean = true;
 		
 		if(rootVertice == null || rootVertice.getChildren().size() < 1){
 			buttonBackBoolean = false;
@@ -341,6 +348,8 @@ public abstract class Gui extends JPanel{
 			buttonCompleteAgentAnimationBoolean = false;
 			spinnerAnimationSpeedBoolean = false;
 			togglePauseBoolean = false;
+			checkboxEditorBoolean = false;
+			buttonDrawAllPotentialEdgesBoolean = false;
 		}
 
 		
@@ -452,6 +461,13 @@ public abstract class Gui extends JPanel{
 		homeBase = null;
 		MessageData.clearGui = true;
 		repaint();
+	}
+	
+	public JPanel getButtonBarNorth(){
+		return buttonBarNorth;
+	}
+	public JPanel getButtonBarSouth(){
+		return buttonBarSouth;
 	}
 
 	protected abstract void calcAlgorithmus(boolean repaintBool);

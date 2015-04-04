@@ -19,6 +19,8 @@ public class MessageData implements IMarkable{
 	private IMarkable msgEdge;
 	private CIMAEdgeWeight edge;
 	private PotentialData potentialData;
+
+	private InfoDisplayClass infoDisplayClass;
 	
 	private maxState maxState;
 	private enum maxState { EDGEMAX, MAXMSGDATA, MSGEDGE};
@@ -88,6 +90,8 @@ public class MessageData implements IMarkable{
 		if(getSender() != null && getReceiver() != null){
 			calcArc();
 		}
+		
+		infoDisplayClass = new InfoDisplayClass();
 	}
 
 	private void calcArc(){
@@ -248,79 +252,29 @@ public class MessageData implements IMarkable{
 			return;
 		}
 		
-//		//schreibe oben in der Ecke welche Werte eine Rolle spielen
-//		Font defaulFont = g.getFont();
-//		int stringHeight = (int) Math.floor(g.getFontMetrics().getStringBounds("stringheight",g).getHeight());
-//		g.setFont(CIMAConstants.getTextFont());
-//		g.setColor(CIMAConstants.getMarkAsMaxColor());
-//		if(edgeWeightUsed){
-//			g.setColor(CIMAConstants.getMarkAsSecMaxColor());
-//		}
-//		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(max1String,g).getWidth());
-//		g.fillRect(3, 12 - stringHeight +1, stringWidth, stringHeight);
-//		g.setColor(Color.BLACK);
-//		g.drawString(max1String, 3, 12);
-//		g.setColor(CIMAConstants.getMarkAsSecMaxColor());
-//		stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(max2String,g).getWidth());
-//		g.fillRect(3, (int) (12 + 1.2*stringHeight) -stringHeight +1, stringWidth, stringHeight);
-//		g.setColor(Color.BLACK);
-//		g.drawString(max2String, 3, (int) (12 + 1.2*stringHeight));
-//		if(edgeWeightUsed){
-//			g.setColor(CIMAConstants.getMarkAsMaxColor());
-//			String kantengewichtString = lamdaValue+" Kantengewicht";
-//			stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(kantengewichtString,g).getWidth());
-//			g.fillRect(3, (int) (12 + 2.4*stringHeight) - stringHeight +1, stringWidth, stringHeight);
-//			g.setColor(Color.BLACK);
-//			g.drawString(kantengewichtString, 3, (int) (12 + 2.4*stringHeight));
-//		}
-//		g.setFont(defaulFont);
-		
-		
-		//////////
 		
 		//schreibe oben in der Ecke welche Werte eine Rolle spielen
-		Font defaulFont = g.getFont();
-		int stringHeight = (int) Math.floor(g.getFontMetrics().getStringBounds("stringheight",g).getHeight());
-		g.setFont(CIMAConstants.getTextFont());
-		g.setColor(CIMAConstants.getMarkAsMaxColor());
-		
-		
+		Color colorBackground;
+		colorBackground = CIMAConstants.getMarkAsMaxColor();
 		if(edgeMax1 != null){
-			g.setColor(edgeMax1.getColor());
+			colorBackground = edgeMax1.getColor();
 		}
-		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(edgeMax1String,g).getWidth());
-		g.fillRect(3, 12 - stringHeight +1, stringWidth, stringHeight);
-		g.setColor(Color.BLACK);
-		g.drawString(edgeMax1String, 3, 12);
+		infoDisplayClass.displayInUpperLeftCorner(g, edgeMax1String, 1, Color.BLACK, colorBackground);
 		
 		if(edgeMax2 != null){
-			g.setColor(edgeMax2.getColor());
+			colorBackground = edgeMax2.getColor();
 		}
-		stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(edgeMax2String,g).getWidth());
-		g.fillRect(3, (int) (12 + 1.2*stringHeight) -stringHeight +1, stringWidth, stringHeight);
-		g.setColor(Color.BLACK);
-		g.drawString(edgeMax2String, 3, (int) (12 + 1.2*stringHeight));
+		infoDisplayClass.displayInUpperLeftCorner(g, edgeMax2String, 2, Color.BLACK, colorBackground);
 		
 		if(maxState == maxState.MAXMSGDATA){
-			g.setColor(maxMsgData.getColor());
-			stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(maxMsgDataString,g).getWidth());
-			g.fillRect(3, (int) (12 + 2.4*stringHeight) - stringHeight +1, stringWidth, stringHeight);
-			g.setColor(Color.BLACK);
-			g.drawString(maxMsgDataString, 3, (int) (12 + 2.4*stringHeight));
+			colorBackground = maxMsgData.getColor();
+			infoDisplayClass.displayInUpperLeftCorner(g, maxMsgDataString, 3, Color.BLACK, colorBackground);
 		}
 		if(maxState == maxState.MSGEDGE){
-			g.setColor(msgEdge.getColor());
-			stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(mshEdgeString,g).getWidth());
-			g.fillRect(3, (int) (12 + 2.4*stringHeight) - stringHeight +1, stringWidth, stringHeight);
-			g.setColor(Color.BLACK);
-			g.drawString(mshEdgeString, 3, (int) (12 + 2.4*stringHeight));
+			colorBackground = msgEdge.getColor();
+			infoDisplayClass.displayInUpperLeftCorner(g, mshEdgeString, 3, Color.BLACK, colorBackground);
 		}
 		
-		
-		
-
-		
-		g.setFont(defaulFont);
 	}
 
 	private void drawMessageInfo(Graphics2D g, int ovalMitteX, int ovalMitteY){

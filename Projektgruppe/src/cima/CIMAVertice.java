@@ -24,6 +24,7 @@ public class CIMAVertice extends Vertice{
 	private PotentialData potentialData;
 	private static int minimalMu;
 	private static List<CIMAEdgeWeight> potentialEdges= new ArrayList<CIMAEdgeWeight>();
+	private static InfoDisplayClass infoDisplayClass = new InfoDisplayClass();
 
 	
 	//animation
@@ -58,6 +59,7 @@ public class CIMAVertice extends Vertice{
 		}else{
 			this.edgeWeightToParent = new CIMAEdgeWeight(0, this, null);
 		}
+	
 	}
 	
 	@Override
@@ -128,11 +130,13 @@ public class CIMAVertice extends Vertice{
 
 	public static void drawDisplayInformation(Graphics g){
 		//draw the displayedInfo - string in upper right corner
-		Font defaulFont = g.getFont();
-		g.setFont(CIMAConstants.getTextFont());
-		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(displayedInfoString,g).getWidth());
-		g.drawString(displayedInfoString, CIMAGui.getGui().getWidth() - 5 - stringWidth, 12);
-		g.setFont(defaulFont);
+//		Font defaulFont = g.getFont();
+//		g.setFont(CIMAConstants.getTextFont());
+//		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(displayedInfoString,g).getWidth());
+//		g.drawString(displayedInfoString, CIMAGui.getGui().getWidth() - 5 - stringWidth, 12);
+//		g.setFont(defaulFont);
+		
+		infoDisplayClass.displayInUpperRightCorner(g, displayedInfoString, 1, Color.BLACK, null);
 	}
 	
 	
