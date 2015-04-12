@@ -10,7 +10,7 @@ import java.util.List;
 import javax.sound.sampled.ReverbType;
 
 import cima.Gui;
-import cima.ModellMinimalDanger.MuCalcResult;
+import cima.ICalcStrategy.MuCalcResult;
 import cima.Vertice;
 
 public class CIMAVertice extends Vertice{
@@ -75,6 +75,10 @@ public class CIMAVertice extends Vertice{
 		
 		//check if color should be chosen
 		if(drawPotentialData){
+			
+			if(potentialEdges.size() == 0){
+				infoDisplayClass.displayInUpperLeftCorner(g, "Potential kann nicht genutzt werden", 1, Color.orange, null);
+			}
 //			drawPotentialMessage(g);//TODO
 		}else{
 			//chose color
@@ -252,7 +256,9 @@ public class CIMAVertice extends Vertice{
 		if(children.size() == 0 && parent != null){
 			//got a ready leaf -> send message
 			specialVerticeWeight = calcStrategy.calcSpecialVerticeWeight(this, (CIMAVertice) parent);
-				((CIMAVertice) parent).receive(new MessageData(specialVerticeWeight, this, (CIMAVertice) parent, edgeWeightToParent, null, null, specialVerticeWeight, null, null, new PotentialData(edgeWeightToParent)));
+			System.out.println("specialVerticeWeight in 'start algo'  "+specialVerticeWeight);
+			
+			((CIMAVertice) parent).receive(new MessageData(specialVerticeWeight, this, (CIMAVertice) parent, edgeWeightToParent, null, null, specialVerticeWeight, null, null, new PotentialData(edgeWeightToParent)));
 		}else{
 			for(Vertice child : children){
 				if(!(child instanceof CIMAVertice)){
@@ -674,6 +680,9 @@ public class CIMAVertice extends Vertice{
 	}
 	public static int getAnimationSpeed(){
 		return animationSpeed;
+	}
+	public static void setStrategy(ICalcStrategy strategy){
+		CIMAVertice.calcStrategy = strategy;
 	}
 	
 	

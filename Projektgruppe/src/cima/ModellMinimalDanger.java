@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ModellMinimalDanger implements ICalcStrategy{
+public class ModellMinimalDanger extends ICalcStrategy{
 
 	@Override
 	public MessageData calcMessageData(CIMAVertice senderNode, CIMAVertice receiverNode) {
@@ -367,22 +367,9 @@ public class ModellMinimalDanger implements ICalcStrategy{
 	}
 
 	
-	public class MuCalcResult{
-		
-		private int muResult;
-		private PotentialData potentialDataResult;
-		
-		public MuCalcResult(int muResult, PotentialData potentialDataresult) {
-			this.muResult = muResult;
-			this.potentialDataResult = potentialDataresult;
-		}
-		
-		public int getMuResult(){
-			return muResult;
-		}
-		public PotentialData getPotentialDataResult(){
-			return potentialDataResult;
-		}
+	@Override
+	public String toString() {
+		return "\"Minimale Bedrohung\"";
 	}
 
 }
