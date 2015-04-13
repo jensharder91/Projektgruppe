@@ -26,7 +26,7 @@ public class CIMAVertice extends Vertice{
 	private static int minimalMu;
 	private static List<CIMAVertice> minimalMuVertices = new ArrayList<CIMAVertice>();
 	private static List<CIMAEdgeWeight> potentialEdges= new ArrayList<CIMAEdgeWeight>();
-	private static InfoDisplayClass infoDisplayClass = new InfoDisplayClass();
+	private static InfoDisplayClass infoDisplayClass;
 	private static ICalcStrategy calcStrategy = new ModellMinimalDanger();
 
 	
@@ -61,6 +61,10 @@ public class CIMAVertice extends Vertice{
 			this.edgeWeightToParent = new CIMAEdgeWeight(edgeWeightToParent, this, (CIMAVertice)parent);
 		}else{
 			this.edgeWeightToParent = new CIMAEdgeWeight(0, this, null);
+		}
+		
+		if(infoDisplayClass == null){
+			infoDisplayClass = new InfoDisplayClass();
 		}
 	}
 	
@@ -141,6 +145,11 @@ public class CIMAVertice extends Vertice{
 //		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(displayedInfoString,g).getWidth());
 //		g.drawString(displayedInfoString, CIMAGui.getGui().getWidth() - 5 - stringWidth, 12);
 //		g.setFont(defaulFont);
+		
+		if(infoDisplayClass == null){
+			
+			infoDisplayClass = new InfoDisplayClass();
+		}
 		
 		infoDisplayClass.displayInUpperRightCorner(g, displayedInfoString, 1, Color.BLACK, null);
 	}
