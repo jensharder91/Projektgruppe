@@ -14,6 +14,7 @@ import java.awt.event.ItemListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JToggleButton;
@@ -31,6 +32,8 @@ public abstract class Gui extends JPanel{
 
 	protected JPanel buttonBarSouth = new JPanel();
 	protected JPanel buttonBarNorth = new JPanel();
+	
+	private ICalcStrategy[] calcStrategies = {new ModellMinimalDanger(), new ModelStandardPaper()};
 
 	/** Buttons */
 	protected JButton buttonCalculate = new JButton("Sofort berechnen");
@@ -47,6 +50,8 @@ public abstract class Gui extends JPanel{
 	private JCheckBox checkboxShowMessageData = new JCheckBox("zeige die Berechnung an");
 	private JCheckBox checkboxEditor = new JCheckBox("editiere den Baum");
 	protected JButton buttonDrawAllPotentialEdges = new JButton("Färbe alle möglichen Kanten");
+	protected JComboBox<ICalcStrategy> comboBoxCalcStrategy = new JComboBox<ICalcStrategy>(calcStrategies);
+	
 	
 	/** bollean if gui element should be visible*/
 	private boolean buttonCalculateBoolean = false;
@@ -222,10 +227,25 @@ public abstract class Gui extends JPanel{
 
 			}
 		});
+		
+		comboBoxCalcStrategy.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				CIMAVertice.setStrategy((ICalcStrategy) comboBoxCalcStrategy.getSelectedItem());
+				
+				
+			}
+		});
+		//init
+		comboBoxCalcStrategy.setSelectedIndex(0);
+		CIMAVertice.setStrategy((ICalcStrategy) comboBoxCalcStrategy.getSelectedItem());
 
 	
 		buttonBarNorth.add(checkboxEditor);
 		buttonBarNorth.add(buttonDrawAllPotentialEdges);
+		buttonBarNorth.add(comboBoxCalcStrategy);
 		this.add(buttonBarNorth, "North");
 		
 //		buttonBarSouth.add(checkboxEditor);
