@@ -1,0 +1,16 @@
+\section{Einleitung}
+Diese Bachelorarbeit ist aus einer Projektarbeit entstanden, welche im Semester 2014/15 stattgefunden hat.\\
+
+In dieser Projektarbeit habe ich einen Algorithmus aus dem Paper "'Capture of an Intruder by Mobile Agents"' (BARRIÈRE L. et al. 2002) in einem Java-Applet visuell dargestellt und implementiert. Es handelt sich bei dem Algorithmus um eine Variante des sogenannten "'graph-searching problems"'.\\
+
+Man kann sich das Problem anschaulich wie folgt vorstellen: Ein Einbrecher ist in das Netzwerk eingedrungen und soll nun von mobilen Agenten gesucht werden. Sowohl die Agenten, als auch der Einbrecher können sich nur auf den Kanten des Graphen bewegen. Der Algorithmus soll die minimale Anzahl der Agenten berechnen, sowie den Knoten angeben, wo die Agenten die Suche im Baum anfangen sollen (die sogenannte Homebase), ohne zu wissen, wo sich der Einbrecher befindet. Je nachdem welcher Knoten als Homebase ausgewählt wird, kann sich die benötigte Anzahl an Agenten evt. ändern.\\
+
+Da dieses Problem NP-Vollständig auf auf allgemeinen Graphen ist, werden sowohl im Paper, als auch in dieser Bachelorarbeit, nur Bäume betrachtet. Dadurch ist es möglich, einen linearen Algorithmus anzugeben, in dem die minimale Anzahl an Agenten sowie die dazugehörige Homebase berechnet werden.\\
+
+Eine wichtige Eigenschaft, die wir aufrecht erhalten wollen ist die Monotonie. Diese bedeutet in diesem Fall, dass ein Knoten, den wir bereits dekontaminiert haben (kontrolliert, dass der Einbrecher dort nicht ist), nicht mehr kontaminiert werden kann (der Einbrecher bekommt keine Möglichkeit mehr in diesen Knoten zu gelangen). Um diese Eigenschaft zu gewährleisten müssen wir sogenannte Wachen aufstellen, die dekontaminierte Teilbäume vor dem Einbrecher schützen. Die einzelnen Teilbäume werden von den Agenten sukzessive kontrolliert, bis wir den ganzen Baum dekontaminiert haben.\\
+\\
+\\
+
+Das Ziel dieser Bachelorarbeit ist es, auf Grundlage des in "'Capture of an Intruder by Mobile Agents"' (BARRIÈRE L. et al. 2002) beschriebenen Algorithmus weitere Problemstellungen zu betrachten. Ich untersuche im folgenden, wie sich ein Potenzial auf den Algorithmus auswirkt. Das Potenzial gibt an, um wieviel eine oder mehrere Kanten(-gewichte) reduziert werden können. Der Algorithmus soll in der Lage sein, dieses Potenzial zu nutzen, um die minimale Anzahl an Agenten, die gebraucht werden, um den ganzen Baum zu dekontaminieren, zu denken. Je nachdem, welche Kanten durch das Potenzial reduziert werden, ändert sich die minimale Anzahl der Agenten unterschiedliche stark. Es sollen nun eine optimale Verteilung an Kanten angegeben werden, um die Agentenzahl möglichst stark zu reduzieren.\\
+
+
