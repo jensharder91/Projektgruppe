@@ -1,12 +1,68 @@
 \section{Das Potenzial-Problem}
 
 \subsection{Spezialfall k = 1}
-//algo angeben, wieso ist er liniear? wieso korrekt?\\
+//algo angeben, wieso ist er liniear? wieso korrekt?
+\\
+\\
+Jeder Knoten berechnet im Algorithmus von BARRIÈRE L. et al. die minimale Anzahl von Agenten (siehe oben) und es lässt sich schnell überlegen, dass die Höhe der Agentenanzahl an jedem Knoten von bestimmten Kanten(-gewichten) abhängt.
+\\
+\\
+Die Idee, um das Potenzial-Problem für den Spezialfall k = 1 zu lösen, ist nun, die Abhängigkeiten zu speichern, welche Kante(n) die Agentenzahl in jedem Knoten beeinflusst. Dazu protokollieren wir im Algorithmus, wie jede berechnete Nachricht zustande kommt, also von welchen Kanten sie abhängt.
+\\
+\\ 
+Wie man in der modifizierten Variante (siehe oben) sehen kann, gibt es drei verschiedene Möglichkeiten, wie eine Nachricht 	$\lambda_{y}$ entstehen kann:
 
+\begin{enumerate}[label=\alph*)]
+	
+	\item aus den beiden größten Kanten $\lambda_{y} \gets edge_{1} + edge_{2}$
+	
+	\item aus dem Knotengewicht $\lambda_{y} \gets \omega(x)$
+	
+	\item aus der größten angekommenen Nachricht $\lambda_{y} \gets l_{1}$
 
-Die Idee des Algorithmus ist es, zu protokollieren, welche Kante(n) für welche Knoten von Bedeutung ist:\\
+\end{enumerate}
 
-Jeder Knoten berechnet im Algorithmus von BARRIÈRE L. et al. die minimale Anzahl von Agenten und jede Knoten hat mindestens eine Kante von der seine Agentenanzahl von abhängt.
+Je nachdem, durch welchen Fall eine Nachricht $\lambda_{y}$ berechnet wird, kommen andere Kanten in Frage, die wir protokollieren müssen.
+Allerdings gilt für alle Fälle, dass wir uns maximal zwei Kanten merken müssen, da wir ansonsten die minimale Agentenzahl nicht verringern können. Gibt es mehr als zwei Kanten, so merken wir uns nur die Information, dass es keinen (zwei) eindeutigen Kanten gab bis hierhin (wir setzen einen "flag").
+\\
+\\
+//TODO ?! beweis, dass nur 2 Kanten in Frage kommen
+\\
+\\
+Im folgenden werde ich bei allen drei Fällen beschreiben, welche Kanten unter welcher Bedingung protokolliert werden. Protokollieren bedeutet einfach, dass wir bei der Berechnung der Nachricht $\lambda_{y}$ von x nach y  in die Nachricht mit reinschreiben, welche Kanten diese Nachricht bestimmt haben, bzw. wir protokollieren einen "flag", falls dies mehr als zwei Kanten sind.
+
+\begin{enumerate}[label=\alph*)]
+	
+	\item in diesem Standardfall wird die Nachricht aus den beiden größten Kanten berechnet (wie oben beschrieben). Allerdings müssen wir kontrollieren, ob diese zwei Kanten eindeutig sind, oder ob es evtl. mehrere gleich große Kanten gibt. Ist die Wahl der Kanten nicht eindeutig, müssen wir dies bei der Protokollierung mit berücksichtigen:\\
+	
+		\begin{algorithmic}
+			\If {$edge_{1} == edge_{3}$}
+			\State \uline{protokolliere} "flag"
+			\State//es gibt drei gleichgroße Kanten
+			\ElsIf {$edge_{2} == edge_{3}$}
+			\State \uline{protokolliere} $edge_{1}$
+			\State//die maximale Kante ist eindeutig, die zweit größte nicht
+			\Else
+			\State \uline{protokolliere} $edge_{1}$ und $edge_{2}$
+			\State//sowohl die größte, als auch die zweit größte Kante ist eindeutig
+			\EndIf
+		\end{algorithmic}
+	
+	\item Dieser Fall tritt nur auf, wenn $\omega(x) \geq edge_{1}+edge_{2}$. Da aber $\omega(x)$ so definiert ist, dass es den Wert des größten Kantengewicht inzident zu x hat, muss die Kante ausschlaggebend sein, über die die Nachricht verschickt wird. 
+	\\
+	Diese Kante zwischen x und y ist für den Nachrichtenwert also entscheidend und wird somit in der Nachricht: \uline{Protokolliere} Kante zwischen x und y.
+	
+	\item In diesem Fall bestimmt die größte ankommende Nachricht $l_{1}$ die neu berechnete Nachricht. Da keine weitere Kante mehr Einfluss genommen hat, übernehmen wir die protokollierten Kanten (oder die "flag") aus $l_{1}$ für $\lambda_{y}$: \uline{Protokolliere} das gleiche wie $l_{1}$
+	
+\end{enumerate}
+
+//TODO alle einzelnen Fälle noch genauer erklären
+\\
+\\
+
+Man muss noch beachten, dass mehrere Fälle gleichzeitig auftreten können. Passiert dies, muss man einen weiteren Test durchführen, ob die verschiedenen Fälle unterschiedlich protokollieren würden.
+\\
+Würden die Fälle verschieden protokollieren, so \uline{protokolliere} "flag", da das Potenzial an dieser Stelle nicht genutzt werden kann, ansonsten behalte die \uline{Protokollierung} bei.
 
 \subsection{Potenzial auf einer Kante mit k > 1}
 

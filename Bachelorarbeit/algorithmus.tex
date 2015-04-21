@@ -4,14 +4,15 @@ Im folgen werde ich zunächst den Algorithmus aus dem Paper beschreiben und erkl
 
 
 \subsection{Originaler Algorithmus aus dem Paper}\label{paperAlgoChapter}
-Um die Anzahl der Agenten zu ermitteln, schicken sich die Baumknoten gegenseitig Nachrichten, mit der Information, wie viele Agenten mindestens benötigt werden, um einen bestimmten Teilbaum zu dekontaminieren.
-
-%\subsubsection*{Berechnung der Nachrichten}
-
+Um die Anzahl der Agenten zu ermitteln, schicken sich die Baumknoten gegenseitig Nachrichten, mit der Information, wie viele Agenten mindestens benötigt werden, um den aktuellen Teilbaum zu dekontaminieren.
+\\
+\\
 Als erstes berechnet der Algorithmus alle von allen Knoten ihre Knotengewichte. Dieses ergibt sich jeweils aus dem maximalen Kantengewicht aller zu diesem Knoten führenden Kanten. Also für das Knotengewicht vom Knoten x gilt: $\omega(x) = max_{e} \omega(e)$, für jede Kante e inzident zu x.
 \\
+Das Knotengewicht gibt an, wie viele Agenten als Wachen benötigt werden, um den aktuellen Knoten (bzw. den dazugehörigen Teilbaum) vor einem kontaminierten Teilbaum zu schützen.
 \\
-Nun werden die Nachrichten versendet, für die es zwei Fälle gibt:
+\\
+Nachdem die Knotengewichte feststehen, werden die Nachrichten versendet, für die es zwei Fälle gibt:
 
 \begin{enumerate}
 			
@@ -19,12 +20,12 @@ Nun werden die Nachrichten versendet, für die es zwei Fälle gibt:
 	
 		\begin{enumerate}
 			
-			\item Der aktuelle Knoten x hat bereits schon mindestens n-1 Nachrichten erhalten, wobei n die Anzahl der inzidenten Knoten ist
+			\item Der aktuelle Knoten x hat genau n-1 Nachrichten erhalten, wobei n die Anzahl der inzidenten Knoten ist. (Also er hat von jedem Nachbarn außer einem eine Nachricht erhalten.)
 			\\
 			
 				\begin{minipage}{0.50\textwidth} 
 					
-					Um eine Nachricht an den Nachbarknoten y zu senden, der bis zu diesem Zeitpunkt noch keine Nachricht an x gesendet hat, nimmt man die 2 größten Nachrichten ($l_{1}$ und $l_{2}$) die bei x angekommen sind. Mit diesen beiden angekommenen Nachrichten $l_{1} \ge l_{2}$ sowie dem Knotengewicht $\omega(x)$ wird die Nachricht $\lambda_{y}$ an y wie folgt berechnet:\\
+					Um eine Nachricht von x an den Nachbarknoten y zu senden, der bis zu diesem Zeitpunkt noch keine Nachricht an x gesendet hat, nimmt man die 2 größten Nachrichten ($l_{1}$ und $l_{2}$) die bei x angekommen sind. Mit diesen beiden angekommenen Nachrichten $l_{1} \ge l_{2}$ sowie dem Knotengewicht $\omega(x)$ wird die Nachricht $\lambda_{y}$ an y wie folgt berechnet (siehe auch Abbildung \ref{abb_n-1}):\\
 					$\lambda_{y} = max\{l_{1},  l_{2} + \omega(x)\}$
 					\\
 					\\	
@@ -34,7 +35,8 @@ Nun werden die Nachrichten versendet, für die es zwei Fälle gibt:
 				\begin{minipage}{0.35\textwidth}
 					
 					\includegraphics[width=\textwidth]{bilder/abb_paper_n-1knoten.png}
-					\captionof{figure}{Die neue Nachricht (blau) von Knoten x zu Knoten y ist 6, da $l_{2} + \omega(x)$ (grün) größer ist als $l_{1}$ (gelb).}
+					\captionof{figure}{Der Wert der neuen Nachricht $\lambda_{y}$(blau) von Knoten x zu Knoten y beträgt 6, da $l_{2} + \omega(x) = 6$ (grün) größer ist als $l_{1} = 3$ (gelb).}
+					\label{abb_n-1}
 				\end{minipage}
 				
 				
@@ -43,7 +45,7 @@ Nun werden die Nachrichten versendet, für die es zwei Fälle gibt:
 				
 				\begin{minipage}{0.50\textwidth} 
 					
-					Um eine Nachricht an einen Nachbarknoten y zu senden, der bis zu diesem Zeitpunkt noch keine Nachricht von x erhalten hat, nimmt man die 2 größten Nachrichten ($l_{1}$ und $l_{2}$) die bei x angekommen. Dabei ist es wichtig, dass weder $l_{1}$ noch $l_{2}$ von y stammen. Die Nachricht von y wird bei dieser Nachrichtenberechnung ignoriert! Mit den beiden ermittelten Nachrichten $l_{1} \ge l_{2}$ sowie dem Knotengewicht $\omega(x)$ wird die Nachricht $\lambda_{y}$ an y wie folgt berechnet:\\
+					Um eine Nachricht von x an einen Nachbarknoten y zu senden, der bis zu diesem Zeitpunkt noch keine Nachricht von x erhalten hat, nimmt man die 2 größten Nachrichten ($l_{1}$ und $l_{2}$), die bereits bei x angekommen sind. Dabei ist es wichtig, dass weder $l_{1}$ noch $l_{2}$ von y stammen. Die Nachricht von y wird bei dieser Nachrichtenberechnung ignoriert! Mit den beiden ermittelten Nachrichten $l_{1} \ge l_{2}$ sowie dem Knotengewicht $\omega(x)$ wird die Nachricht $\lambda_{y}$ an y wie folgt berechnet (Abbildung \ref{abb_n}):\\
 					$\lambda_{y} = max\{l_{1},  l_{2} + \omega(x)\}$
 					\\
 					\\
@@ -53,7 +55,8 @@ Nun werden die Nachrichten versendet, für die es zwei Fälle gibt:
 				\begin{minipage}{0.35\textwidth}
 					
 					\includegraphics[width=\textwidth]{bilder/abb_paper_nknoten.png}
-					\captionof{figure}{Die neue Nachricht (blau) von Knoten x zu Knoten y ist 7, da $l_{1}$ (grün) größer ist als $l_{2} + \omega(x)$ (gelb).}
+					\captionof{figure}{Die neue Nachricht $\lambda_{y}$ (blau) von Knoten x zu Knoten y hat den Wert 7, da $l_{1} = 7$ (grün) größer ist als $l_{2} + \omega(x) = 6$ (gelb).}
+					\label{abb_n}
 				\end{minipage}
 			
 		\end{enumerate}
@@ -61,23 +64,25 @@ Nun werden die Nachrichten versendet, für die es zwei Fälle gibt:
 	\item Fall:
 		
 		\begin{minipage}{0.55\textwidth} 
-			Zu beginn des Algorithmus, oder wenn der andere Fall nicht mehr auftritt, sendet ein beliebiger Blattknoten seine Nachricht an den eigenen Nachbarn.\\
+			Zu beginn des Algorithmus, oder wenn der Fall \ref{paperAlgoFall1} nicht mehr auftritt, sendet ein beliebiger Blattknoten seine Nachricht an den eigenen Nachbarn.\\
 			
-			Die zu sendende Nachricht $\lambda_{y}$ vom Blatt x an seinen Nachbarknoten y ist dabei nur das eigene Gewicht:\\
+			Die zu sendende Nachricht $\lambda_{y}$ vom Blatt x an seinen Nachbarknoten y ist dabei nur das eigene Gewicht (Abbildung \ref{abb_leaf}):\\
 			$\lambda_{y} = \omega(x)$
 		\end{minipage}
 		\hfill
 		\begin{minipage}{0.35\textwidth}
 						
 			\includegraphics[width=\textwidth]{bilder/abb_blattknoten.png}
-			\captionof{figure}{Das Knotengewicht des Blattknotens x (grün) bestimmt die Nachricht (blau) zum Nachbarknoten y.}
+			\captionof{figure}{Das Knotengewicht des Blattknotens x (grün) bestimmt den Wert Nachricht $\lambda_{y} = 3$ (blau) zum Nachbarknoten y.}
+			\label{abb_leaf}
 		\end{minipage}
 		
 \end{enumerate}
 
+
 %\subsubsection*{Berechnung der minimalen Agenten}
 
-Sobald alle Knoten sowohl an alle Nachbarn eine Nachricht geschickt haben, als auch von allen Nachbarn eine Nachricht erhalten haben (jede Kante im gesamten Baum überträgt genau 2 Nachrichten), hat jeder Knoten alle Informationen die er gebraucht werden, um die minimale Anzahl an Agenten zu errechnen, die an diesem Knoten benötigt werden:
+Sobald alle Knoten sowohl an alle Nachbarn eine Nachricht geschickt haben, als auch von allen Nachbarn eine Nachricht erhalten haben (jede Kante im gesamten Baum überträgt genau 2 Nachrichten), hat jeder Knoten alle Informationen die er gebraucht werden, um die minimale Anzahl an Agenten zu errechnen, die für diesen Knoten als Homebase benötigt werden.
 \\
 Die minimale Agentenanzahl $\mu(x)$, die am Knoten x benötigt werden, wenn dieser als Homebase definiert wird, wird wie folgt berechnet:
 \\
@@ -86,7 +91,7 @@ $\mu(x) = max\{l_{1},  l_{2} + \omega(x)\}$, wobei analog zu der Berechnung der 
 \\
 Nachdem alle Knoten ihr $\mu$ berechnet haben, wird ein Knoten mit minimalen $\mu$ ausgewählt. Dieser ist die neue Homebase, von dem aus $\mu$ viele Agenten den gesamten Baum dekontaminieren können, ohne die Monotonie-Eigenschaft zu verletzen (siehe oben).
 
-
+\newpage
 
 \subsection{Modifikationen am Algorithmus}
 
@@ -101,18 +106,18 @@ Nachdem alle Knoten ihr $\mu$ berechnet haben, wird ein Knoten mit minimalen $\m
 
 Die Ergebnisse des im Paper beschriebene Algorithmus stimmt in einigen Fällen nicht mit der Intuition überein, die man bekommt wenn man einige Beispielbäume betrachtet (z.B. Abbildung \ref{fig:negBeispielPaperAlgo}). In dem  angegebenen Beispiel sollte der Knoten x mit 5 Agenten auskommen: Alle 5 Agenten gehen über die erste Kante zum mittleren Knoten. Von dort aus werden nur noch 2 Agenten benötigt: Einer hält Wache um die Monotonie zu gewährleisten und der zweite dekontaminiert ein Blatt. Zum Schluss wird das letzte Blatt von einem Agenten dekontaminiert und der Algorithmus ist fertig.
 \\
-Der Unterschied zwischen dem originalen Algorithmus und der Intuition ist folgender: Der originale Algorithmus plant im Beispiel für den mittleren Knoten 5 Wachen ein (das Knotengewicht ist 5), obwohl wir über die Kante mit Gewicht 5 kommen, diese dadurch dekontaminiert ist und wir sie nicht mehr bewachen müssen. Es werden dadurch mehr Agenten eingeplant, als wirklich benötigt werden.
+Der Unterschied zwischen dem originalen Algorithmus und der Intuition ist folgender: Der originale Algorithmus plant im Beispiel für den mittleren Knoten 5 Wachen ein (das Knotengewicht ist 5), obwohl wir über die Kante mit Gewicht 5 kommen, diese dadurch dekontaminiert ist, und wir sie nicht mehr bewachen müssen. Es werden dadurch mehr Agenten eingeplant, als wirklich benötigt werden.
 \\
-Da das Problem wie beschrieben am Knotengewicht liegt, werde ich im folgenden eine Variante des Algorithmus beschreiben, die etwas anders mit dem Knotengewicht umgeht. Allerdings kommt es zu Fehlern, wenn man nur das Knotengewicht verändert, weshalb man zusätzliche Fälle in den Algorithmus einbauen muss, damit dieser sowohl richtig, als auch intuitiv sinnvoll funktioniert:
+Da das Problem, wie erläutert, am Knotengewicht liegt, werde ich im folgenden eine Variante des Algorithmus beschreiben, die etwas anders mit dem Knotengewicht umgeht. Allerdings kommt es zu Fehlern, wenn man nur das Knotengewicht verändert, weshalb man zusätzliche Fälle in den Algorithmus einbauen muss, damit dieser sowohl richtig, als auch intuitiv sinnvoll funktioniert:
 \\
 \\
-Im Gegensatz zum originalen Algorithmus wird im modifizierten Algorithmus nicht mehr das Knotengewicht in die direkte Berechnung der Nachricht miteinbezogen, sondern dient nur noch dazu zu überprüfen, dass die berechnete Nachricht nicht zu klein ist.
+Im Gegensatz zum originalen Algorithmus wird im modifizierten Algorithmus nicht mehr das Knotengewicht in die direkte Berechnung der Nachricht miteinbezogen, sondern dient nur noch dazu, zu überprüfen, dass die berechnete Nachricht nicht zu klein ist.
 \\
 Dazu muss der Algorithmus in Kapitel \ref{paperAlgoChapter} Fall \ref{paperAlgoFall1} wie folgt abgeändert werden:
 
 \subsubsection*{Modifizierte Berechnung der Nachricht:}
 
-\begin{itemize}
+\begin{enumerate}[label=\alph*)]
 	
 	\item 
 		Um eine Nachricht an einen Nachbarknoten y zu senden, der bis zu diesem Zeitpunkt noch keine Nachricht von x erhalten hat, nimmt man das Kantengewicht der zwei größten Kanten ($edge_{1}$ und $edge_{2}$) die inzident zu x sind, jedoch nicht zu y. Mit den beiden ermittelten Kantengewichten, für die gilt $edge_{1} \ge edge_{2}$ wird die Nachricht $\lambda_{y}$ an y wie auch in Abbildung \ref{modifiziert_a} gezeigt berechnet:\\
@@ -125,28 +130,29 @@ Dazu muss der Algorithmus in Kapitel \ref{paperAlgoChapter} Fall \ref{paperAlgoF
 		Nachdem die neue Nachricht $\lambda_{y}$ nun berechnet wurde, müssen wir noch überprüfen, dass $\lambda_{y}$ nicht kleiner ist als das Knotengewicht $\omega(x)$. Ist dies der Fall bedeutet dass, dass das Kantengewicht der Kante, über die wir die Nachricht nach y schicken größer ist als die berechnete Nachricht. Da dies nicht sein darf, da wir sonst nicht genug Agenten haben würden, um über die Kante zu laufen, müssen wir die Nachricht die wir an y schicken entsprechend anpssen (Beispiel in Abbildung \ref{modifiziert_b}):
 		
 		\begin{algorithmic}
-			\If {$\lambda_{y} < \omega(x)$}
+			\If {$\lambda_{y} \leq \omega(x)$}
 			\State $\lambda_{y} \gets \omega(x)$
 			\EndIf
 		\end{algorithmic}
 	
 	\item
-		Außerdem darf die berechnete Nachricht $\lambda_{y}$ nicht kleiner sein als die größte in x angekommene Nachricht $l_{1}$ (außer der Nachricht, die wir evt. schon von y erhalten haben). Ist die Nachricht $\lambda_{y}$ kleiner als $\l_{1}$, würden wir nicht genug Agenten bekommen, um den Teilbaum, aus dem $l_{1}$ kommt zu dekontaminieren. Wir müssen $\lambda_{y}$ kontrollieren und evt. wie in Abbildung \ref{modifiziert_c} anpassen:
+		Außerdem darf die berechnete Nachricht $\lambda_{y}$ nicht kleiner sein als die größte in x angekommene Nachricht $l_{1}$ (außer der Nachricht, die wir evt. schon von y erhalten haben). Ist die Nachricht $\lambda_{y}$ kleiner als $l_{1}$, würden wir nicht genug Agenten bekommen, um den Teilbaum, aus dem $l_{1}$ kommt zu dekontaminieren. Wir müssen $\lambda_{y}$ kontrollieren und evt. wie in Abbildung \ref{modifiziert_c} anpassen:
 		
 		\begin{algorithmic}
-			\If {$\lambda_{y} < l_{1}$}
+			\If {$\lambda_{y} \leq l_{1}$}
 			\State $\lambda_{y} \gets l_{1}$
 			\EndIf
 		\end{algorithmic}
 	
-\end{itemize}
+\end{enumerate}
 
 \begin{figure}[h]
-	\subfigure[Die Nachricht $\lambda_{y}$ (blau) von x zu y ist 5, da $edge_{1}$ und $edge_{2}$ (beide grün) die entscheidenden Kanten sind. y.\label{modifiziert_a}]{\includegraphics[width=0.32\textwidth]{bilder/abb_neu_max1max2.png}}
+	\subfigure[Die Nachricht $\lambda_{y}$ (blau) von x zu y hat den Wert 5, da $edge_{1} $ und $edge_{2}$ (beide grün) die entscheidenden Kanten sind.
+	\label{modifiziert_a}]{\includegraphics[width=0.32\textwidth]{bilder/abb_neu_max1max2.png}}
 	\hfill
-	\subfigure[Da das Knotengewicht durch die Kante zwischen x und y bestimmt wird (grün) und dieses größer ist als die Summe der beiden normalen Kanten $edge_{1}$ und $edge_{2}$ (gelb), bestimmt diese Kante die Nachricht $\lambda_{y}$ (blau). \label{modifiziert_b}]{\includegraphics[width=0.32\textwidth]{bilder/abb_neu_edge.png}} 
+	\subfigure[Da das Knotengewicht durch die Kante zwischen x und y bestimmt wird (grün) und dieses größer ist als die Summe der beiden normalen Kanten $edge_{1}$ und $edge_{2}$ (gelb), bestimmt diese Kante den Wert der Nachricht $\lambda_{y} = 5$ (blau). \label{modifiziert_b}]{\includegraphics[width=0.32\textwidth]{bilder/abb_neu_edge.png}} 
 	\hfill
-	\subfigure[Die größte Nachricht (grün), die an x ankommt ist größer als die beiden Kanten $edge_{1}$ und $edge_{2}$ (gelb) und bestimmt dadurch die die Nachricht $\lambda_{y}$ (blau). \label{modifiziert_c}]{\includegraphics[width=0.32\textwidth]{bilder/abb_neu_msgData.png}}  
+	\subfigure[Die größte Nachricht (grün), die an x ankommt ist größer als die beiden Kanten $edge_{1}$ und $edge_{2}$ (gelb) und bestimmt dadurch den Nachrichtenwert $\lambda_{y} = 8$ (blau). \label{modifiziert_c}]{\includegraphics[width=0.32\textwidth]{bilder/abb_neu_msgData.png}}  
 	
 	\caption{Drei Fälle, die bei der Modifizierung des Algorithmus beachtet werden müssen, um alle Spezialfälle abzudecken.} 
 \end{figure} 
