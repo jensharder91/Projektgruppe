@@ -28,6 +28,8 @@ public class CIMAVertice extends Vertice{
 	private static List<CIMAEdgeWeight> potentialEdges= new ArrayList<CIMAEdgeWeight>();
 	private static InfoDisplayClass infoDisplayClass;
 	private static ICalcStrategy calcStrategy = new ModellMinimalDanger();
+	
+	private int potential = 2;
 
 	
 	//animation
@@ -267,7 +269,8 @@ public class CIMAVertice extends Vertice{
 			specialVerticeWeight = calcStrategy.calcSpecialVerticeWeight(this, (CIMAVertice) parent);
 			System.out.println("specialVerticeWeight in 'start algo'  "+specialVerticeWeight);
 			
-			((CIMAVertice) parent).receive(new MessageData(specialVerticeWeight, this, (CIMAVertice) parent, edgeWeightToParent, null, null, specialVerticeWeight, null, null, new PotentialData(edgeWeightToParent)));
+			((CIMAVertice) parent).receive(calcStrategy.calcMessageData(this, (CIMAVertice) getParent(), potential));
+//			((CIMAVertice) parent).receive(new MessageData(specialVerticeWeight, this, (CIMAVertice) parent, edgeWeightToParent, null, null, specialVerticeWeight, null, null, new PotentialData(edgeWeightToParent)));
 		}else{
 			for(Vertice child : children){
 				if(!(child instanceof CIMAVertice)){
@@ -281,7 +284,15 @@ public class CIMAVertice extends Vertice{
 	private void receive(MessageData data){
 		this.lamdas.add(data);
 		messageDataList.add(data);
-
+		
+		if(data.getSender() != null && data.getReceiver() != null){
+			System.out.println("+++++++++++++++++");
+			System.out.println("++");
+			System.out.println("++ message from "+data.getSender().getName()+" to "+data.getReceiver().getName() + " //  data: "+data.getLamdaValue()+" / optimal data: "+data.getBestPossiblelamdaValue());
+			System.out.println("++");
+			System.out.println("+++++++++++++++++");
+		}
+		
 		if(lamdas.size() == numberOfNeighbors() -1){
 			computeLamdasAndSendTo(getMissingNeightbour());
 		}else if(lamdas.size() == numberOfNeighbors()){
@@ -370,7 +381,7 @@ public class CIMAVertice extends Vertice{
 //
 //		receiverNode.receive(calcMessageData);
 		
-		receiverNode.receive(calcStrategy.calcMessageData(this, receiverNode));
+		receiverNode.receive(calcStrategy.calcMessageData(this, receiverNode, potential));
 	}
 
 	private CIMAVertice getMissingNeightbour(){

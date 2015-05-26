@@ -9,7 +9,7 @@ public class ModelStandardPaper extends ICalcStrategy{
 
 	@Override
 	public MessageData calcMessageData(CIMAVertice senderNode,
-			CIMAVertice receiverNode) {
+			CIMAVertice receiverNode, int potential) {
 		// TODO Auto-generated method stub
 		
 		/****************************************************/

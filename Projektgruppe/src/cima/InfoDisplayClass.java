@@ -6,7 +6,8 @@ import java.awt.Graphics;
 
 public class InfoDisplayClass {
 	
-	Gui gui;
+	private Gui gui;
+	private static boolean disableInfo = false;
 	
 	public InfoDisplayClass(){
 		gui = CIMAGui.getGui();
@@ -51,6 +52,11 @@ public class InfoDisplayClass {
 	}
 	
 	private void drawString(Graphics g, String displayedText, int xCoordText, int yCoordText, int stringWidth, int stringHeight, Color textColor, Color backgroundColor){
+		
+		if(disableInfo){
+			return;
+		}
+		
 		Font defaulFont = g.getFont();
 		g.setFont(CIMAConstants.getTextFont());
 	
@@ -62,6 +68,10 @@ public class InfoDisplayClass {
 		g.drawString(displayedText, xCoordText, yCoordText);
 		
 		g.setFont(defaulFont);	
+	}
+	
+	public static void setDisableInfo(boolean disableInfo){
+		InfoDisplayClass.disableInfo = disableInfo;
 	}
 
 }

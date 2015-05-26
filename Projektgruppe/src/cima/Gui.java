@@ -29,11 +29,12 @@ public abstract class Gui extends JPanel{
 	public static Vertice rootVertice = null;
 	protected Vertice homeBase = null;
 	protected Vertice currentVertice = null;
+	protected boolean hideHomebase = false;
 
 	protected JPanel buttonBarSouth = new JPanel();
 	protected JPanel buttonBarNorth = new JPanel();
 	
-	private ICalcStrategy[] calcStrategies = {new ModellMinimalDanger(), new ModelStandardPaper()};
+	private ICalcStrategy[] calcStrategies = {new ModellMinimalDanger(), new ModelStandardPaper()/*, new ModelMultPotential()*/};
 
 	/** Buttons */
 	protected JButton buttonCalculate = new JButton("Sofort berechnen");
@@ -49,6 +50,7 @@ public abstract class Gui extends JPanel{
 	private JSpinner spinnerAnimationSpeed = new JSpinner(spinnerModel);
 	private JCheckBox checkboxShowMessageData = new JCheckBox("zeige die Berechnung an");
 	private JCheckBox checkboxEditor = new JCheckBox("editiere den Baum");
+	private JCheckBox checkboxDisableAllInfos = new JCheckBox("schalte alle Infos aus");
 	protected JButton buttonDrawAllPotentialEdges = new JButton("Färbe alle möglichen Kanten");
 	protected JComboBox<ICalcStrategy> comboBoxCalcStrategy = new JComboBox<ICalcStrategy>(calcStrategies);
 	
@@ -200,6 +202,18 @@ public abstract class Gui extends JPanel{
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				MessageData.setShowMessageData(checkboxShowMessageData.isSelected());
+				repaint();
+			}
+		});
+		
+		checkboxDisableAllInfos.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+//				MessageData.setShowMessageData(!checkboxDisableAllInfos.isSelected());
+				InfoDisplayClass.setDisableInfo(checkboxDisableAllInfos.isSelected());
+				hideHomebase = !checkboxDisableAllInfos.isSelected();
+				repaint();
 			}
 		});
 		
@@ -241,11 +255,14 @@ public abstract class Gui extends JPanel{
 		//init
 		comboBoxCalcStrategy.setSelectedIndex(0);
 		CIMAVertice.setStrategy((ICalcStrategy) comboBoxCalcStrategy.getSelectedItem());
+		
+		
 
 	
 		buttonBarNorth.add(checkboxEditor);
 		buttonBarNorth.add(buttonDrawAllPotentialEdges);
 		buttonBarNorth.add(comboBoxCalcStrategy);
+		buttonBarNorth.add(checkboxDisableAllInfos);
 		this.add(buttonBarNorth, "North");
 		
 //		buttonBarSouth.add(checkboxEditor);
@@ -312,7 +329,7 @@ public abstract class Gui extends JPanel{
 			if(rootVertice != null){
 				homeBase = ((CIMAVertice) rootVertice).findHomeBase();
 			}
-			if(homeBase != null){
+			if(homeBase != null && hideHomebase){
 				g2.drawRect(homeBase.getX(), homeBase.getY(), homeBase.getDiameter(), homeBase.getDiameter());
 			}
 		}
@@ -460,6 +477,7 @@ public abstract class Gui extends JPanel{
 		checkboxEditor.setVisible(checkboxEditorBoolean);
 		buttonDrawAllPotentialEdges.setVisible(buttonDrawAllPotentialEdgesBoolean);
 		
+		checkboxDisableAllInfos.setVisible(true);
 		
 	}
 	

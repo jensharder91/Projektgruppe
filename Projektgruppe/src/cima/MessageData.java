@@ -18,7 +18,16 @@ public class MessageData implements IMarkable{
 	private IMarkable maxMsgData;
 	private IMarkable msgEdge;
 	private CIMAEdgeWeight edge;
+	
+	//potential k == 1
 	private PotentialData potentialData;
+	
+	//potantial k > 1
+	private int bestPossibleLamdaValue;
+	private CIMAEdgeWeight potentialEdge;
+	
+	
+	//
 
 	private InfoDisplayClass infoDisplayClass;
 	
@@ -31,7 +40,7 @@ public class MessageData implements IMarkable{
 	private int yMiddleAnimationEndPosition;
 	private static int animationSpeed = 3;
 	private static MessageData displayCalcInfos;
-	private static boolean showMessageData = false;
+	private static boolean showMessageData = true;
 	
 	private String edgeMax1String = "";
 	private String edgeMax2String = "";
@@ -92,6 +101,20 @@ public class MessageData implements IMarkable{
 		}
 		
 		infoDisplayClass = new InfoDisplayClass();
+	}
+	public MessageData(int lamdaValue, CIMAVertice sender, CIMAVertice receiver, int bestPossibleLamdaValue, CIMAEdgeWeight potentialEdge){
+		this.lamdaValue = lamdaValue;
+		this.sender = sender;
+		this.receiver = receiver;
+		this.bestPossibleLamdaValue = bestPossibleLamdaValue;
+		this.potentialEdge = potentialEdge;
+		
+		System.out.println("new msgData created with:\n-----");
+		System.out.println("sender "+sender.getName());
+		System.out.println("receiver "+receiver.getName());
+		System.out.println("lambda "+lamdaValue);
+		System.out.println("bestlamda "+bestPossibleLamdaValue);
+		System.out.println("-----");
 	}
 
 	private void calcArc(){
@@ -173,7 +196,7 @@ public class MessageData implements IMarkable{
 	
 	public void drawLine(Graphics2D g){
 		//after calc dont draw
-		if(CIMAVertice.drawMu && CIMAVertice.activeAnimation && !showMessageData){
+		if(CIMAVertice.drawMu && CIMAVertice.activeAnimation || !showMessageData){
 			return;
 		}
 
@@ -195,7 +218,7 @@ public class MessageData implements IMarkable{
 	public void drawMessageData(Graphics2D g){
 				
 		//after calc dont draw
-		if(CIMAVertice.drawMu && CIMAVertice.activeAnimation && !showMessageData){
+		if(CIMAVertice.drawMu && CIMAVertice.activeAnimation || !showMessageData){
 			return;
 		}
 		
@@ -311,6 +334,10 @@ public class MessageData implements IMarkable{
 
 	@Override
 	public String toString() {
+		//TODO fix the null problem
+		if(sender == null || receiver == null){
+			return "NULL string";
+		}
 		return "Sender : "+sender.getName()+"  Empfänger : "+receiver.getName()+"  LamdaValue: "+lamdaValue;
 	}
 
@@ -371,6 +398,12 @@ public class MessageData implements IMarkable{
 	public CIMAEdgeWeight getEdge(){
 		return edge;
 	}
+	public int getBestPossiblelamdaValue(){
+		return bestPossibleLamdaValue;
+	}
+	public CIMAEdgeWeight getPotentialEdge(){
+		return potentialEdge;
+	}
 	
 	public void markAllColors(){
 		
@@ -384,13 +417,19 @@ public class MessageData implements IMarkable{
 			//just 1 relevant edge
 			}else if(edgeMax2 == null){
 				edgeMax1.markAsMax();
-				sender.markAsSecMax(specialVerticeWeight);
+				if(specialVerticeWeight != 0){
+					sender.markAsSecMax(specialVerticeWeight);
+				}
 				edgeMax1String = edgeMax1.getLamdaValue()+" max1";
 				edgeMax2String = (edgeMax2.getLamdaValue() + specialVerticeWeight) + " = "+edgeMax2.getLamdaValue()+" + "+specialVerticeWeight +"  max2 + Knotengewicht";
 				
 			//both edges relevamt
 			}else{
-				if(edgeMax1.getLamdaValue() >= (edgeMax2.getLamdaValue() + specialVerticeWeight)){
+				if(specialVerticeWeight == 0){
+					edgeMax1.markAsMax();
+					edgeMax2.markAsMax();
+					edgeMax1String = (edgeMax1.getLamdaValue() + edgeMax2.getLamdaValue()) + " = "+edgeMax1.getLamdaValue()+" + "+edgeMax2.getLamdaValue() +"  max1 + max2";
+				}else if(edgeMax1.getLamdaValue() >= (edgeMax2.getLamdaValue() + specialVerticeWeight)){
 					edgeMax1.markAsMax();
 					edgeMax2.markAsSecMax();
 					sender.markAsSecMax(specialVerticeWeight);
@@ -413,7 +452,9 @@ public class MessageData implements IMarkable{
 			}
 			if(edgeMax2 != null){
 				edgeMax2.markAsSecMax();
-				sender.markAsSecMax(specialVerticeWeight);
+				if(specialVerticeWeight != 0){
+					sender.markAsSecMax(specialVerticeWeight);
+				}
 				edgeMax2String = (edgeMax2.getLamdaValue() + specialVerticeWeight) + " = "+edgeMax2.getLamdaValue()+" + "+specialVerticeWeight +"  max2 + Knotengewicht";
 			}
 		}
