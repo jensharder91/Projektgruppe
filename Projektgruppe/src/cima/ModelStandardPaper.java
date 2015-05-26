@@ -95,7 +95,7 @@ public class ModelStandardPaper extends ICalcStrategy{
 	}
 
 	@Override
-	public MuCalcResult calcMu(CIMAVertice vertice) {
+	public MuCalcResult calcMu(CIMAVertice vertice, int potential) {
 		List<MessageData> lamdas = vertice.getLamdas();
  		Collections.sort(lamdas, new MessageDataComparator());
  		MessageData max1 = new MessageData();

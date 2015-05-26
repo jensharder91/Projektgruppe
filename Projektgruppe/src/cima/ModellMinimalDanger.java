@@ -168,13 +168,17 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		return edgeWeightList;
 	}
 	
-	public MuCalcResult calcMu(CIMAVertice vertice){
+	public MuCalcResult calcMu(CIMAVertice vertice, int potential){
 		int mu;
 		List<MessageData> lamdas = vertice.getLamdas();
 		Collections.sort(lamdas, new MessageDataComparator());
 		MessageData biggestMsgData = new MessageData();
+		MessageData biggest2MsgData = new MessageData();
 		if(lamdas.size() >= 1){
 			biggestMsgData = lamdas.get(0);
+		}
+		if(lamdas.size() >= 2){
+			biggest2MsgData = lamdas.get(1);
 		}
 		
 		List<CIMAEdgeWeight> edgeWeightList = calcSortedEdgeWeightList(vertice, null);
@@ -193,7 +197,7 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		System.out.println("max3: "+ max3.getEdgeWeightValue());
 		
 		if(true){//TODO
-			return ModelMultPotential.calcMu(this, vertice, max1.getEdgeWeightValue(), max2.getEdgeWeightValue(), biggestMsgData.getLamdaValue());
+			return ModelMultPotential.calcMu(this, vertice, max1, max2, max3, biggestMsgData, biggest2MsgData, potential);
 		}
 		
 

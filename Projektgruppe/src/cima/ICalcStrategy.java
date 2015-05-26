@@ -15,7 +15,7 @@ public abstract class ICalcStrategy {
 	 * @param vertice  from which the result should be calculated
 	 * @return MuCalcResult, included the mu value and the PotentialData
 	 */
-	public abstract MuCalcResult calcMu(CIMAVertice vertice);
+	public abstract MuCalcResult calcMu(CIMAVertice vertice, int potential);
 	
 	
 	

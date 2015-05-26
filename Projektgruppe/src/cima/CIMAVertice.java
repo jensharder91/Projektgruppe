@@ -415,7 +415,7 @@ public class CIMAVertice extends Vertice{
 
 	private void calcMu(){		
 
-		MuCalcResult result = calcStrategy.calcMu(this);
+		MuCalcResult result = calcStrategy.calcMu(this, potential);
 		mu = result.getMuResult();
 		potentialData = result.getPotentialDataResult();
 		

@@ -171,7 +171,7 @@ public class ModelMultPotential /*extends ModellMinimalDanger*/{
 		//get the bestMuResult (with using the potential)
 		//check if you can use the potential to minimize the msgDataValue
 		int reducedValue = 1;
-		int possibleMsgData = 1;
+		int possibleMu = 1;
 		
 
 		//case2: reduce the max1
@@ -184,10 +184,10 @@ public class ModelMultPotential /*extends ModellMinimalDanger*/{
 			reducedValue = max3.getEdgeWeightValue();
 			System.out.println("case c_2");
 		}
-		possibleMsgData = calcMsgDataValue(reducedValue, max2.getEdgeWeightValue(), maxMsgData.getLamdaValue(), edgeValue.getEdgeWeightValue());
-		if(possibleMsgData < bestMuResult){
+		possibleMu = calcBestMuValue(reducedValue, max2.getEdgeWeightValue(), maxMsgData.getLamdaValue());
+		if(possibleMu < bestMuResult){
 			System.out.println("case c_3");
-			bestMuResult = possibleMsgData;
+			bestMuResult = possibleMu;
 			potentialEdge = max1;
 		}
 		
@@ -201,10 +201,10 @@ public class ModelMultPotential /*extends ModellMinimalDanger*/{
 			reducedValue = max3.getEdgeWeightValue();
 			System.out.println("case d_2");
 		}
-		possibleMsgData = calcMsgDataValue(max1.getEdgeWeightValue(), reducedValue, maxMsgData.getLamdaValue(), edgeValue.getEdgeWeightValue());
-		if(possibleMsgData < bestMuResult){
+		possibleMu = calcBestMuValue(max1.getEdgeWeightValue(), reducedValue, maxMsgData.getLamdaValue());
+		if(possibleMu < bestMuResult){
 			System.out.println("case d_3");
-			bestMuResult = possibleMsgData;
+			bestMuResult = possibleMu;
 			potentialEdge = max2;
 		}
 		
@@ -222,18 +222,17 @@ public class ModelMultPotential /*extends ModellMinimalDanger*/{
 			System.out.println("case e_2");
 			if(maxMsgData.getPotentialEdge().equals(max1)){
 				System.out.println("case e_3");
-				possibleMsgData = calcMsgDataValue(reducedValue, max2.getEdgeWeightValue(), reducedValue, edgeValue.getEdgeWeightValue());
+				possibleMu = calcBestMuValue(reducedValue, max2.getEdgeWeightValue(), reducedValue);
 			}else if(maxMsgData.getPotentialEdge().equals(max2)){
 				System.out.println("case e_4");
-				possibleMsgData = calcMsgDataValue(max1.getEdgeWeightValue(), reducedValue, reducedValue, edgeValue.getEdgeWeightValue());
+				possibleMu = calcBestMuValue(max1.getEdgeWeightValue(), reducedValue, reducedValue);
 			}else{
 				System.out.println("case e_5");
-				possibleMsgData = calcMsgDataValue(max1.getEdgeWeightValue(), max2.getEdgeWeightValue(), reducedValue, edgeValue.getEdgeWeightValue());
+				possibleMu = calcBestMuValue(max1.getEdgeWeightValue(), max2.getEdgeWeightValue(), reducedValue);
 			}
-			if(possibleMsgData < bestMsgDataValue){
+			if(possibleMu < bestMuResult){
 				System.out.println("case e_6");
-				bestMsgDataValue = possibleMsgData;
-				newMessageData = new MessageData(normalMsgDataValue, sender, receiver, bestMsgDataValue, maxMsgData.getPotentialEdge());
+				bestMuResult = possibleMu;
 			}
 		}
 		
