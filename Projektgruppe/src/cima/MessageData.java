@@ -59,8 +59,8 @@ public class MessageData implements IMarkable{
 	int Y_segMitteGewollt;
 	int X_mitte_segMitteGewollt_sender;
 	int Y_mitte_segMitteGewollt_sender;
-	int X_mÃ¶glMiddlepunkt;
-	int Y_mÃ¶glMiddlepunkt;
+	int X_möglMiddlepunkt;
+	int Y_möglMiddlepunkt;
 	int tatsÃ¤chlicherKreisMiddlepunkt_X;
 	int tatsÃ¤chlicherKreisMiddlepunkt_Y;
 
@@ -151,18 +151,18 @@ public class MessageData implements IMarkable{
 		int orthVektor_sender_segMitteGewollt_X = vektor_sender_segMitteGewollt_Y;
 		int orthVektor_sender_segMitteGewollt_Y = -vektor_sender_segMitteGewollt_X;
 		
-		X_mÃ¶glMiddlepunkt = X_mitte_segMitteGewollt_sender + orthVektor_sender_segMitteGewollt_X;
-		Y_mÃ¶glMiddlepunkt = Y_mitte_segMitteGewollt_sender + orthVektor_sender_segMitteGewollt_Y;
+		X_möglMiddlepunkt = X_mitte_segMitteGewollt_sender + orthVektor_sender_segMitteGewollt_X;
+		Y_möglMiddlepunkt = Y_mitte_segMitteGewollt_sender + orthVektor_sender_segMitteGewollt_Y;
 		
 		
 		int x1 = MiddlepunktX;
 		int x2 = MiddlepunktKreisX;
 		int x3 = X_mitte_segMitteGewollt_sender;
-		int x4 = X_mÃ¶glMiddlepunkt;
+		int x4 = X_möglMiddlepunkt;
 		int y1 = MiddlepunktY;
 		int y2 = MiddlepunktKreisY;
 		int y3 = Y_mitte_segMitteGewollt_sender;
-		int y4 = Y_mÃ¶glMiddlepunkt;
+		int y4 = Y_möglMiddlepunkt;
 		
 	    double d = (x1-x2)*(y3-y4) - (y1-y2)*(x3-x4);
 	    
