@@ -43,9 +43,9 @@ public class ModelStandardPaper extends ICalcStrategy{
  		MessageData calcMessageData;
  		int verticeWeight = calcGeneralVerticeWeight(senderNode);
  		if(max1.getLamdaValue() >= max2.getLamdaValue() + verticeWeight){
- 			calcMessageData = new MessageData(max1.getLamdaValue(), senderNode, receiverNode, senderNode.getEdgeWeightToParent(), max1, max2, verticeWeight, null, null, new PotentialData(true));
+ 			calcMessageData = new MessageData(senderNode, receiverNode, max1.getLamdaValue());
  		}else{
- 			calcMessageData = new MessageData(max2.getLamdaValue() + verticeWeight, senderNode, receiverNode, senderNode.getEdgeWeightToParent(), max1, max2, verticeWeight, null, null, new PotentialData(true));
+ 			calcMessageData = new MessageData(senderNode, receiverNode, max2.getLamdaValue() + verticeWeight);
  		}
  	
  
@@ -59,14 +59,7 @@ public class ModelStandardPaper extends ICalcStrategy{
 	@Override
 	public int calcGeneralVerticeWeight(CIMAVertice vertice) {
  		//calc the verticeWeight
-		return calcSortedEdgeWeightList(vertice, null).get(0).getLamdaValue();
-	}
-
-	@Override
-	public int calcSpecialVerticeWeight(CIMAVertice vertice, CIMAVertice exeptVertice) {
-
-		// with this model there is no difference between general and special vertice weight
-		return calcGeneralVerticeWeight(vertice);
+		return calcSortedEdgeWeightList(vertice, null).get(0).getEdgeWeightValue();
 	}
 
 	@Override
@@ -95,7 +88,7 @@ public class ModelStandardPaper extends ICalcStrategy{
 	}
 
 	@Override
-	public MuCalcResult calcMu(CIMAVertice vertice, int potential) {
+	public int calcMu(CIMAVertice vertice, int potential) {
 		List<MessageData> lamdas = vertice.getLamdas();
  		Collections.sort(lamdas, new MessageDataComparator());
  		MessageData max1 = new MessageData();
@@ -110,7 +103,7 @@ public class ModelStandardPaper extends ICalcStrategy{
  		int verticeWeight = calcGeneralVerticeWeight(vertice);
  		int mu = Math.max(max1.getLamdaValue(), max2.getLamdaValue() + verticeWeight);
  		
- 		return new MuCalcResult(mu, new PotentialData(true));
+ 		return mu;
 	}
 	
 	

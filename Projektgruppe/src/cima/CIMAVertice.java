@@ -10,26 +10,21 @@ import java.util.List;
 import javax.sound.sampled.ReverbType;
 
 import cima.Gui;
-import cima.ICalcStrategy.MuCalcResult;
 import cima.Vertice;
 
 public class CIMAVertice extends Vertice{
 
 	private CIMAEdgeWeight edgeWeightToParent;
 	private int verticeWeight;
-	private int specialVerticeWeight;
 	public static boolean drawMu = false;
 	private Color stringColor = Color.black;
 	private int mu;
 	private List<MessageData> lamdas = new ArrayList<MessageData>();
-	private PotentialData potentialData;
 	private static int minimalMu;
 	private static List<CIMAVertice> minimalMuVertices = new ArrayList<CIMAVertice>();
-	private static List<CIMAEdgeWeight> potentialEdges= new ArrayList<CIMAEdgeWeight>();
-	private static InfoDisplayClass infoDisplayClass;
 	private static ICalcStrategy calcStrategy = new ModellMinimalDanger();
 	
-	private int potential = 2;
+	private static int potential = 2;
 
 	
 	//animation
@@ -64,10 +59,6 @@ public class CIMAVertice extends Vertice{
 		}else{
 			this.edgeWeightToParent = new CIMAEdgeWeight(0, this, null);
 		}
-		
-		if(infoDisplayClass == null){
-			infoDisplayClass = new InfoDisplayClass();
-		}
 	}
 	
 	@Override
@@ -80,31 +71,20 @@ public class CIMAVertice extends Vertice{
 	protected void drawAllVertice(Graphics g){
 		
 		//check if color should be chosen
-		if(drawPotentialData){
-			
-			if(potentialEdges.size() == 0){
-				infoDisplayClass.displayInUpperLeftCorner(g, "Potential kann nicht genutzt werden", 1, Color.orange, null);
-			}
-//			drawPotentialMessage(g);//TODO
-		}else{
-			//chose color
-			if(CIMAVertice.drawMu){
-				if(activeAnimation){
-					if(decontaminated){
-						verticeColor = Color.GREEN;
-					}else{
-						verticeColor = new Color(255, 50, 0);
-					}
-					
+		//chose color
+		if(CIMAVertice.drawMu){
+			if(activeAnimation){
+				if(decontaminated){
+					verticeColor = Color.GREEN;
 				}else{
-					verticeColor = Color.white;
+					verticeColor = new Color(255, 50, 0);
 				}
+				
 			}else{
-				if(!MessageData.animationInProgress){
-					verticeColor = Color.white;
-				}
+				verticeColor = Color.white;
 			}
 		}
+		
 		super.drawAllVertice(g, verticeColor);
 
 		String stringVertice;
@@ -126,9 +106,6 @@ public class CIMAVertice extends Vertice{
 				verticeWeight = calcStrategy.calcGeneralVerticeWeight(this);
 				stringVertice = String.valueOf(verticeWeight);
 				displayedInfoString = "Knotengewichte";
-				if(MessageData.animationInProgress && marked){
-					stringVertice = String.valueOf(specialVerticeWeight);
-				}
 			}
 			g.setColor(stringColor);
 			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(stringVertice,g).getWidth());
@@ -138,22 +115,6 @@ public class CIMAVertice extends Vertice{
 			g.setFont(defaultFont);
 		}		
 
-	}
-
-	public static void drawDisplayInformation(Graphics g){
-		//draw the displayedInfo - string in upper right corner
-//		Font defaulFont = g.getFont();
-//		g.setFont(CIMAConstants.getTextFont());
-//		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(displayedInfoString,g).getWidth());
-//		g.drawString(displayedInfoString, CIMAGui.getGui().getWidth() - 5 - stringWidth, 12);
-//		g.setFont(defaulFont);
-		
-		if(infoDisplayClass == null){
-			
-			infoDisplayClass = new InfoDisplayClass();
-		}
-		
-		infoDisplayClass.displayInUpperRightCorner(g, displayedInfoString, 1, Color.BLACK, null);
 	}
 	
 	
@@ -239,14 +200,13 @@ public class CIMAVertice extends Vertice{
 		calcMu();
 		logSubtree();
 
-		MessageData.clearGui = false;
 		drawMu = true;
 	}
 
 	public void reset(){
 		lamdas.clear();
 		for(MessageData msgData : messageDataList){
-			msgData.resetAllColors();
+//			msgData.resetAllColors();
 		}
 		messageDataList.clear();
 		agentWayList.clear();
@@ -266,8 +226,6 @@ public class CIMAVertice extends Vertice{
 	private void startAlgo(){
 		if(children.size() == 0 && parent != null){
 			//got a ready leaf -> send message
-			specialVerticeWeight = calcStrategy.calcSpecialVerticeWeight(this, (CIMAVertice) parent);
-			System.out.println("specialVerticeWeight in 'start algo'  "+specialVerticeWeight);
 			
 			((CIMAVertice) parent).receive(calcStrategy.calcMessageData(this, (CIMAVertice) getParent(), potential));
 //			((CIMAVertice) parent).receive(new MessageData(specialVerticeWeight, this, (CIMAVertice) parent, edgeWeightToParent, null, null, specialVerticeWeight, null, null, new PotentialData(edgeWeightToParent)));
@@ -285,13 +243,13 @@ public class CIMAVertice extends Vertice{
 		this.lamdas.add(data);
 		messageDataList.add(data);
 		
-		if(data.getSender() != null && data.getReceiver() != null){
-			System.out.println("+++++++++++++++++");
-			System.out.println("++");
-			System.out.println("++ message from "+data.getSender().getName()+" to "+data.getReceiver().getName() + " //  data: "+data.getLamdaValue()+" / optimal data: "+data.getBestPossiblelamdaValue());
-			System.out.println("++");
-			System.out.println("+++++++++++++++++");
-		}
+//		if(data.getSender() != null && data.getReceiver() != null){
+//			System.out.println("+++++++++++++++++");
+//			System.out.println("++");
+//			System.out.println("++ message from "+data.getSender().getName()+" to "+data.getReceiver().getName() + " //  data: "+data.getLamdaValue()+" / optimal data: "+data.getBestPossiblelamdaValue());
+//			System.out.println("++");
+//			System.out.println("+++++++++++++++++");
+//		}
 		
 		if(lamdas.size() == numberOfNeighbors() -1){
 			computeLamdasAndSendTo(getMissingNeightbour());
@@ -415,27 +373,14 @@ public class CIMAVertice extends Vertice{
 
 	private void calcMu(){		
 
-		MuCalcResult result = calcStrategy.calcMu(this, potential);
-		mu = result.getMuResult();
-		potentialData = result.getPotentialDataResult();
-		
-		potentialData.registerPotentialVertice(this);
+		mu = calcStrategy.calcMu(this, potential);
 		
 		if(mu < minimalMu){//save the minimal MU
 			minimalMu = mu;
 			minimalMuVertices.clear();
-			potentialEdges.clear();
 		}
 		
-		//save all edges which decrement the minimal mu:
 		if(mu == minimalMu){
-			for(CIMAEdgeWeight edge : potentialData.getPotentialEdgeWeights()){
-				if(!potentialEdges.contains(edge)){
-					potentialEdges.add(edge);
-				}
-			}
-			
-			//save this vertex in minimalList
 			minimalMuVertices.add(this);
 		}
 
@@ -445,99 +390,6 @@ public class CIMAVertice extends Vertice{
 			}
 			((CIMAVertice) child).calcMu();
 		}
-	}
-
-	/////////////////
-
-	private void calcAgentsMove(){
-
-		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
-
-		//animation läuft schon.... breche neue animation ab
-		if(activeAnimation){
-			animation.stopAgentAnimation();
-			return;
-		}
-
-		agentWayList.clear();
-		
-		CIMAVertice homeBase = findHomeBase();
-		homeBase.resetAllVerticeAnimation();
-		homeBase.changeCurrentAgents(homeBase.getMu());
-		homeBase.moveAgents(null, 0);
-
-	}
-	
-	public void doCompleteSendMessageAnimation(){
-		
-		if(CIMAAnimation.breakThread){
-			return;
-		}
-		
-		//animation läuft schon.... breche die animation ab
-		if(MessageData.animationInProgress && !CIMAAnimation.singeAnimationModus){
-			CIMAAnimation.getCIMAAnimation().stopSendMessageAnimation();
-			return;
-		}
-
-		if(!MessageData.animationInProgress){
-			algorithmus();
-		}
-		
-		
-		CIMAAnimation.getCIMAAnimation().startSendMessageAnimation(messageDataList);
-	}
-	
-	public void doStepSendMessageAnimation(){
-		
-		if(CIMAAnimation.breakThread){
-			return;
-		}
-
-		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
-		
-		if(!MessageData.animationInProgress){
-			algorithmus();
-		}
-		animation.nextStepSendMessageAnimation(messageDataList);
-
-	}
-
-	public void doCompleteAgentAnimation(){
-		
-		if(CIMAAnimation.breakThread){
-			return;
-		}
-
-		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
-
-		//animation läuft schon.... breche neue animation ab
-		if(activeAnimation && !CIMAAnimation.singeAnimationModus){
-			animation.stopAgentAnimation();
-			return;
-		}
-		if(!activeAnimation){
-			calcAgentsMove();
-		}
-
-		animation.startAgentAnimation(agentWayList);
-	}
-
-	public void doStepAgentAnimation(){
-		
-		if(CIMAAnimation.breakThread){
-			return;
-		}
-
-		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
-
-		if(!activeAnimation){
-			calcAgentsMove();
-		}
-
-
-		animation.nextStepAgentAnimation(agentWayList);
-
 	}
 
 	public CIMAVertice findHomeBase(){
@@ -567,7 +419,7 @@ public class CIMAVertice extends Vertice{
 
 	@Override
 	public String toString(){
-		return "##Vertice "+this.name+"; "+this.children.size()+" children; mu: "+this.mu+"; currentAgents: "+currentAgents+"  potentialEdges: "+this.potentialData + "\n"
+		return "##Vertice "+this.name+"; "+this.children.size()+" children; mu: "+this.mu+"; currentAgents: "+currentAgents + "\n"
 				+ "		all lamda: "+getAlllamda();
 	}
 
@@ -620,24 +472,14 @@ public class CIMAVertice extends Vertice{
 	public List<MessageData> getLamdas(){
 		return lamdas;
 	}
-	public void drawPotentialDataForThisNode(boolean drawPotentialData){
-		
-		resetDrawPotentialData();
-		
-		this.drawPotentialData = drawPotentialData;
-		potentialData.prepareDraw();
-		System.out.println("draw potential : "+drawPotentialData);
-	}
 	public void markColor(Color color){
 		verticeColor = color;
 	}
 	public void markAsMax(int specialVerticeWeight){
-		this.specialVerticeWeight = specialVerticeWeight;
 		verticeColor = CIMAConstants.getMarkAsMaxColor();
 		marked = true;
 	}
 	public void markAsSecMax(int specialVerticeWeight){
-		this.specialVerticeWeight = specialVerticeWeight;
 		verticeColor = CIMAConstants.getMarkAsSecMaxColor();
 		marked = true;
 	}
@@ -645,48 +487,7 @@ public class CIMAVertice extends Vertice{
 		verticeColor = Color.white;
 		marked = false;
 	}
-	public void drawAllPotentialEdges(){
-		resetDrawPotentialData();
-		
-		drawPotentialData = true;
-		
-		for(CIMAEdgeWeight edge : potentialEdges){
-			if(edge.getEdgeWeightValue() > 1){
-				edge.markColor(Color.ORANGE);
-			}else{
-				edge.markColor(Color.YELLOW);
-			}
-		}
-	}
 	
-	public void drawPotentialMessage(Graphics g){
-		if(potentialEdges.size() == 0){
-			Font defaulFont = g.getFont();
-			int stringHeight = (int) Math.floor(g.getFontMetrics().getStringBounds("stringheight",g).getHeight());
-			g.setFont(CIMAConstants.getTextFont());
-			g.setColor(CIMAConstants.getMarkAsMaxColor());
-
-			String string = "Agentenanzahl kann nicht optimiert werden";
-			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
-			g.fillRect(3, 12 - stringHeight +1, stringWidth, stringHeight);
-			g.setColor(Color.ORANGE);
-			g.drawString(string, 3, 12);
-			g.setFont(defaulFont);
-		}
-	}
-	public void resetDrawPotentialData(){
-		
-		resetColor();
-		if(edgeWeightToParent != null){
-			edgeWeightToParent.resetColor();
-		}
-		potentialData.resetDraw();
-		drawPotentialData = false;
-		
-		for(Vertice child : children){
-			((CIMAVertice)child).resetDrawPotentialData();
-		}
-	}
 	public boolean isDecontaminated(){
 		return decontaminated;
 	}
@@ -703,6 +504,9 @@ public class CIMAVertice extends Vertice{
 	}
 	public static void setStrategy(ICalcStrategy strategy){
 		CIMAVertice.calcStrategy = strategy;
+	}
+	public static void setPotential(int potential){
+		CIMAVertice.potential = potential;
 	}
 	
 	

@@ -55,12 +55,7 @@ public class CIMAGui extends Gui{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
-				if(editorOn){
-					editTree(e);
-				}else{
-					showInfos(e);
-				}
-
+				editTree(e);
 				repaint();
 			}
 		});
@@ -75,7 +70,6 @@ public class CIMAGui extends Gui{
 					if(selectedVertice == rootVertice){
 						clearGui();
 					}else{
-						MessageData.clearGui = true;
 						selectedVertice.delete();
 					}
 					treeChanged();
@@ -107,7 +101,6 @@ public class CIMAGui extends Gui{
 				}
 				if(parent instanceof CIMAVertice){
 					new CIMAVertice(""+verticeCoutner, parent);
-					MessageData.clearGui = true;
 					verticeCoutner++;
 					treeChanged();
 				}
@@ -122,35 +115,9 @@ public class CIMAGui extends Gui{
 			}
 		}
 	}
-	
-	private void showInfos(MouseEvent e){
-		
-		if(rootVertice != null){
-			((CIMAVertice) rootVertice).algorithmus();
-			((CIMAVertice) rootVertice).resetDrawPotentialData(); //TODO reset for edges
-		}
-		
-		//clicked on a node?
-		CIMAVertice selectedVertex = (CIMAVertice) rootVertice.getPoint(e.getX(), e.getY());
-		if(selectedVertex != null){
-			selectedVertex.drawPotentialDataForThisNode(true);
-		}else{
-			//clicked on a edgeWeightOval?
-			Vertice edgeWeigthOwner = ((CIMAVertice) rootVertice).edgeWeightOvalExists(e.getX(), e.getY());
-			if(edgeWeigthOwner != null){
-				((CIMAVertice) edgeWeigthOwner).getEdgeWeightToParent().setDrawPotentialData(true);
-			}
-		}
-		
-		System.out.println("showInfos...");
-		
-		repaint();
-	}
+
 	
 	private void treeChanged(){
-		CIMAVertice.drawMu = false;
-		CIMAAnimation.afterMessageDataCalc = false;
-		CIMAAnimation.getCIMAAnimation().stopAllAnimations();
 		if(rootVertice != null){
 			((CIMAVertice) rootVertice).reset();
 		}

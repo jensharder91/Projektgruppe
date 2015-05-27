@@ -17,20 +17,24 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		}
 		
 		Collections.sort(senderNode.getLamdas(), new MessageDataComparator());
-		List<MessageData> maximums = new ArrayList<MessageData>();
+		List<MessageData_simplePotential> maximums = new ArrayList<MessageData_simplePotential>();
 		for(MessageData data : senderNode.getLamdas()){
 			if(data.getSender() != receiverNode){
-				maximums.add(data);
+				if(data instanceof MessageData_simplePotential){
+					maximums.add((MessageData_simplePotential) data);
+				}
 			}
 			if(maximums.size() == 2){
 				break;
 			}
 		}
 		
-		MessageData biggestMsgData = new MessageData();
-		MessageData secBiggestMsgData = new MessageData();
+		MessageData_simplePotential biggestMsgData = new MessageData_simplePotential();
+		MessageData_simplePotential secBiggestMsgData = new MessageData_simplePotential();
 		if(maximums.size() >= 1){
 			biggestMsgData = maximums.get(0);
+		}
+		if(maximums.size() >= 2){
 			secBiggestMsgData = maximums.get(1);
 		}
 		
@@ -40,21 +44,14 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		
 		System.out.println("start calc mesgData...."+senderNode.getName()+" > "+receiverNode.getName());
 		
-		
-		//
 	
-		if(true){//TODO
-			return ModelMultPotential.calcBestMsgDataValueWithPotential(senderNode, receiverNode, max1, max2, max3, biggestMsgData, secBiggestMsgData, edgeToReceiverNode, potential);
-		}
 		
 		/*
 		 * calc messageData and potentialDta
 		 */
 		
-		MessageData calculatedMessageData;
+		MessageData_simplePotential calculatedMessageData;
 		PotentialData calculatedPotentialData = null;
-		
-		int specialVerticeWeight = calcSpecialVerticeWeight(senderNode, receiverNode);
 
 		//default case max1 + max2
 		if(max1.getEdgeWeightValue() == max3.getEdgeWeightValue()){
@@ -64,15 +61,15 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		}else{
 			calculatedPotentialData = new PotentialData(max1, max2);
 		}
-		calculatedMessageData = new MessageData(max1.getLamdaValue() + max2.getLamdaValue(), senderNode, receiverNode, edgeToReceiverNode, max1, max2, 0, null, null, calculatedPotentialData);
+		calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, max1.getEdgeWeightValue() + max2.getEdgeWeightValue(), calculatedPotentialData);
 		
 		//make sure it is not smaller then the edge
-		if(calculatedMessageData.getLamdaValue() <= edgeToReceiverNode.getLamdaValue()){
+		if(calculatedMessageData.getLamdaValue() <= edgeToReceiverNode.getEdgeWeightValue()){
 //			calculatedMessageData = new MessageData(edgeToReceiverNode.getLamdaValue(), senderNode, receiverNode, edgeToReceiverNode, max1, max2, max2.getLamdaValue(), null, edgeToReceiverNode, calculatedPotentialData);
 			
 			//
 			
-			if(calculatedMessageData.getLamdaValue() == edgeToReceiverNode.getLamdaValue()){
+			if(calculatedMessageData.getLamdaValue() == edgeToReceiverNode.getEdgeWeightValue()){
 				
 				//
 				if(calculatedMessageData.getPotentialData().getNumberOfpotentialEdgeWeights() == 1){
@@ -81,7 +78,7 @@ public class ModellMinimalDanger extends ICalcStrategy{
 						//potential data shouldnt change
 //						calcMessageData = new MessageData(senderNode.getEdgeWeightToParent().getEdgeWeightValue(), senderNode, receiverNode, edgeToReceiverNode, max1, max2, specialVerticeWeight, null, senderNode.getEdgeWeightToParent(), new PotentialData(senderNode.getEdgeWeightToParent()));
 					}else{
-						calculatedMessageData = new MessageData(edgeToReceiverNode.getEdgeWeightValue(), senderNode, receiverNode, edgeToReceiverNode, max1, max2, 0, null, edgeToReceiverNode, new PotentialData(true));
+						calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, edgeToReceiverNode.getEdgeWeightValue(), new PotentialData(true));
 					}
 					
 				}
@@ -89,7 +86,7 @@ public class ModellMinimalDanger extends ICalcStrategy{
 				
 				
 			}else{
-				calculatedMessageData = new MessageData(edgeToReceiverNode.getEdgeWeightValue(), senderNode, receiverNode, edgeToReceiverNode, max1, max2, 0, null, edgeToReceiverNode, new PotentialData(edgeToReceiverNode));								
+				calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, edgeToReceiverNode.getEdgeWeightValue(), new PotentialData(edgeToReceiverNode));								
 			}
 			
 			//
@@ -109,16 +106,16 @@ public class ModellMinimalDanger extends ICalcStrategy{
 						if(calculatedMessageData.getPotentialData().hasSameEdge(edge)){
 							//potential data shouldnt change
 						}else{
-							calculatedMessageData = new MessageData(biggestMsgData.getLamdaValue(), senderNode, receiverNode, edgeToReceiverNode, max1, max2, 0, biggestMsgData, null, new PotentialData(true));
+							calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, biggestMsgData.getLamdaValue(), new PotentialData(true));
 						}
 					}
 				}else{
-					calculatedMessageData = new MessageData(biggestMsgData.getLamdaValue(), senderNode, receiverNode, edgeToReceiverNode, max1, max2, 0, biggestMsgData, null, new PotentialData(true));
+					calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, biggestMsgData.getLamdaValue(), new PotentialData(true));
 				}
 				
 				
 			}else{
-				calculatedMessageData = new MessageData(biggestMsgData.getLamdaValue(), senderNode, receiverNode, edgeToReceiverNode, max1, max2, 0, biggestMsgData, null, biggestMsgData.getPotentialData().getPotentialDataCopy());								
+				calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, biggestMsgData.getLamdaValue(), biggestMsgData.getPotentialData().getPotentialDataCopy());								
 			}
 			
 			//
@@ -133,15 +130,7 @@ public class ModellMinimalDanger extends ICalcStrategy{
 	}
 	
 	public int calcGeneralVerticeWeight(CIMAVertice vertice){
-		return calcSortedEdgeWeightList(vertice, null).get(0).getLamdaValue();
-	}
-	
-	public int calcSpecialVerticeWeight(CIMAVertice vertice, CIMAVertice exeptVertice){
-		if(vertice.getNeighbors().size() > 1){
-			return calcSortedEdgeWeightList(vertice, exeptVertice).get(0).getLamdaValue();	
-		}else{
-			return calcGeneralVerticeWeight(vertice);
-		}
+		return calcSortedEdgeWeightList(vertice, null).get(0).getEdgeWeightValue();
 	}
 	
 	public List<CIMAEdgeWeight> calcSortedEdgeWeightList(CIMAVertice vertice, CIMAVertice exeptVertice){
@@ -168,17 +157,21 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		return edgeWeightList;
 	}
 	
-	public MuCalcResult calcMu(CIMAVertice vertice, int potential){
+	public int calcMu(CIMAVertice vertice, int potential){
 		int mu;
 		List<MessageData> lamdas = vertice.getLamdas();
 		Collections.sort(lamdas, new MessageDataComparator());
-		MessageData biggestMsgData = new MessageData();
-		MessageData biggest2MsgData = new MessageData();
+		MessageData_simplePotential biggestMsgData = new MessageData_simplePotential();
+		MessageData_simplePotential biggest2MsgData = new MessageData_simplePotential();
 		if(lamdas.size() >= 1){
-			biggestMsgData = lamdas.get(0);
+			if(lamdas.get(0) instanceof MessageData_simplePotential){
+				biggestMsgData = (MessageData_simplePotential)lamdas.get(0);
+			}
 		}
 		if(lamdas.size() >= 2){
-			biggest2MsgData = lamdas.get(1);
+			if(lamdas.get(0) instanceof MessageData_simplePotential){
+				biggest2MsgData = (MessageData_simplePotential)lamdas.get(1);
+			}
 		}
 		
 		List<CIMAEdgeWeight> edgeWeightList = calcSortedEdgeWeightList(vertice, null);
@@ -195,11 +188,7 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		System.out.println("max1: "+ max1.getEdgeWeightValue());
 		System.out.println("max2: "+ max2.getEdgeWeightValue());
 		System.out.println("max3: "+ max3.getEdgeWeightValue());
-		
-		if(true){//TODO
-			return ModelMultPotential.calcMu(this, vertice, max1, max2, max3, biggestMsgData, biggest2MsgData, potential);
-		}
-		
+	
 
 //		int verticeWeight = calcGeneralVerticeWeight(vertice);
 		PotentialData potentialData;
@@ -215,7 +204,7 @@ public class ModellMinimalDanger extends ICalcStrategy{
 			potentialData = new PotentialData(vertice, max1, max2);
 			System.out.println("case c");
 		}
-		mu = max1.getLamdaValue() + max2.getLamdaValue();
+		mu = max1.getEdgeWeightValue() + max2.getEdgeWeightValue();
 
 		//make sure mu is not less the biggest msgData
 		if(mu <=  biggestMsgData.getLamdaValue()){
@@ -254,7 +243,7 @@ public class ModellMinimalDanger extends ICalcStrategy{
 			mu = biggestMsgData.getLamdaValue();
 		}
 		
-		return new MuCalcResult(mu, potentialData);
+		return mu;
 	}
 
 	

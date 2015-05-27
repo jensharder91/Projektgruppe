@@ -47,32 +47,32 @@ public class PotentialData {
 	
 	//draw
 	
-	public void prepareDraw(){
-		System.out.println("in draw");
-		if(flag){
-			System.out.println("flag");
-			vertice.markColor(Color.RED);
-		}
-		else{
-			for(CIMAEdgeWeight edge : potentialEdgeWeights){
-				System.out.println("edge");
-				if(edge.getEdgeWeightValue() > 1){
-					edge.markColor(Color.GREEN);
-				}else{
-					edge.markColor(Color.YELLOW);
-				}
-			}
-			if(potentialEdgeWeights.size() > 0){
-				vertice.markColor(Color.GREEN);
-			}
-		}
-	}
+//	public void prepareDraw(){
+//		System.out.println("in draw");
+//		if(flag){
+//			System.out.println("flag");
+//			vertice.markColor(Color.RED);
+//		}
+//		else{
+//			for(CIMAEdgeWeight edge : potentialEdgeWeights){
+//				System.out.println("edge");
+//				if(edge.getEdgeWeightValue() > 1){
+//					edge.markColor(Color.GREEN);
+//				}else{
+//					edge.markColor(Color.YELLOW);
+//				}
+//			}
+//			if(potentialEdgeWeights.size() > 0){
+//				vertice.markColor(Color.GREEN);
+//			}
+//		}
+//	}
 	
-	public void resetDraw(){
-		for(CIMAEdgeWeight edge : potentialEdgeWeights){
-			edge.resetColor();
-		}
-	}
+//	public void resetDraw(){
+//		for(CIMAEdgeWeight edge : potentialEdgeWeights){
+//			edge.resetColor();
+//		}
+//	}
 
 	
 	
@@ -109,15 +109,15 @@ public class PotentialData {
 	
 	//register
 	
-	public void registerPotentialVertice(CIMAVertice vertice){
-		if(flag){
-			//dont register if flag is set
-			return;
-		}
-		for(CIMAEdgeWeight edgeWeight : potentialEdgeWeights){
-			edgeWeight.addToPotentialList(vertice);
-		}
-	}
+//	public void registerPotentialVertice(CIMAVertice vertice){
+//		if(flag){
+//			//dont register if flag is set
+//			return;
+//		}
+//		for(CIMAEdgeWeight edgeWeight : potentialEdgeWeights){
+//			edgeWeight.addToPotentialList(vertice);
+//		}
+//	}
 	
 	//check
 	
