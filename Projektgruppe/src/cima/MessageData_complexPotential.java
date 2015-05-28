@@ -23,20 +23,42 @@ public class MessageData_complexPotential extends MessageData{
 	}
 	
 	public MessageData_complexPotential updateMessageData(int bestPossibleLamdaValue, CIMAEdgeWeight... potentialEdge){
-		if(this.bestPossibleLamdaValue > bestPossibleLamdaValue){
-			this.bestPossibleLamdaValue = bestPossibleLamdaValue;
-			potentialEdges.clear();
-			for(int i = 0; potentialEdge.length < i; i++){
-				potentialEdges.add(potentialEdge[i]);
-			}
-		}else{
-			for(int i = 0; potentialEdge.length < i; i++){
-				potentialEdges.add(potentialEdge[i]);
-			}
+		
+		ArrayList<CIMAEdgeWeight> newPotentialEdges = new ArrayList<CIMAEdgeWeight>();
+		for(int i = 0; i < potentialEdge.length; i++){
+			newPotentialEdges.add(potentialEdge[i]);
 		}
+		
+		return updateMessageData(bestPossibleLamdaValue, newPotentialEdges);
+	}
+		
+	public MessageData_complexPotential updateMessageData(int bestPossibleLamdaValue, ArrayList<CIMAEdgeWeight> newPotentialEdges){
+		
+	
+		//there is no improvement -> potetial cant get used
+		if(bestPossibleLamdaValue >= lamdaValue){
+			potentialEdges.clear();
+			
+			
+		}else {//potential can be used
+					
+			if(this.bestPossibleLamdaValue > bestPossibleLamdaValue){
+				this.bestPossibleLamdaValue = bestPossibleLamdaValue;
+				potentialEdges.clear();
+			}
+			potentialEdges.addAll(newPotentialEdges);
+		}
+//		System.out.println("~update compleyMsgData :: "+bestPossibleLamdaValue + " / "+potentialEdges.toString());
 		return this;
 	}
 	
+	@Override
+	public String toString() {
+		if(sender == null || receiver == null){
+			return "NULL string";
+		}
+		return "Sender : "+sender.getName()+"  Empfänger : "+receiver.getName()+"  LamdaValue: "+lamdaValue+ " bestPossibleLamdaValue: "+bestPossibleLamdaValue+" potentialEdges: "+potentialEdges;
+	}
 	
 	public int getBestPossiblelamdaValue(){
 		return bestPossibleLamdaValue;

@@ -18,5 +18,13 @@ public class MessageData_simplePotential extends MessageData{
 	public PotentialData getPotentialData(){
 		return potentialData;
 	}
+	
+	@Override
+	public String toString() {
+		if(sender == null || receiver == null){
+			return "NULL string";
+		}
+		return "Sender : "+sender.getName()+"  Empfänger : "+receiver.getName()+"  LamdaValue: "+lamdaValue+ " potentialData: "+potentialData;
+	}
 
 }

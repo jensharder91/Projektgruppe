@@ -19,7 +19,6 @@ public class MessageData{
 
 	@Override
 	public String toString() {
-		//TODO fix the null problem
 		if(sender == null || receiver == null){
 			return "NULL string";
 		}

@@ -246,7 +246,7 @@ public class CIMAVertice extends Vertice{
 //		if(data.getSender() != null && data.getReceiver() != null){
 //			System.out.println("+++++++++++++++++");
 //			System.out.println("++");
-//			System.out.println("++ message from "+data.getSender().getName()+" to "+data.getReceiver().getName() + " //  data: "+data.getLamdaValue()+" / optimal data: "+data.getBestPossiblelamdaValue());
+//			System.out.println("++ message from "+data.getSender().getName()+" to "+data.getReceiver().getName() + " //  data: "+data.getLamdaValue());
 //			System.out.println("++");
 //			System.out.println("+++++++++++++++++");
 //		}

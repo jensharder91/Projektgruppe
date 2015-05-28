@@ -80,7 +80,20 @@ public class CIMAEdgeWeight implements Comparable<CIMAEdgeWeight>{
 		this.edgeWeightValue = edgeWeight;
 	}
 	public String getEdgeName(){
-		return vertice.getName() + " - " + parent.getName();
+		String verticeName = "null";
+		String parentName = "null";
+		if(vertice != null){
+			verticeName = vertice.getName();
+		}
+		if(parent != null){
+			parentName = parent.getName();
+		}
+		return "Edge: ("+verticeName + " - " + parentName+")";
+	}
+	
+	@Override
+	public String toString() {
+		return getEdgeName();
 	}
 	
 	@Override
@@ -97,6 +110,10 @@ public class CIMAEdgeWeight implements Comparable<CIMAEdgeWeight>{
 	public boolean equals(Object obj) {
 
 		if(obj instanceof CIMAEdgeWeight){
+			
+			if(((CIMAEdgeWeight) obj).getParent() != null && parent != null)
+			
+			
 			if(((CIMAEdgeWeight) obj).getParent().equals(parent)){
 				if(((CIMAEdgeWeight) obj).getVertice().equals(vertice)){
 					return true;
