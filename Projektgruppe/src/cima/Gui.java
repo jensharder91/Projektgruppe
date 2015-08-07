@@ -186,7 +186,7 @@ public abstract class Gui extends JPanel{
 //			}
 //		});
 		
-		spinnerPotential.addChangeListener(new ChangeListener() {
+	spinnerPotential.addChangeListener(new ChangeListener() {
 		
 		@Override
 		public void stateChanged(ChangeEvent e) {
@@ -200,6 +200,7 @@ public abstract class Gui extends JPanel{
 			}
 		}
 	});
+	spinnerPotential.setValue(2);
 
 //		togglePause.addItemListener(new ItemListener() {
 //
