@@ -252,4 +252,11 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		return "\"Minimale Bedrohung\"";
 	}
 
+
+	@Override
+	public void displayResult(CIMAVertice vertice) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

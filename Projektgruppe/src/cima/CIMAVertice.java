@@ -24,7 +24,10 @@ public class CIMAVertice extends Vertice{
 	private static List<CIMAVertice> minimalMuVertices = new ArrayList<CIMAVertice>();
 	private static ICalcStrategy calcStrategy = new ModellMinimalDanger();
 	
+	//pot >= 1
 	private static int potential = 2;
+	private int bestMu;
+	private ArrayList<CIMAEdgeWeight> potentialEdges;
 
 	
 	//animation
@@ -201,6 +204,9 @@ public class CIMAVertice extends Vertice{
 		logSubtree();
 
 		drawMu = true;
+		
+		
+		calcStrategy.displayResult(this);
 	}
 
 	public void reset(){
@@ -236,7 +242,7 @@ public class CIMAVertice extends Vertice{
 				}
 				((CIMAVertice) child).startAlgo();
 			}
-		}
+		}		
 	}
 
 	private void receive(MessageData data){
@@ -502,6 +508,9 @@ public class CIMAVertice extends Vertice{
 	public static int getAnimationSpeed(){
 		return animationSpeed;
 	}
+	public static int getMinimalMu(){
+		return minimalMu;
+	}
 	public static void setStrategy(ICalcStrategy strategy){
 		CIMAVertice.calcStrategy = strategy;
 	}
@@ -509,6 +518,19 @@ public class CIMAVertice extends Vertice{
 		CIMAVertice.potential = potential;
 	}
 	
+	//potential >= 1
+	public void setBestMu(int bestMu){
+		this.bestMu = bestMu;
+	}
+	public void setPotentialEdges(ArrayList<CIMAEdgeWeight> potentialEdges){
+		this.potentialEdges = potentialEdges;
+	}
+	public int getBestMu(){
+		return this.bestMu ;
+	}
+	public ArrayList<CIMAEdgeWeight> getPotentialEdges(){
+		return this.potentialEdges;
+	}
 	
 	
 	

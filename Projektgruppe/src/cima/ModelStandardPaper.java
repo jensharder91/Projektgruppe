@@ -112,4 +112,10 @@ public class ModelStandardPaper extends ICalcStrategy{
 		return "\"Paper Modell\"";
 	}
 
+	@Override
+	public void displayResult(CIMAVertice vertice) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
