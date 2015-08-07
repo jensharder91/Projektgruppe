@@ -118,6 +118,11 @@ public class ModelMultPotential extends ICalcStrategy{
 			int reducedValueFromMax2MsgData = max2MsgData.getLamdaValue();
 			
 			
+			if(reducedValue < max3.getEdgeWeightValue()){
+				reducedValue = max3.getEdgeWeightValue();
+				System.out.println("case e_1_b2");
+			}
+			
 			if(maxMsgData.getPotentialEdges() != null){
 				System.out.println("case e_2b");
 				if(maxMsgData.getPotentialEdges().size() == 1 && maxMsgData.getPotentialEdges().get(0).equals(max1)){
@@ -273,6 +278,8 @@ public class ModelMultPotential extends ICalcStrategy{
 //		System.out.println("max1: "+ max1.getEdgeWeightValue());
 //		System.out.println("max2: "+ max2.getEdgeWeightValue());
 //		System.out.println("max3: "+ max3.getEdgeWeightValue());
+//		System.out.println("maxMsgData: "+ maxMsgData.getLamdaValue());
+//		System.out.println("max2MsgData: "+ max2MsgData.getLamdaValue());
 
 		int bestMuResult;
 		
@@ -291,19 +298,18 @@ public class ModelMultPotential extends ICalcStrategy{
 		//case2: reduce the max1
 		reducedValue = max1.getEdgeWeightValue() - potential;
 		if(reducedValue < 1){
-//			System.out.println("case c_1");
+			System.out.println("case c_1");
 			reducedValue = 1;
 		}
 		if(reducedValue < max3.getEdgeWeightValue()){
 			reducedValue = max3.getEdgeWeightValue();
-//			System.out.println("case c_2");
+			System.out.println("case c_2");
 		}
 		possibleMu = calcBestMuValue(reducedValue, max2.getEdgeWeightValue(), maxMsgData.getLamdaValue());
 		if(possibleMu <= bestMuResult){
 			if(possibleMu < bestMuResult){
 				potentialEdges.clear();
 			}
-//			System.out.println("case c_3");
 			bestMuResult = possibleMu;
 			potentialEdges.add(max1);
 		}
@@ -311,19 +317,19 @@ public class ModelMultPotential extends ICalcStrategy{
 		//case3: reduce the max2
 		reducedValue = max2.getEdgeWeightValue() - potential;
 		if(reducedValue < 1){
-//			System.out.println("case d_1");
+			System.out.println("case d_1");
 			reducedValue = 1;
 		}
 		if(reducedValue < max3.getEdgeWeightValue()){
 			reducedValue = max3.getEdgeWeightValue();
-//			System.out.println("case d_2");
+			System.out.println("case d_2");
 		}
 		possibleMu = calcBestMuValue(max1.getEdgeWeightValue(), reducedValue, maxMsgData.getLamdaValue());
 		if(possibleMu <= bestMuResult){
 			if(possibleMu < bestMuResult){
 				potentialEdges.clear();
 			}
-//			System.out.println("case d_3");
+			System.out.println("case d_3");
 			bestMuResult = possibleMu;
 			potentialEdges.add(max2);
 		}
@@ -332,11 +338,11 @@ public class ModelMultPotential extends ICalcStrategy{
 		boolean edge1Case = true;
 		reducedValue = maxMsgData.getBestPossiblelamdaValue();
 		if(reducedValue < 1){
-//			System.out.println("case e_1");
+			System.out.println("case e_1");
 			reducedValue = 1;
 		}
 		if(reducedValue < max2MsgData.getLamdaValue()){
-//			System.out.println("case e_1_b");
+			System.out.println("case e_1_b");
 			reducedValue = max2MsgData.getLamdaValue();
 			edge1Case = false;
 		}
@@ -345,7 +351,7 @@ public class ModelMultPotential extends ICalcStrategy{
 			if(possibleMu < bestMuResult){
 				potentialEdges.clear();
 			}
-//			System.out.println("case e_2");
+			System.out.println("case e_2");
 			bestMuResult = possibleMu;
 			if(edge1Case){
 				potentialEdges.addAll(maxMsgData.getPotentialEdges());
@@ -353,6 +359,75 @@ public class ModelMultPotential extends ICalcStrategy{
 				potentialEdges.addAll(max2MsgData.getPotentialEdges());
 			}
 		}
+		
+		
+		
+		
+		
+		if(reducedValue < max2MsgData.getLamdaValue()){
+			System.out.println("case e_1_b");
+			int reducedValueFromMax2MsgData = max2MsgData.getLamdaValue();
+			
+			
+			if(maxMsgData.getPotentialEdges() != null){
+				System.out.println("case e_2b");
+				if(maxMsgData.getPotentialEdges().size() == 1 && maxMsgData.getPotentialEdges().get(0).equals(max1)){
+					System.out.println("case e_3b");
+					possibleMu = calcBestMuValue(reducedValue, max2.getEdgeWeightValue(), reducedValueFromMax2MsgData);					
+				}else if(maxMsgData.getPotentialEdges().size() == 1 && maxMsgData.getPotentialEdges().get(0).equals(max2)){
+					System.out.println("case e_4b");
+					possibleMu = calcBestMuValue(max1.getEdgeWeightValue(), reducedValue, reducedValueFromMax2MsgData);
+				}else{
+					System.out.println("case e_5b");
+					possibleMu = calcBestMuValue(max1.getEdgeWeightValue(), max2.getEdgeWeightValue(), reducedValueFromMax2MsgData);
+				}
+				if(possibleMu <= bestMuResult){
+					System.out.println("case e_6b");
+					if(possibleMu < bestMuResult){
+						potentialEdges.clear();
+					}
+					bestMuResult = possibleMu;
+					for(CIMAEdgeWeight edge : maxMsgData.getPotentialEdges()){
+						if(!potentialEdges.contains(edge)){
+							potentialEdges.add(edge);
+						}
+					}
+//					potentialEdges.addAll(maxMsgData.getPotentialEdges());
+				}
+				
+			}
+			
+			
+			
+		}else if(maxMsgData.getPotentialEdges() != null){
+			System.out.println("case e_2c");
+			if(maxMsgData.getPotentialEdges().size() == 1 && maxMsgData.getPotentialEdges().get(0).equals(max1)){
+				System.out.println("case e_3c");
+				possibleMu = calcBestMuValue(reducedValue, max2.getEdgeWeightValue(), reducedValue);
+			}else if(maxMsgData.getPotentialEdges().size() == 1 && maxMsgData.getPotentialEdges().get(0).equals(max2)){
+				System.out.println("case e_4c");
+				possibleMu = calcBestMuValue(max1.getEdgeWeightValue(), reducedValue, reducedValue);
+			}else{
+				System.out.println("case e_5c");
+				possibleMu = calcBestMuValue(max1.getEdgeWeightValue(), max2.getEdgeWeightValue(), reducedValue);
+			}
+			if(possibleMu <= bestMuResult){
+				System.out.println("case e_6c");
+				if(possibleMu < bestMuResult){
+					potentialEdges.clear();
+				}
+				bestMuResult = possibleMu;
+				for(CIMAEdgeWeight edge : maxMsgData.getPotentialEdges()){
+					if(!potentialEdges.contains(edge)){
+						potentialEdges.add(edge);
+					}
+				}
+//				potentialEdges.addAll(maxMsgData.getPotentialEdges());
+			}
+		}
+		
+		
+		
 //		if(maxMsgData.getPotentialEdges() != null && maxMsgData.getPotentialEdges().size() == 1){
 //			System.out.println("case e_2");
 //			if(maxMsgData.getPotentialEdges().get(0).equals(max1)){
