@@ -91,6 +91,18 @@ public class CIMAEdgeWeight implements Comparable<CIMAEdgeWeight>{
 		return "Edge: ("+verticeName + " - " + parentName+")";
 	}
 	
+	//animation
+	public void setOvalColor(Color color){
+		this.ovalColor = color;
+	}
+	public void resetColor(){
+		this.ovalColor = this.defaultOvalColor;
+	}
+	
+	
+	
+	
+	
 	@Override
 	public String toString() {
 		return getEdgeName();

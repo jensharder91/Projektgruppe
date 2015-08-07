@@ -1,5 +1,7 @@
 package cima;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +33,7 @@ public class ModelMultPotential extends ICalcStrategy{
 	}
 	
 	
-	public static  MessageData calcBestMsgDataValueWithPotential(CIMAVertice sender, CIMAVertice receiver, CIMAEdgeWeight max1, CIMAEdgeWeight max2, CIMAEdgeWeight max3, MessageData maxMsgData_notTested, MessageData max2MsgData_notTested, CIMAEdgeWeight edgeValue, int potential){
+	private static  MessageData calcBestMsgDataValueWithPotential(CIMAVertice sender, CIMAVertice receiver, CIMAEdgeWeight max1, CIMAEdgeWeight max2, CIMAEdgeWeight max3, MessageData maxMsgData_notTested, MessageData max2MsgData_notTested, CIMAEdgeWeight edgeValue, int potential){
 
 		MessageData_complexPotential maxMsgData = new MessageData_complexPotential();
 		MessageData_complexPotential max2MsgData = new MessageData_complexPotential();
@@ -386,10 +388,10 @@ public class ModelMultPotential extends ICalcStrategy{
 	}
 
 	@Override
-	public void displayResult(CIMAVertice vertice) {
+	public void displayResult(CIMAVertice vertice, Graphics g2) {
 		
 		bestPossibleLamdaValue = CIMAVertice.getMinimalMu();
-		potentialEdges.clear();
+		potentialEdges = new ArrayList<CIMAEdgeWeight>();
 		
 		//find root
 		while (vertice.getParent() != null) {
@@ -405,6 +407,16 @@ public class ModelMultPotential extends ICalcStrategy{
 		}
 		
 		System.out.println("bestPossibleLamdaValue vom ganzen Baum: "+bestPossibleLamdaValue + "  potentialEdges:  "+potentialEdges.toString());
+		
+		if(potentialEdges.size() > 0){
+			InfoDisplayClass.getInfoDisplayClass().displayInUpperRightCorner(g2, "Agentenzahl kann auf  >>"+bestPossibleLamdaValue+"<< # reduziert werde", 1, Color.black, null);
+			for(CIMAEdgeWeight edge : potentialEdges){
+				edge.setOvalColor(Color.RED);
+				edge.draw(g2);
+			}
+		}else{
+			InfoDisplayClass.getInfoDisplayClass().displayInUpperRightCorner(g2, "Agentenzahl kann  >>nicht<<  reduziert werde", 1, Color.black, null);
+		}
 		
 	}
 	

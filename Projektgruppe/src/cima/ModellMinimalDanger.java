@@ -1,5 +1,6 @@
 package cima;
 
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -254,7 +255,7 @@ public class ModellMinimalDanger extends ICalcStrategy{
 
 
 	@Override
-	public void displayResult(CIMAVertice vertice) {
+	public void displayResult(CIMAVertice vertice, Graphics g2) {
 		// TODO Auto-generated method stub
 		
 	}

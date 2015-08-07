@@ -372,7 +372,9 @@ public abstract class Gui extends JPanel{
 //			((CIMAVertice) rootVertice).drawPotentialData(g2);
 //		}
 		
-//		CIMAVertice.drawDisplayInformation(g2);
+		if(rootVertice != null){
+			CIMAVertice.drawDisplayInformation(((CIMAVertice) rootVertice), g2);
+		}
 		
 
 		

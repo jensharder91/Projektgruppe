@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.sound.sampled.ReverbType;
-
 import cima.Gui;
 import cima.Vertice;
 
@@ -23,6 +21,8 @@ public class CIMAVertice extends Vertice{
 	private static int minimalMu;
 	private static List<CIMAVertice> minimalMuVertices = new ArrayList<CIMAVertice>();
 	private static ICalcStrategy calcStrategy = new ModellMinimalDanger();
+	
+	private static boolean showDisplayInfo = false;
 	
 	//pot >= 1
 	private static int potential = 2;
@@ -68,6 +68,14 @@ public class CIMAVertice extends Vertice{
 	protected void drawSubtree(Graphics g, int areaX, int areaY, int areaWidth,
 			int areaHeight) {
 		super.drawSubtree(g, areaX, areaY, areaWidth, areaHeight);
+	}
+	
+	public static void drawDisplayInformation(CIMAVertice root, Graphics g2){
+
+
+		if(showDisplayInfo){
+			calcStrategy.displayResult(root, g2);
+		}
 	}
 
 	@Override
@@ -126,6 +134,7 @@ public class CIMAVertice extends Vertice{
 		super.drawAllTreeLines(g);
 
 		if(parent != null){
+			edgeWeightToParent.resetColor();
 			edgeWeightToParent.draw(g);
 		}
 	}
@@ -198,18 +207,20 @@ public class CIMAVertice extends Vertice{
 
 		reset();
 		startAlgo();
+		
+		showDisplayInfo = true;
 
 		minimalMu = Integer.MAX_VALUE;
 		calcMu();
 		logSubtree();
 
 		drawMu = true;
-		
-		
-		calcStrategy.displayResult(this);
 	}
 
 	public void reset(){
+		
+		showDisplayInfo = false;
+		
 		lamdas.clear();
 		for(MessageData msgData : messageDataList){
 //			msgData.resetAllColors();
@@ -229,7 +240,7 @@ public class CIMAVertice extends Vertice{
 		}
 	}
 
-	private void startAlgo(){
+	private void startAlgo(){		
 		if(children.size() == 0 && parent != null){
 			//got a ready leaf -> send message
 			
