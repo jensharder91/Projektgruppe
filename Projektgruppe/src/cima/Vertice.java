@@ -2,6 +2,7 @@ package cima;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,14 +108,14 @@ public class Vertice {
 	/**
 	 * Draws the complete tree
 	 */
-	public void drawTree(Graphics g, int areaX, int areaY, int areaWidth, int areaHeight){
+	public void drawTree(Graphics2D g, int areaX, int areaY, int areaWidth, int areaHeight){
 		this.getRoot().drawSubtree(g,areaX,areaY,areaWidth,areaHeight);
 	}
 
 	/**
 	 * Draws the current subtree
 	 */
-	protected void drawSubtree(Graphics g, int areaX, int areaY, int areaWidth, int areaHeight){
+	protected void drawSubtree(Graphics2D g, int areaX, int areaY, int areaWidth, int areaHeight){
 		int levelHeight = (areaHeight-areaY) / (this.getSubtreeHeight()+1);
 		levelHeight = Math.min(100,levelHeight); // maximum Level Height: 100
 		calcPoints(areaX, areaY, areaWidth, levelHeight);

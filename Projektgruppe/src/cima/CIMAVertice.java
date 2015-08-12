@@ -3,6 +3,7 @@ package cima;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -65,12 +66,12 @@ public class CIMAVertice extends Vertice{
 	}
 	
 	@Override
-	protected void drawSubtree(Graphics g, int areaX, int areaY, int areaWidth,
+	protected void drawSubtree(Graphics2D g, int areaX, int areaY, int areaWidth,
 			int areaHeight) {
 		super.drawSubtree(g, areaX, areaY, areaWidth, areaHeight);
 	}
 	
-	public static void drawDisplayInformation(CIMAVertice root, Graphics g2){
+	public static void drawDisplayInformation(CIMAVertice root, Graphics2D g2){
 
 
 		if(showDisplayInfo){
@@ -134,7 +135,7 @@ public class CIMAVertice extends Vertice{
 		super.drawAllTreeLines(g);
 
 		if(parent != null){
-			edgeWeightToParent.resetColor();
+//			edgeWeightToParent.resetColor();
 			edgeWeightToParent.draw(g);
 		}
 	}
@@ -215,6 +216,9 @@ public class CIMAVertice extends Vertice{
 		logSubtree();
 
 		drawMu = true;
+		
+		
+		messageDataList.get(0).animation();
 	}
 
 	public void reset(){

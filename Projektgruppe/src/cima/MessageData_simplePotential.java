@@ -1,5 +1,8 @@
 package cima;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+
 public class MessageData_simplePotential extends MessageData{
 	
 	protected PotentialData potentialData;
@@ -20,11 +23,22 @@ public class MessageData_simplePotential extends MessageData{
 	}
 	
 	@Override
+	protected void explainMessageData(Graphics2D g) {
+		String[] explainStrings = {"test1", "test2", "hier erkl‰r ich die msgData"};
+		InfoDisplayClass.getInfoDisplayClass().displayInLowerRightCorner(g, Color.RED, null, explainStrings);
+	}
+	
+	@Override
+	protected void clearExplainMessageData() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
 	public String toString() {
 		if(sender == null || receiver == null){
 			return "NULL string";
 		}
 		return "Sender : "+sender.getName()+"  Empf√§nger : "+receiver.getName()+"  LamdaValue: "+lamdaValue+ " potentialData: "+potentialData;
 	}
-
 }

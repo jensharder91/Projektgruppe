@@ -32,7 +32,7 @@ public class CIMAEdgeWeight implements Comparable<CIMAEdgeWeight>{
 	}
 	
     public void draw(Graphics g){
-        g.setColor(ovalColor);
+        g.setColor(ovalColor);        
         ovalMiddleX = Math.min(vertice.getMiddleX(), parent.getMiddleX()) + Math.abs(vertice.getMiddleX() - parent.getMiddleX()) / 2;
         ovalMiddleY = Math.min(vertice.getMiddleY(), parent.getMiddleY()) + Math.abs(vertice.getMiddleY() - parent.getMiddleY()) / 2;
         g.fillOval(ovalMiddleX - ovalWidth/2, ovalMiddleY - ovalWidth/2, ovalWidth, ovalWidth);

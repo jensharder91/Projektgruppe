@@ -1,6 +1,7 @@
 package cima;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.List;
 
 public abstract class ICalcStrategy {
@@ -11,5 +12,5 @@ public abstract class ICalcStrategy {
 	public abstract int calcMu(CIMAVertice vertice, int potential);
 	
 	//animation
-	public abstract void displayResult(CIMAVertice vertice, Graphics g2);
+	public abstract void displayResult(CIMAVertice vertice, Graphics2D g2);
 }

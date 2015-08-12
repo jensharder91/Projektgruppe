@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.DisplayMode;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 public class InfoDisplayClass {
 	
@@ -31,7 +32,7 @@ public class InfoDisplayClass {
 	 * @param textColor
 	 * @param backgroundColor
 	 */
-	public void displayInUpperLeftCorner(Graphics g, String displayedText, int row, Color textColor, Color backgroundColor){
+	public void displayInUpperLeftCorner(Graphics2D g, String displayedText, int row, Color textColor, Color backgroundColor){
 
 		if(row < 1) row = 1;
 	
@@ -45,8 +46,18 @@ public class InfoDisplayClass {
 		
 		drawString(g, displayedText, xCoordText, yCoordText, stringWidth, stringHeight, textColor, backgroundColor);
 	}
+	public void displayInUpperLeftCorner(Graphics2D g, Color textColor, Color backgroundColor, String... displayedText){
+
+		if(displayedText == null || displayedText.length == 0){
+			return;
+		}
+		
+		for(int i = 0; i < displayedText.length; i++){
+			displayInUpperLeftCorner(g, displayedText[i], i+1, textColor, backgroundColor);
+		}
+	}
 	
-	public void displayInUpperRightCorner(Graphics g, String displayedText, int row, Color textColor, Color backgroundColor){
+	public void displayInUpperRightCorner(Graphics2D g, String displayedText, int row, Color textColor, Color backgroundColor){
 		
 		if(row < 1) row = 1;
 	
@@ -60,8 +71,71 @@ public class InfoDisplayClass {
 		
 		drawString(g, displayedText, xCoordText, yCoordText, stringWidth, stringHeight, textColor, backgroundColor);
 	}
+	public void displayInUpperRightCorner(Graphics2D g, Color textColor, Color backgroundColor, String... displayedText){
+
+		if(displayedText == null || displayedText.length == 0){
+			return;
+		}
+		
+		for(int i = 0; i < displayedText.length; i++){
+			displayInUpperRightCorner(g, displayedText[i], i+1, textColor, backgroundColor);
+		}
+	}
 	
-	private void drawString(Graphics g, String displayedText, int xCoordText, int yCoordText, int stringWidth, int stringHeight, Color textColor, Color backgroundColor){
+	public void displayInLowerLeftCorner(Graphics2D g, String displayedText, int row, Color textColor, Color backgroundColor){
+
+		if(row < 1) row = 1;
+	
+		Font defaulFont = g.getFont();
+		g.setFont(CIMAConstants.getTextFont());
+		int stringHeight = (int) Math.floor(g.getFontMetrics().getStringBounds("stringheight",g).getHeight());
+		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(displayedText,g).getWidth());
+		int xCoordText = 3;
+		int yCoordText = (int) (gui.getHeight() - 5 - gui.getButtonBarSouth().getHeight() - (1.2*row * stringHeight));
+		g.setFont(defaulFont);	
+		
+		drawString(g, displayedText, xCoordText, yCoordText, stringWidth, stringHeight, textColor, backgroundColor);
+	}
+	public void displayInLowerLeftCorner(Graphics2D g, Color textColor, Color backgroundColor, String... displayedText){
+
+		if(displayedText == null || displayedText.length == 0){
+			return;
+		}
+		
+		for(int i = displayedText.length-1; i >= 0; i--){
+			displayInLowerLeftCorner(g, displayedText[i], i+1, textColor, backgroundColor);
+		}
+	}
+	
+	public void displayInLowerRightCorner(Graphics2D g, String displayedText, int row, Color textColor, Color backgroundColor){
+		
+		if(row < 1) row = 1;
+	
+		Font defaulFont = g.getFont();
+		g.setFont(CIMAConstants.getTextFont());
+		int stringHeight = (int) Math.floor(g.getFontMetrics().getStringBounds("stringheight",g).getHeight());
+		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(displayedText,g).getWidth());
+		int xCoordText = CIMAGui.getGui().getWidth() - 5 - stringWidth;
+		int yCoordText = (int) (gui.getHeight() - 5 - gui.getButtonBarSouth().getHeight() - (1.2*row * stringHeight));
+		g.setFont(defaulFont);	
+		
+		drawString(g, displayedText, xCoordText, yCoordText, stringWidth, stringHeight, textColor, backgroundColor);
+	}
+	public void displayInLowerRightCorner(Graphics2D g, Color textColor, Color backgroundColor, String... displayedText){
+
+		if(displayedText == null || displayedText.length == 0){
+			return;
+		}
+		
+		for(int i = displayedText.length-1; i >= 0; i--){
+			displayInLowerRightCorner(g, displayedText[i], displayedText.length - 
+					i+1, textColor, backgroundColor);
+		}
+	}
+	
+
+	
+	private void drawString(Graphics2D g, String displayedText, int xCoordText, int yCoordText, int stringWidth, int stringHeight, Color textColor, Color backgroundColor){
 		
 		if(disableInfo){
 			return;

@@ -1,6 +1,7 @@
 package cima;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,8 +27,8 @@ public class ModelStandardPaper extends ICalcStrategy{
  				break;
  			}
  		}
-		MessageData max1 = new MessageData();
-		MessageData max2 = new MessageData();
+		MessageData max1 = new MessageData_normal();
+		MessageData max2 = new MessageData_normal();
 		
  		if(maximums.size() > 0){
 			max1 = maximums.get(0);
@@ -44,9 +45,9 @@ public class ModelStandardPaper extends ICalcStrategy{
  		MessageData calcMessageData;
  		int verticeWeight = calcGeneralVerticeWeight(senderNode);
  		if(max1.getLamdaValue() >= max2.getLamdaValue() + verticeWeight){
- 			calcMessageData = new MessageData(senderNode, receiverNode, max1.getLamdaValue());
+ 			calcMessageData = new MessageData_normal(senderNode, receiverNode, max1.getLamdaValue());
  		}else{
- 			calcMessageData = new MessageData(senderNode, receiverNode, max2.getLamdaValue() + verticeWeight);
+ 			calcMessageData = new MessageData_normal(senderNode, receiverNode, max2.getLamdaValue() + verticeWeight);
  		}
  	
  
@@ -92,8 +93,8 @@ public class ModelStandardPaper extends ICalcStrategy{
 	public int calcMu(CIMAVertice vertice, int potential) {
 		List<MessageData> lamdas = vertice.getLamdas();
  		Collections.sort(lamdas, new MessageDataComparator());
- 		MessageData max1 = new MessageData();
- 		MessageData max2 = new MessageData();
+ 		MessageData max1 = new MessageData_normal();
+ 		MessageData max2 = new MessageData_normal();
  		if(lamdas.size() >= 1){
  			max1 = lamdas.get(0);
  		}
@@ -114,7 +115,7 @@ public class ModelStandardPaper extends ICalcStrategy{
 	}
 
 	@Override
-	public void displayResult(CIMAVertice vertice, Graphics g2) {
+	public void displayResult(CIMAVertice vertice, Graphics2D g2) {
 		// TODO Auto-generated method stub
 		
 	}

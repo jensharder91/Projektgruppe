@@ -1,5 +1,7 @@
 package cima;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 public class MessageData_complexPotential extends MessageData{
@@ -53,6 +55,30 @@ public class MessageData_complexPotential extends MessageData{
 	}
 	
 	@Override
+	protected void explainMessageData(Graphics2D g) {
+		String[] explainStrings = 
+			{"Nachricht", 
+				"normale Nachricht: "+lamdaValue, 
+				"bestmögliche Nachricht: "+bestPossibleLamdaValue};
+		InfoDisplayClass.getInfoDisplayClass().displayInLowerRightCorner(g, Color.BLUE, null, explainStrings);
+		
+		
+		for(CIMAEdgeWeight edge : potentialEdges){
+			edge.setOvalColor(Color.GREEN);
+			System.out.println("color "+edge.toString());
+		}
+	}
+	
+
+	@Override
+	protected void clearExplainMessageData() {
+		for(CIMAEdgeWeight edge : potentialEdges){
+			System.out.println("clear "+edge.toString());
+			edge.resetColor();
+		}		
+	}
+	
+	@Override
 	public String toString() {
 		if(sender == null || receiver == null){
 			return "NULL string";
@@ -66,5 +92,4 @@ public class MessageData_complexPotential extends MessageData{
 	public ArrayList<CIMAEdgeWeight> getPotentialEdges(){
 		return potentialEdges;
 	}
-
 }

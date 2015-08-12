@@ -40,14 +40,14 @@ public abstract class Gui extends JPanel{
 	protected JButton buttonCalculate = new JButton("Sofort berechnen");
 //	protected JButton buttonCalculateAnimation = new JButton("Berechnung animieren");
 	protected JButton buttonClear = new JButton("Clear");
-	protected JButton buttonBack = new JButton("ZurÃ¼ck");
+	protected JButton buttonBack = new JButton("Zurück");
 //	protected JButton buttonShowMu = new JButton("berechne minimale Agenten");
 //	protected JToggleButton togglePause = new JToggleButton("\u25AE\u25AE");
 //	private JButton buttonNextAgentAnimationStep = new JButton("\u25BA");//RightArrow
 //	private JButton buttonNextCalculateAnimationStep = new JButton("\u25BA");
 //	protected JButton buttonCompleteAgentAnimation = new JButton("Baum dekontaminieren");
 	private SpinnerNumberModel spinnerModel_speed = new SpinnerNumberModel(3, 0, 10, 1);
-	private SpinnerNumberModel spinnerModel_potential = new SpinnerNumberModel(0, 0, 999, 1);
+	private SpinnerNumberModel spinnerModel_potential = new SpinnerNumberModel(1, 1, 999, 1);
 //	private JSpinner spinnerAnimationSpeed = new JSpinner(spinnerModel_speed);
 	private JSpinner spinnerPotential = new JSpinner(spinnerModel_potential);
 	private JCheckBox checkboxShowMessageData = new JCheckBox("zeige die Berechnung an");
@@ -200,7 +200,7 @@ public abstract class Gui extends JPanel{
 			}
 		}
 	});
-	spinnerPotential.setValue(2);
+//	spinnerPotential.setValue(1);
 
 //		togglePause.addItemListener(new ItemListener() {
 //
@@ -363,6 +363,9 @@ public abstract class Gui extends JPanel{
 //		for(MessageData_old msgData : CIMAVertice.messageDataList){
 //			msgData.drawMessageData(g2);
 //		}
+		for(MessageData msgData : CIMAVertice.messageDataList){
+			msgData.drawAnimation(g2);
+		}
 		
 		if(rootVertice != null){
 			((CIMAVertice) rootVertice).drawAnimation(g2);

@@ -2,6 +2,7 @@ package cima;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -194,8 +195,8 @@ public class ModelMultPotential extends ICalcStrategy{
 			}
 		}
 		
-		MessageData biggestMsgData = new MessageData();
-		MessageData secBiggestMsgData = new MessageData();
+		MessageData biggestMsgData = new MessageData_normal();
+		MessageData secBiggestMsgData = new MessageData_normal();
 		if(maximums.size() >= 1){
 			biggestMsgData = maximums.get(0);
 		}
@@ -213,7 +214,7 @@ public class ModelMultPotential extends ICalcStrategy{
 	
 	@Override
 	public String toString() {
-		return "\"Minimale Bedrohung\" (potantial >= 1)";
+		return "\"Modifikation\" (Potential \u2265 1)";
 	}
 
 	@Override
@@ -463,7 +464,7 @@ public class ModelMultPotential extends ICalcStrategy{
 	}
 
 	@Override
-	public void displayResult(CIMAVertice vertice, Graphics g2) {
+	public void displayResult(CIMAVertice vertice, Graphics2D g2) {
 		
 		bestPossibleLamdaValue = CIMAVertice.getMinimalMu();
 		potentialEdges = new ArrayList<CIMAEdgeWeight>();
@@ -484,7 +485,7 @@ public class ModelMultPotential extends ICalcStrategy{
 		System.out.println("bestPossibleLamdaValue vom ganzen Baum: "+bestPossibleLamdaValue + "  potentialEdges:  "+potentialEdges.toString());
 		
 		if(potentialEdges.size() > 0){
-			InfoDisplayClass.getInfoDisplayClass().displayInUpperRightCorner(g2, "Agentenzahl kann auf  >>"+bestPossibleLamdaValue+"<< # reduziert werde", 1, Color.black, null);
+			InfoDisplayClass.getInfoDisplayClass().displayInUpperRightCorner(g2, "Agentenzahl kann auf  >>"+bestPossibleLamdaValue+"<<  reduziert werde", 1, Color.black, null);
 			for(CIMAEdgeWeight edge : potentialEdges){
 				edge.setOvalColor(Color.RED);
 				edge.draw(g2);
