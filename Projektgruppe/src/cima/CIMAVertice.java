@@ -74,7 +74,7 @@ public class CIMAVertice extends Vertice{
 	public static void drawDisplayInformation(CIMAVertice root, Graphics2D g2){
 
 
-		if(showDisplayInfo){
+		if(showDisplayInfo && drawMu){
 			calcStrategy.displayResult(root, g2);
 		}
 	}
@@ -218,7 +218,8 @@ public class CIMAVertice extends Vertice{
 		drawMu = true;
 		
 		
-		messageDataList.get(0).animation();
+//		messageDataList.get(0).animation();
+		CIMAAnimation.getCIMAAnimation().startSendMessageAnimation(messageDataList);
 	}
 
 	public void reset(){
