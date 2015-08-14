@@ -1,7 +1,9 @@
 package cima;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.geom.Arc2D;
 
 public abstract class MessageData{
 
@@ -35,6 +37,7 @@ public abstract class MessageData{
 	protected static int animationSpeed = 3;
 	
 	protected static MessageData currentMsgDataAnimation = null;
+	protected boolean readyAnimated = false;
 	
 	
 	
@@ -178,14 +181,32 @@ public abstract class MessageData{
 	}
 	
 	//draw animation
-	
 	public void drawAnimation(Graphics2D g){		
 		
-		if(currentMsgDataAnimation != this){
+		//just draw if it is the animated msgData or if the animation is ready
+		if(currentMsgDataAnimation != this && !readyAnimated){
 			
 			return;
 		}
+		if(!CIMAAnimation.getCIMAAnimation().animationIsInProgress()){
+			return;
+		}
+		
+		
+		double animationAngle = this.animationAngle;
+		
 
+		
+//		//draw the msgData LINE
+//		g.setColor(Color.BLACK);
+//		g.draw(new Arc2D.Double(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, Math.toDegrees(angleSender), Math.toDegrees(animationAngle), Arc2D.OPEN));
+
+		//if the animation is ready animationAngle should be the angleReceiver
+//		if(readyAnimated){
+//			animationAngle = angleReceiver;
+//		}
+		
+		//draw the msgData
 		double kreisSegmentEndeAngle = angleSender + animationAngle;
 		if(kreisSegmentEndeAngle >= angleReceiver){
 			kreisSegmentEndeAngle = angleReceiver;
@@ -199,15 +220,55 @@ public abstract class MessageData{
 		int kreisSegmentEndeY = (int) (MiddlepunktKreisY - Math.sin(kreisSegmentEndeAngle) * radius);
 		
 //		drawMessageInfo(g, kreisSegmentEndeX, kreisSegmentEndeY);
-		g.setColor(Color.BLACK);
+		g.setColor(Color.YELLOW);
 		int ovalMitteX = kreisSegmentEndeX;
 		int ovalMitteY = kreisSegmentEndeY;
 		g.fillOval(ovalMitteX - messageDataRadius, ovalMitteY - messageDataRadius, 2*messageDataRadius, 2*messageDataRadius);
 		
 		
-		explainMessageData(g);
+		//draw the number inside the msgData
+		g.setColor(Color.black);
+		String string = String.valueOf(lamdaValue);
+		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
+		Font defaultFont = g.getFont();
+		g.setFont(CIMAConstants.getTextFont());
+		g.drawString(string, ovalMitteX - stringWidth/2, ovalMitteY+messageDataRadius/2);
+		g.setFont(defaultFont);
+		
+		
+		//draw msgData-info in lower right corner only if this is the animated msgData
+		if(currentMsgDataAnimation == this){
+			explainMessageData(g);
+		}
+	}
+	
+	public void drawAnimationLine(Graphics2D g){
+		
+		
+		//just draw if it is the animated msgData or if the animation is ready
+		if(currentMsgDataAnimation != this && !readyAnimated){
+			
+			return;
+		}
+		if(!CIMAAnimation.getCIMAAnimation().animationIsInProgress()){
+			return;
+		}
+		
+		
+		double animationAngle = this.animationAngle;
+		
+
+		
+		//draw the msgData LINE
+		g.setColor(Color.BLACK);
+		g.draw(new Arc2D.Double(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, Math.toDegrees(angleSender), Math.toDegrees(animationAngle), Arc2D.OPEN));
+
 	}
 
+	
+	public void setReadyAnimated(){
+		readyAnimated = true;
+	}
 	
 	
 	
@@ -263,6 +324,7 @@ public abstract class MessageData{
 			}
 			
 			currentMsgDataAnimation.clearExplainMessageData();
+			currentMsgDataAnimation.setReadyAnimated();
 			currentMsgDataAnimation = null;
 			
 //			activeAnimation = false;

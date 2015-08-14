@@ -29,7 +29,7 @@ public abstract class Gui extends JPanel{
 	public static Vertice rootVertice = null;
 	protected Vertice homeBase = null;
 	protected Vertice currentVertice = null;
-	protected boolean hideHomebase = false;
+//	protected boolean hideHomebase = false;
 
 	protected JPanel buttonBarSouth = new JPanel();
 	protected JPanel buttonBarNorth = new JPanel();
@@ -38,7 +38,8 @@ public abstract class Gui extends JPanel{
 
 	/** Buttons */
 	protected JButton buttonCalculate = new JButton("Sofort berechnen");
-//	protected JButton buttonCalculateAnimation = new JButton("Berechnung animieren");
+	protected JButton buttonCalculateAnimation = new JButton("Berechnung animieren");
+	protected JToggleButton togglebuttonCalculateAnimation = new JToggleButton("Berechnung animieren");
 	protected JButton buttonClear = new JButton("Clear");
 	protected JButton buttonBack = new JButton("Zurück");
 //	protected JButton buttonShowMu = new JButton("berechne minimale Agenten");
@@ -135,16 +136,25 @@ public abstract class Gui extends JPanel{
 		});
 		
 
-//		buttonCalculateAnimation.addActionListener(new ActionListener() {
-//
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//
-//				homeBase = ((CIMAVertice) rootVertice).findHomeBase();
-//				((CIMAVertice) rootVertice).doCompleteSendMessageAnimation();
-//
-//			}
-//		});
+		buttonCalculateAnimation.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				CIMAAnimation cimaAnimation = CIMAAnimation.getCIMAAnimation();
+				
+				if(cimaAnimation.animationIsInProgress()){
+					cimaAnimation.stopAllAnimations();
+					buttonCalculateAnimation.setText("Berechnung animieren");
+				}else{
+					homeBase = ((CIMAVertice) rootVertice).findHomeBase();
+					calcAlgorithmus(true);
+//					((CIMAVertice) rootVertice).animateMsgData();
+					((CIMAVertice) rootVertice).animateAgents();//TODO
+					buttonCalculateAnimation.setText("Animation anhalten");
+				}
+			}
+		});
 		
 //		buttonCompleteAgentAnimation.addActionListener(new ActionListener() {
 //			
@@ -293,7 +303,7 @@ public abstract class Gui extends JPanel{
 		buttonBarSouth.add(buttonBack);
 //		buttonBarSouth.add(buttonShowMu);
 		buttonBarSouth.add(buttonCalculate);
-//		buttonBarSouth.add(buttonCalculateAnimation);
+		buttonBarSouth.add(buttonCalculateAnimation);
 //		buttonBarSouth.add(buttonCompleteAgentAnimation);
 //		buttonBarSouth.add(buttonNextAgentAnimationStep);
 //		buttonBarSouth.add(buttonNextCalculateAnimationStep);
@@ -333,9 +343,9 @@ public abstract class Gui extends JPanel{
 //		}
 		
 		//messageDataLine
-//		for(MessageData_old msgData : CIMAVertice.messageDataList){
-//			msgData.drawLine(g2);
-//		}
+		for(MessageData msgData : CIMAVertice.messageDataList){
+			msgData.drawAnimationLine(g2);
+		}
 
 		//mark current point
 		g2.setColor(Color.blue);
@@ -349,7 +359,8 @@ public abstract class Gui extends JPanel{
 			if(rootVertice != null){
 				homeBase = ((CIMAVertice) rootVertice).findHomeBase();
 			}
-			if(homeBase != null && hideHomebase){
+//			if(homeBase != null && hideHomebase){
+			if(homeBase != null){
 				g2.drawRect(homeBase.getX(), homeBase.getY(), homeBase.getDiameter(), homeBase.getDiameter());
 			}
 		}
@@ -367,8 +378,11 @@ public abstract class Gui extends JPanel{
 			msgData.drawAnimation(g2);
 		}
 		
-		if(rootVertice != null){
-			((CIMAVertice) rootVertice).drawAnimation(g2);
+//		if(rootVertice != null){
+//			((CIMAVertice) rootVertice).drawAnimation(g2);
+//		}
+		for(AgentWayData agentData : CIMAVertice.agentWayList){
+			agentData.drawAnimation(g2);
 		}
 		
 //		if(rootVertice != null){

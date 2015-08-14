@@ -33,17 +33,13 @@ public class CIMAVertice extends Vertice{
 	
 	//animation
     protected Gui gui = CIMAGui.getGui();
-    protected double xMiddleAnimation;
-    protected double yMiddleAnimation;
     protected boolean activeAgent = false;
-    public static boolean activeAnimation = false;
+    public static boolean activeAgentAnimation = false;
     private boolean marked = false;
-    private static int animationSpeed = 3;
     private static String displayedInfoString ="";
     private boolean drawPotentialData = false;
     
     protected int currentAgents = 0;
-    protected int moveAgentCounter = 0;
     protected boolean decontaminated = false;
     protected Color verticeColor = Color.white;
 
@@ -85,7 +81,7 @@ public class CIMAVertice extends Vertice{
 		//check if color should be chosen
 		//chose color
 		if(CIMAVertice.drawMu){
-			if(activeAnimation){
+			if(activeAgentAnimation){
 				if(decontaminated){
 					verticeColor = Color.GREEN;
 				}else{
@@ -101,7 +97,7 @@ public class CIMAVertice extends Vertice{
 
 		String stringVertice;
 		displayedInfoString = "";
-		if(activeAnimation){
+		if(activeAgentAnimation){
 			g.setColor(Color.black);
 			stringVertice = String.valueOf(currentAgents);
 			displayedInfoString = "aktuelle Agentenanzahl";
@@ -154,26 +150,26 @@ public class CIMAVertice extends Vertice{
 //		}
 //	}
 	
-    public void drawAnimation(Graphics g) {
-    	
-    	if(activeAgent){
-    		g.setColor(Color.green);
-	        g.fillOval((int)(xMiddleAnimation - diameter/2), (int)(yMiddleAnimation - diameter/2), diameter, diameter);
-			g.setColor(new Color(0x33,0x44,0x55));
-			g.drawOval((int)(xMiddleAnimation - diameter/2), (int)(yMiddleAnimation - diameter/2), diameter, diameter);
-			g.setColor(Color.black);
-			String string = String.valueOf(moveAgentCounter);
-			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
-			Font defaultFont = g.getFont();
-			g.setFont(CIMAConstants.getTextFont());
-			g.drawString(string, (int)(xMiddleAnimation - stringWidth/2), (int)(yMiddleAnimation + diameter/4));
-			g.setFont(defaultFont);
-    	}
-	        
-		for(Vertice child : children){
-			((CIMAVertice)child).drawAnimation(g);;
-		}
-    }
+//    public void drawAnimation(Graphics g) {
+//    	
+//    	if(activeAgent){
+//    		g.setColor(Color.green);
+//	        g.fillOval((int)(xMiddleAnimation - diameter/2), (int)(yMiddleAnimation - diameter/2), diameter, diameter);
+//			g.setColor(new Color(0x33,0x44,0x55));
+//			g.drawOval((int)(xMiddleAnimation - diameter/2), (int)(yMiddleAnimation - diameter/2), diameter, diameter);
+//			g.setColor(Color.black);
+//			String string = String.valueOf(moveAgentCounter);
+//			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
+//			Font defaultFont = g.getFont();
+//			g.setFont(CIMAConstants.getTextFont());
+//			g.drawString(string, (int)(xMiddleAnimation - stringWidth/2), (int)(yMiddleAnimation + diameter/4));
+//			g.setFont(defaultFont);
+//    	}
+//	        
+//		for(Vertice child : children){
+//			((CIMAVertice)child).drawAnimation(g);;
+//		}
+//    }
     
 	public void resetAllVerticeAnimation(){
 		resetCurrentAgents();
@@ -219,7 +215,9 @@ public class CIMAVertice extends Vertice{
 		
 		
 //		messageDataList.get(0).animation();
-		CIMAAnimation.getCIMAAnimation().startSendMessageAnimation(messageDataList);
+
+//		CIMAAnimation.getCIMAAnimation().startSendMessageAnimation(messageDataList);
+		
 	}
 
 	public void reset(){
@@ -421,23 +419,7 @@ public class CIMAVertice extends Vertice{
 			return null;
 		}
 	}
-
-	private int moveAgents(CIMAVertice sender, int agentNumber){
-
-		Collections.sort(lamdas, new MessageDataComparator());
-		for(int i = lamdas.size() - 1; i >= 0; i--){
-
-			if(sender == null  || !(lamdas.get(i).getSender().equals(sender))){
-				agentWayList.add(new AgentWayData(this, lamdas.get(i).getSender(), lamdas.get(i).getLamdaValue()));
-				lamdas.get(i).getSender().moveAgents(this, lamdas.get(i).getLamdaValue());
-			}
-		}
-
-		agentWayList.add(new AgentWayData(this, sender, agentNumber));
-		return agentNumber;
-	}
-
-
+	
 
 	@Override
 	public String toString(){
@@ -513,16 +495,8 @@ public class CIMAVertice extends Vertice{
 	public boolean isDecontaminated(){
 		return decontaminated;
 	}
-	public static void setAnimationSpeed(int animationSpeed){
-		if(animationSpeed >= 0 && animationSpeed <= 10){
-			CIMAVertice.animationSpeed = animationSpeed;
-		}
-	}
 	public void setDrawPotentialData(boolean bool){
 		drawPotentialData = bool;
-	}
-	public static int getAnimationSpeed(){
-		return animationSpeed;
 	}
 	public static int getMinimalMu(){
 		return minimalMu;
@@ -549,57 +523,50 @@ public class CIMAVertice extends Vertice{
 	}
 	
 	
+	//***ANIMATION*/
 	
-	public AgentAnimationTimer animation(Vertice destVertice, int moveAgentCounter){
-		this.moveAgentCounter = moveAgentCounter;
-		AgentAnimationTimer timer = new AgentAnimationTimer(destVertice);
-		timer.start();
-		return timer;
+	public void animateMsgData(){
+		CIMAAnimation.getCIMAAnimation().startSendMessageAnimation(messageDataList);
 	}
 	
-	public class AgentAnimationTimer extends Thread{
+	public void animateAgents(){
+		calcAgentsMove();
+		CIMAAnimation.getCIMAAnimation().startAgentAnimation(agentWayList);
+	}
+	
+	private void calcAgentsMove(){
 		
-		Vertice destVertice;
+		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
+
+		//animation läuft schon.... breche neue animation ab
+//		if(activeAnimation){
+//			animation.stopAgentAnimation();
+//			return;
+//		}
+
+		agentWayList.clear();
 		
-		public AgentAnimationTimer(Vertice destVertice) {
-			this.destVertice = destVertice;
-		}
-		 
-		@Override
-		public void run() {
-			
-			xMiddleAnimation = xMiddle;
-			yMiddleAnimation = yMiddle;
-			
-			
-			activeAgent = true;
-			
-			while(isInterrupted() == false){
-				
-				double vektorX = destVertice.getMiddleX() - xMiddleAnimation;
-				double vektorY = destVertice.getMiddleY() - yMiddleAnimation;
-				
-				double vektorLength = Math.sqrt(vektorX*vektorX + vektorY*vektorY);
-				
-				xMiddleAnimation += animationSpeed * vektorX/vektorLength;
-				yMiddleAnimation += animationSpeed * vektorY/vektorLength;
-				
-				gui.repaint();
-								
-				try {
-					Thread.sleep(20);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				
-				if(vektorLength < 2*animationSpeed){
-					this.interrupt();
-				}
-			}
-			
-			activeAgent = false;
-			gui.repaint();
-		}
+		CIMAVertice homeBase = findHomeBase();
+		homeBase.resetAllVerticeAnimation();
+		homeBase.changeCurrentAgents(homeBase.getMu());
+		homeBase.moveAgents(null, 0);
+
 	}
 
+	private int moveAgents(CIMAVertice sender, int agentNumber){
+
+
+		Collections.sort(lamdas, new MessageDataComparator());
+		for(int i = lamdas.size() - 1; i >= 0; i--){
+
+			if(sender == null  || !(lamdas.get(i).getSender().equals(sender))){
+				agentWayList.add(new AgentWayData(this, lamdas.get(i).getSender(), lamdas.get(i).getLamdaValue()));
+				lamdas.get(i).getSender().moveAgents(this, lamdas.get(i).getLamdaValue());
+			}
+		}
+
+		agentWayList.add(new AgentWayData(this, sender, agentNumber));
+		return agentNumber;
+	}
+	
 }

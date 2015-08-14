@@ -3,6 +3,7 @@ package cima;
 import java.util.ArrayList;
 import java.util.List;
 
+import cima.AgentWayData.AgentAnimationTimer;
 import cima.MessageData.SendMessageAnimationTimer;
 
 public class CIMAAnimation {
@@ -15,7 +16,7 @@ public class CIMAAnimation {
 	private boolean animationInProgress = false;
 //	private boolean activeAgent = false;
 	public static boolean singeAnimationModus = false;
-	public static boolean afterMessageDataCalc = false;
+//	public static boolean afterMessageDataCalc = false;
 
 	/**Singleton*/
 	public static CIMAAnimation getCIMAAnimation(){
@@ -41,6 +42,9 @@ public class CIMAAnimation {
 //		if(CIMAVertice.activeAnimation || MessageData.animationInProgress){
 		if(animationInProgress){
 			index = 0;
+
+			breakThread = true;
+
 			stopAgentAnimation();
 			stopSendMessageAnimation();
 		}
@@ -52,26 +56,29 @@ public class CIMAAnimation {
 	 *
 	 */
 
-//	public void startAgentAnimation(List<AgentWayData> agentsWayList){
-//		
+	public void startAgentAnimation(List<AgentWayData> agentsWayList){
+		
 //		if(activeAgent || breakThread){
 //			return;
 //		}
-//
-//		singeAnimationModus = false;
-//		AnimationAgentLoop animationLoop = new AnimationAgentLoop(agentsWayList);
-//		animationLoop.start();
-//
-//	}
-
-	public void stopAgentAnimation(){
-//		if(activeAgent){
 		if(animationInProgress){
-			breakThread = true;
+			return;
 		}
+
+		singeAnimationModus = false;
+		AnimationAgentLoop animationLoop = new AnimationAgentLoop(agentsWayList);
+		animationLoop.start();
+
+	}
+
+	private void stopAgentAnimation(){
+//		if(activeAgent){
+//		if(animationInProgress){
+//			breakThread = true;
+//		}
 //		CIMAVertice.activeAnimation = false;
 //		activeAgent = false;
-		gui.repaint();
+//		gui.repaint();
 	}
 
 //	public void nextStepAgentAnimation(List<AgentWayData> agentsWayList){
@@ -120,119 +127,129 @@ public class CIMAAnimation {
 //		animationLoop.start();
 //	}
 	
-	public void stopSendMessageAnimation(){
+	private void stopSendMessageAnimation(){
 //		if(activeAgent){
-		if(animationInProgress){
-			breakThread = true;
-		}
+//		if(animationInProgress){
+//			breakThread = true;
+//		}
 //		MessageData.resetDisplayCalcInfos();
 //		index = 0;	
 //		MessageData.animationInProgress = false;
 //		activeA{gent = false;
-		gui.repaint();
+//		gui.repaint();
 	}
 
 	/*
 	 *
-	 * Animation Loop Threads.....
+	 * Animation AGENTS Loop Threads.....
 	 *
 	 */
 
-//	public class AnimationAgentLoop extends Thread{
-//
-//		private List<AgentWayData> agentsWayList;
-//		private boolean singleStepAnimation = false;
-//
-//		public AnimationAgentLoop(List<AgentWayData> agentsWayList) {
-//			this(agentsWayList, false);
-//		}
-//		public AnimationAgentLoop(List<AgentWayData> agentsWayList, boolean singeStepAnimation) {
-//			this.agentsWayList = agentsWayList;
-//			this.singleStepAnimation = singeStepAnimation;
-//		}
-//
-//		@Override
-//		public void run() {
-//
-//			CIMAVertice.activeAnimation = true;
+	public class AnimationAgentLoop extends Thread{
+
+		private List<AgentWayData> agentsWayList;
+		private boolean singleStepAnimation = false;
+
+		public AnimationAgentLoop(List<AgentWayData> agentsWayList) {
+			this(agentsWayList, false);
+		}
+		public AnimationAgentLoop(List<AgentWayData> agentsWayList, boolean singeStepAnimation) {
+			this.agentsWayList = agentsWayList;
+			this.singleStepAnimation = singeStepAnimation;
+		}
+
+		@Override
+		public void run() {
+
+			CIMAVertice.activeAgentAnimation = true;
 //			activeAgent = true;
-//
-//			gui.repaint();
-//
-//			if(singleStepAnimation){
-//
-//				doAnimation(index);
-//				index++;
-//
-//				if(index < 0){
-//					index = 0;
-//				}
-//
-//				//bis size - 1 weil der letzte schritt die animation null -> homebase ist und übersprungen werden muss
-//				if(index >= agentsWayList.size() -1){
-//					CIMAVertice.activeAnimation = false;
-//					index = 0;
-//				}
-//
-//			}else{
-//
-//				breakThread = false;
-//
-//				//bis size - 1 weil der letzte schritt die animation null -> homebase ist und übersprungen werden muss
-//				for(int i = index; i < agentsWayList.size() -1; i++){
-//
-//					//breche bei bedarf die animation ab!
-//					if(breakThread){
-//						break;
-//					}
-//
-//					pauseAnimation();
-//
-//					doAnimation(i);
-//
-//				}
-//
-//				if(!breakThread){
-//					pauseAnimation();
-//				}
-//				CIMAVertice.activeAnimation = false;
-//				index = 0;
-//			}
-//
-//			breakThread = false;
-//			gui.repaint();
+			animationInProgress = true;
+
+			gui.repaint();
+
+			if(singleStepAnimation){
+
+				doAnimation(index);
+				index++;
+
+				if(index < 0){
+					index = 0;
+				}
+
+				//bis size - 1 weil der letzte schritt die animation null -> homebase ist und übersprungen werden muss
+				if(index >= agentsWayList.size() -1){
+					CIMAVertice.activeAgentAnimation = false;
+					index = 0;
+				}
+
+			}else{
+
+				breakThread = false;
+
+				//bis size - 1 weil der letzte schritt die animation null -> homebase ist und übersprungen werden muss
+				for(int i = index; i < agentsWayList.size() -1; i++){
+
+					//breche bei bedarf die animation ab!
+					if(breakThread){
+						break;
+					}
+
+					pauseAnimation();
+
+					doAnimation(i);
+
+				}
+
+				if(!breakThread){
+					pauseAnimation();
+				}
+				CIMAVertice.activeAgentAnimation = false;
+				index = 0;
+			}
+
+			animationInProgress = false;
+			CIMAVertice.activeAgentAnimation = false;
+			breakThread = false;
+			gui.repaint();
 //			activeAgent = false;
-//
-//		}
-//
-//		private AgentAnimationTimer doAnimation(int i){
-//
-//			agentsWayList.get(i).getSender().changeCurrentAgents(- agentsWayList.get(i).getAgentNumber());
-//
-//			AgentAnimationTimer timer = agentsWayList.get(i).getSender().animation(agentsWayList.get(i).getReceiver(), agentsWayList.get(i).getAgentNumber());
-//
-//			try {
-//				timer.join();
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//			
-//			if(i < agentsWayList.size()){
-//				agentsWayList.get(i).getReceiver().changeCurrentAgents(agentsWayList.get(i).getAgentNumber());
-//			}
-//
-//			gui.repaint();
-//			return timer;
-//		}
-//
-//		private void pauseAnimation(){
-//			try {
-//				Thread.sleep(1000 - 75*CIMAVertice.getAnimationSpeed());
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
+
+		}
+
+		private AgentAnimationTimer doAnimation(int i){
+
+			agentsWayList.get(i).getSender().changeCurrentAgents(- agentsWayList.get(i).getAgentNumber());
+
+			AgentAnimationTimer timer = agentsWayList.get(i).animation();
+
+			try {
+				timer.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			if(i < agentsWayList.size()){
+				agentsWayList.get(i).getReceiver().changeCurrentAgents(agentsWayList.get(i).getAgentNumber());
+			}
+
+			gui.repaint();
+			return timer;
+		}
+
+		private void pauseAnimation(){
+			try {
+				Thread.sleep(1000 - 75*AgentWayData.getAnimationSpeed());
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	/*
+	 *
+	 * Animation MsgData Loop Threads.....
+	 *
+	 */
 
 	public class AnimationSendMessageLoop extends Thread{
 
@@ -302,13 +319,14 @@ public class CIMAAnimation {
 //				MessageData.animationInProgress = false;
 				if(breakThread){
 //					MessageData.clearGui = true;
+					CIMAVertice.drawMu = false;
 				}else{
-					CIMAAnimation.afterMessageDataCalc = true;
+//					CIMAAnimation.afterMessageDataCalc = true;
+					CIMAVertice.drawMu = true;
 				}
 			}
 			gui.repaint();
 			breakThread = false;
-			CIMAVertice.drawMu = true;
 //			activeAgent = false;
 			animationInProgress = false;
 
