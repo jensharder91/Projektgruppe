@@ -308,6 +308,7 @@ public class ModelMultPotential extends ICalcStrategy{
 			if(possibleMu < bestMuResult){
 				potentialEdges.clear();
 			}
+			System.out.println("case c_3");
 			bestMuResult = possibleMu;
 			potentialEdges.add(max1);
 		}
