@@ -70,7 +70,7 @@ public class MessageData_complexPotential extends MessageData{
 		
 		for(CIMAEdgeWeight edge : potentialEdges){
 			edge.setOvalColor(Color.GREEN);
-			System.out.println("color "+edge.toString());
+//			System.out.println("color "+edge.toString());
 		}
 	}
 	
@@ -78,7 +78,7 @@ public class MessageData_complexPotential extends MessageData{
 	@Override
 	protected void clearExplainMessageData() {
 		for(CIMAEdgeWeight edge : potentialEdges){
-			System.out.println("clear "+edge.toString());
+//			System.out.println("clear "+edge.toString());
 			edge.resetColor();
 		}		
 	}

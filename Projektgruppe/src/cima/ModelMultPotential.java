@@ -489,7 +489,7 @@ public class ModelMultPotential extends ICalcStrategy{
 			potentialEdges.clear();
 		}
 		
-		System.out.println("bestPossibleLamdaValue vom ganzen Baum: "+bestPossibleLamdaValue + "  potentialEdges:  "+potentialEdges.toString());
+//		System.out.println("bestPossibleLamdaValue vom ganzen Baum: "+bestPossibleLamdaValue + "  potentialEdges:  "+potentialEdges.toString());
 		
 		if(potentialEdges.size() > 0){
 			InfoDisplayClass.getInfoDisplayClass().displayInUpperRightCorner(g2, "Agentenzahl kann auf  >>"+bestPossibleLamdaValue+"<<  reduziert werde", 1, Color.black, null);

@@ -118,6 +118,7 @@ public class CIMAGui extends Gui{
 
 	
 	private void treeChanged(){
+		CIMAVertice.drawMu = false;
 		if(rootVertice != null){
 			((CIMAVertice) rootVertice).reset();
 		}

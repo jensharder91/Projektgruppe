@@ -269,6 +269,9 @@ public abstract class MessageData{
 	public void setReadyAnimated(){
 		readyAnimated = true;
 	}
+	public void resetReadyAnimated(){
+		readyAnimated = false;
+	}
 	public static int getAnimationSpeed(){
 		return animationSpeed;
 	}

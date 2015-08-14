@@ -530,6 +530,12 @@ public class CIMAVertice extends Vertice{
 	}
 	
 	public void animateAgents(){
+		//reset the msgData animation
+		for(MessageData msgData : messageDataList){
+			msgData.resetReadyAnimated();
+		}
+		
+		//calc agents steps
 		calcAgentsMove();
 		CIMAAnimation.getCIMAAnimation().startAgentAnimation(agentWayList);
 	}
