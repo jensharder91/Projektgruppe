@@ -53,6 +53,12 @@ public class AgentWayData {
 	public static int getAnimationSpeed(){
 		return animationSpeed;
 	}
+	public static void setAnimationSpeed(int speed){
+		animationSpeed = speed;
+		if(animationSpeed < 0){
+			animationSpeed = 0;
+		}
+	}
 	
 	
 	//animation

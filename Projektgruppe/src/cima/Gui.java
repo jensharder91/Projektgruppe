@@ -15,6 +15,7 @@ import java.awt.event.ItemListener;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JToggleButton;
@@ -37,19 +38,19 @@ public abstract class Gui extends JPanel{
 	private ICalcStrategy[] calcStrategies = {new ModellMinimalDanger(), new ModelMultPotential(), new ModelStandardPaper()};
 
 	/** Buttons */
-	protected JButton buttonCalculate = new JButton("Sofort berechnen");
-	protected JButton buttonCalculateAnimation = new JButton("Berechnung animieren");
-	protected JToggleButton togglebuttonCalculateAnimation = new JToggleButton("Berechnung animieren");
+	protected JButton buttonCalculate = new JButton("Nachrichten sofort berechnen");
+	protected JButton buttonCalculateAnimation = new JButton("Nachrichtenberechnung animieren");
 	protected JButton buttonClear = new JButton("Clear");
 	protected JButton buttonBack = new JButton("Zurück");
 //	protected JButton buttonShowMu = new JButton("berechne minimale Agenten");
 //	protected JToggleButton togglePause = new JToggleButton("\u25AE\u25AE");
 //	private JButton buttonNextAgentAnimationStep = new JButton("\u25BA");//RightArrow
 //	private JButton buttonNextCalculateAnimationStep = new JButton("\u25BA");
-//	protected JButton buttonCompleteAgentAnimation = new JButton("Baum dekontaminieren");
+	protected JButton buttonCompleteAgentAnimation = new JButton("Baumdekontamination animieren");
+	private JLabel lableAnimationSpeed = new JLabel("Animation speed:");
 	private SpinnerNumberModel spinnerModel_speed = new SpinnerNumberModel(3, 0, 10, 1);
 	private SpinnerNumberModel spinnerModel_potential = new SpinnerNumberModel(1, 1, 999, 1);
-//	private JSpinner spinnerAnimationSpeed = new JSpinner(spinnerModel_speed);
+	private JSpinner spinnerAnimationSpeed = new JSpinner(spinnerModel_speed);
 	private JSpinner spinnerPotential = new JSpinner(spinnerModel_potential);
 	private JCheckBox checkboxShowMessageData = new JCheckBox("zeige die Berechnung an");
 //	private JCheckBox checkboxEditor = new JCheckBox("editiere den Baum");
@@ -67,12 +68,21 @@ public abstract class Gui extends JPanel{
 	private boolean togglePauseBoolean = false;
 	private boolean buttonNextAgentAnimationStepBoolean = false;
 	private boolean buttonNextCalculateAnimationStepBoolean = false;
-	private boolean buttonCompleteAgentAnimationBoolean = false;
+	private boolean buttonCompleteAgentAnimationBoolean = true;
 	private boolean spinnerAnimationSpeedBoolean = false;
 	private boolean spinnerPotentialBoolean = false;
 	private boolean checkboxShowMessageDataBoolean = false;
 	private boolean checkboxEditorBoolean = true;
 	private boolean buttonDrawAllPotentialEdgesBoolean = true;
+	
+	private enum ButtonState{
+		state1, //<2 knoten
+		state2,	//"normal"
+		state3,	//bei msgData animation
+		state4, //nach msgData animation
+		state5;	//bei baumdekonta. animation
+	};
+	private ButtonState buttonState = ButtonState.state2;
 	
 	
 	protected boolean autoAlgo = false;
@@ -145,27 +155,33 @@ public abstract class Gui extends JPanel{
 				
 				if(cimaAnimation.animationIsInProgress()){
 					cimaAnimation.stopAllAnimations();
-					buttonCalculateAnimation.setText("Berechnung animieren");
+					buttonCalculateAnimation.setText("Nachrichtenberechnung animieren");
 				}else{
 					homeBase = ((CIMAVertice) rootVertice).findHomeBase();
 					calcAlgorithmus(true);
-//					((CIMAVertice) rootVertice).animateMsgData();
-					((CIMAVertice) rootVertice).animateAgents();//TODO
-					buttonCalculateAnimation.setText("Animation anhalten");
+					((CIMAVertice) rootVertice).animateMsgData();
+					buttonCalculateAnimation.setText("Nachrichtenanimation anhalten");
 				}
 			}
 		});
 		
-//		buttonCompleteAgentAnimation.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				
-//				((CIMAVertice) homeBase).doCompleteAgentAnimation();
-//				
-//			}
-//		});
-		
+		buttonCompleteAgentAnimation.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				CIMAAnimation cimaAnimation = CIMAAnimation.getCIMAAnimation();
+				
+				if(cimaAnimation.animationIsInProgress()){
+					cimaAnimation.stopAllAnimations();
+					buttonCompleteAgentAnimation.setText("Baumdekontamination animieren");
+				}else{
+					((CIMAVertice) rootVertice).animateAgents();
+					buttonCompleteAgentAnimation.setText("Dekontaminationsanimation anhalten");
+				}
+				
+			}
+		});
+				
 //		buttonNextAgentAnimationStep.addActionListener(new ActionListener() {
 //
 //			@Override
@@ -187,14 +203,14 @@ public abstract class Gui extends JPanel{
 //			}
 //		});
 		
-//		spinnerAnimationSpeed.addChangeListener(new ChangeListener() {
-//			
-//			@Override
-//			public void stateChanged(ChangeEvent e) {
-//				CIMAVertice.setAnimationSpeed((int) spinnerAnimationSpeed.getValue());
-//				MessageData_old.setAnimationSpeed((int) spinnerAnimationSpeed.getValue());
-//			}
-//		});
+		spinnerAnimationSpeed.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				AgentWayData.setAnimationSpeed((int) spinnerAnimationSpeed.getValue());
+				MessageData.setAnimationSpeed((int) spinnerAnimationSpeed.getValue());
+			}
+		});
 		
 	spinnerPotential.addChangeListener(new ChangeListener() {
 		
@@ -291,6 +307,7 @@ public abstract class Gui extends JPanel{
 //		buttonBarNorth.add(checkboxEditor);
 //		buttonBarNorth.add(buttonDrawAllPotentialEdges);
 		buttonBarNorth.add(comboBoxCalcStrategy);
+		buttonBarNorth.add(spinnerPotential);
 //		buttonBarNorth.add(checkboxDisableAllInfos);
 		this.add(buttonBarNorth, "North");
 		
@@ -298,13 +315,14 @@ public abstract class Gui extends JPanel{
 //		buttonBarSouth.add(buttonDrawAllPotentialEdges);
 	
 //		buttonBarSouth.add(togglePause);
-//		buttonBarSouth.add(spinnerAnimationSpeed);
-		buttonBarSouth.add(spinnerPotential);
+		buttonBarSouth.add(lableAnimationSpeed);
+		buttonBarSouth.add(spinnerAnimationSpeed);
+//		buttonBarSouth.add(spinnerPotential);
 		buttonBarSouth.add(buttonBack);
 //		buttonBarSouth.add(buttonShowMu);
 		buttonBarSouth.add(buttonCalculate);
 		buttonBarSouth.add(buttonCalculateAnimation);
-//		buttonBarSouth.add(buttonCompleteAgentAnimation);
+		buttonBarSouth.add(buttonCompleteAgentAnimation);
 //		buttonBarSouth.add(buttonNextAgentAnimationStep);
 //		buttonBarSouth.add(buttonNextCalculateAnimationStep);
 		buttonBarSouth.add(buttonClear);
@@ -395,42 +413,105 @@ public abstract class Gui extends JPanel{
 		
 
 		
-		//disable / enable buttons
-
+		//***  BUTTON logic   **/
+		
+		buttonState = ButtonState.state2; //default
+		
+		if(rootVertice == null || rootVertice.getChildren().size() < 1){
+			buttonState = ButtonState.state1;
+		}
+		
+		if(CIMAAnimation.getCIMAAnimation().animationIsInProgress() && !CIMAVertice.activeAgentAnimation){
+			buttonState = ButtonState.state3;
+		}
+		
+		if(!CIMAAnimation.getCIMAAnimation().animationIsInProgress() && CIMAVertice.drawMu){
+			buttonState = ButtonState.state4;
+		}
+		
+		if(CIMAAnimation.getCIMAAnimation().animationIsInProgress() && CIMAVertice.activeAgentAnimation){
+			buttonState = ButtonState.state5;
+		}
+		
+		
+		//enabe / disable the buttons
+		
+		//default disable all buttons
+		buttonCalculateBoolean = false;
+		buttonCalculateAnimationBoolean = false;
+		buttonClearBoolean = false;
 		buttonBackBoolean = false;
 		buttonShowMuBoolean = false;
-		buttonCalculateBoolean = true;
-		buttonCalculateAnimationBoolean = true;
-//		if(!buttonCalculateAnimation.getText().equals("Berechnung animieren")){
-//			buttonCalculateAnimation.setText("Berechnung animieren");
-//		}
-		buttonClearBoolean = true;
+		togglePauseBoolean = false;
 		buttonNextAgentAnimationStepBoolean = false;
-		buttonNextCalculateAnimationStepBoolean = true;
+		buttonNextCalculateAnimationStepBoolean = false;
 		buttonCompleteAgentAnimationBoolean = false;
 		spinnerAnimationSpeedBoolean = false;
 		spinnerPotentialBoolean = false;
-		togglePauseBoolean = false;
 		checkboxShowMessageDataBoolean = false;
-		checkboxEditorBoolean = true;
-		buttonDrawAllPotentialEdgesBoolean = true;
+		checkboxEditorBoolean = false;
+		buttonDrawAllPotentialEdgesBoolean = false;
 		
-		if(rootVertice == null || rootVertice.getChildren().size() < 1){
-			buttonBackBoolean = false;
-			buttonCalculateBoolean = false;
-			buttonCalculateAnimationBoolean  = false;
-			buttonClearBoolean = false;
-			buttonNextAgentAnimationStepBoolean = false;
-			buttonNextCalculateAnimationStepBoolean = false;
-			buttonCompleteAgentAnimationBoolean = false;
-			spinnerAnimationSpeedBoolean = false;
-			spinnerPotentialBoolean = false;
-			togglePauseBoolean = false;
-			checkboxEditorBoolean = false;
-			buttonDrawAllPotentialEdgesBoolean = false;
+		
+		if(buttonState == ButtonState.state1){//<2 knoten
+			buttonClearBoolean = true;
+		}
+		if(buttonState == ButtonState.state2){//"normal"
+			buttonClearBoolean = true;
+			buttonCalculateBoolean = true;
+			buttonCalculateAnimationBoolean = true;
+		}
+		if(buttonState == ButtonState.state3){//bei msgData animation
+			buttonCalculateAnimationBoolean = true;
+			spinnerAnimationSpeedBoolean = true;
+		}
+		if(buttonState == ButtonState.state4){//nach msgData animation
+			buttonBackBoolean = true;
+			buttonCompleteAgentAnimationBoolean = true;
+			buttonClearBoolean = true;
+		}
+		if(buttonState == ButtonState.state5){//bei baumdekonta. animation
+			buttonCompleteAgentAnimationBoolean = true;
+			spinnerAnimationSpeedBoolean = true;
 		}
 
 		
+		
+
+//		buttonBackBoolean = false;
+//		buttonShowMuBoolean = false;
+//		buttonCalculateBoolean = true;
+//		buttonCalculateAnimationBoolean = true;
+////		if(!buttonCalculateAnimation.getText().equals("Berechnung animieren")){
+////			buttonCalculateAnimation.setText("Berechnung animieren");
+////		}
+//		buttonClearBoolean = true;
+//		buttonNextAgentAnimationStepBoolean = false;
+//		buttonNextCalculateAnimationStepBoolean = true;
+//		buttonCompleteAgentAnimationBoolean = true;
+//		spinnerAnimationSpeedBoolean = false;
+//		spinnerPotentialBoolean = false;
+//		togglePauseBoolean = false;
+//		checkboxShowMessageDataBoolean = false;
+//		checkboxEditorBoolean = true;
+//		buttonDrawAllPotentialEdgesBoolean = true;
+//		
+//		if(rootVertice == null || rootVertice.getChildren().size() < 1){
+//			buttonBackBoolean = false;
+//			buttonCalculateBoolean = false;
+//			buttonCalculateAnimationBoolean  = false;
+//			buttonClearBoolean = false;
+//			buttonNextAgentAnimationStepBoolean = false;
+//			buttonNextCalculateAnimationStepBoolean = false;
+//			buttonCompleteAgentAnimationBoolean = true;
+//			spinnerAnimationSpeedBoolean = false;
+//			spinnerPotentialBoolean = false;
+//			togglePauseBoolean = false;
+//			checkboxEditorBoolean = false;
+//			buttonDrawAllPotentialEdgesBoolean = false;
+//		}
+//
+//		
 //		if(MessageData_old.animationInProgress){
 //			if(!buttonCalculateAnimation.getText().equals("Animation abbrechen")){
 //				buttonCalculateAnimation.setText("Animation abbrechen");
@@ -504,20 +585,21 @@ public abstract class Gui extends JPanel{
 //		}
 //		
 //		
-//		buttonSetEnabled(buttonCalculate, buttonCalculateBoolean);
-//		buttonSetEnabled(buttonCalculateAnimation, buttonCalculateAnimationBoolean);
-//		buttonSetEnabled(buttonClear, buttonClearBoolean);
-//		buttonSetEnabled(buttonBack, buttonBackBoolean);
+		buttonSetEnabled(buttonCalculate, buttonCalculateBoolean);
+		buttonSetEnabled(buttonCalculateAnimation, buttonCalculateAnimationBoolean);
+		buttonSetEnabled(buttonClear, buttonClearBoolean);
+		buttonSetEnabled(buttonBack, buttonBackBoolean);
 //		buttonSetEnabled(buttonShowMu, buttonShowMuBoolean);
 //		buttonSetEnabled(buttonNextAgentAnimationStep, buttonNextAgentAnimationStepBoolean);
 //		buttonSetEnabled(buttonNextCalculateAnimationStep, buttonNextCalculateAnimationStepBoolean);
-//		buttonSetEnabled(buttonCompleteAgentAnimation, buttonCompleteAgentAnimationBoolean);
+		buttonSetEnabled(buttonCompleteAgentAnimation, buttonCompleteAgentAnimationBoolean);
 //		togglePause.setVisible(togglePauseBoolean);
-//		spinnerAnimationSpeed.setVisible(spinnerAnimationSpeedBoolean);
-//		checkboxShowMessageData.setVisible(checkboxShowMessageDataBoolean);
+		lableAnimationSpeed.setVisible(spinnerAnimationSpeedBoolean);
+		spinnerAnimationSpeed.setVisible(spinnerAnimationSpeedBoolean);
+		checkboxShowMessageData.setVisible(checkboxShowMessageDataBoolean);
 //		checkboxEditor.setVisible(checkboxEditorBoolean);
 //		buttonDrawAllPotentialEdges.setVisible(buttonDrawAllPotentialEdgesBoolean);
-//		
+		
 //		checkboxDisableAllInfos.setVisible(true);
 		
 	}
