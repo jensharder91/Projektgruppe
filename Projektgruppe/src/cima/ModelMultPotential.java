@@ -311,6 +311,7 @@ public class ModelMultPotential extends ICalcStrategy{
 			if(possibleMu < bestMuResult){
 				potentialEdges.clear();
 			}
+			System.out.println("case c_3");
 			bestMuResult = possibleMu;
 			potentialEdges.add(max1);
 		}
@@ -354,11 +355,17 @@ public class ModelMultPotential extends ICalcStrategy{
 			}
 			System.out.println("case e_2");
 			bestMuResult = possibleMu;
-			if(edge1Case){
-				potentialEdges.addAll(maxMsgData.getPotentialEdges());
-			}else{
-				potentialEdges.addAll(max2MsgData.getPotentialEdges());
+//			if(edge1Case){//TODO
+//				potentialEdges.addAll(maxMsgData.getPotentialEdges());
+//			}else{
+//				potentialEdges.addAll(max2MsgData.getPotentialEdges());
+//			}
+			for(CIMAEdgeWeight edge : maxMsgData.getPotentialEdges()){
+				if(!potentialEdges.contains(edge)){
+					potentialEdges.add(edge);
+				}
 			}
+			
 		}
 		
 		

@@ -48,7 +48,12 @@ public class MessageData_complexPotential extends MessageData{
 				this.bestPossibleLamdaValue = bestPossibleLamdaValue;
 				potentialEdges.clear();
 			}
-			potentialEdges.addAll(newPotentialEdges);
+			for(CIMAEdgeWeight edge : newPotentialEdges){
+				if(!potentialEdges.contains(edge)){
+					potentialEdges.add(edge);
+				}
+			}
+//			potentialEdges.addAll(newPotentialEdges);
 		}
 //		System.out.println("~update compleyMsgData :: "+bestPossibleLamdaValue + " / "+potentialEdges.toString());
 		return this;
