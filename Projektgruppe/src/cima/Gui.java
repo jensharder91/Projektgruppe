@@ -44,8 +44,8 @@ public abstract class Gui extends JPanel{
 	protected JButton buttonBack = new JButton("Zurück");
 //	protected JButton buttonShowMu = new JButton("berechne minimale Agenten");
 //	protected JToggleButton togglePause = new JToggleButton("\u25AE\u25AE");
-//	private JButton buttonNextAgentAnimationStep = new JButton("\u25BA");//RightArrow
-//	private JButton buttonNextCalculateAnimationStep = new JButton("\u25BA");
+	private JButton buttonNextAgentAnimationStep = new JButton("\u25BA");//RightArrow
+	private JButton buttonNextCalculateAnimationStep = new JButton("\u25BA");
 	protected JButton buttonCompleteAgentAnimation = new JButton("Baumdekontamination animieren");
 	private JLabel lableAnimationSpeed = new JLabel("Animation speed:");
 	private SpinnerNumberModel spinnerModel_speed = new SpinnerNumberModel(3, 0, 10, 1);
@@ -80,7 +80,11 @@ public abstract class Gui extends JPanel{
 		state2,	//"normal"
 		state3,	//bei msgData animation
 		state4, //nach msgData animation
-		state5;	//bei baumdekonta. animation
+		state5,	//bei baumdekonta. animation
+		state6, //next msgData animation
+		state7, //wait step msgData animation
+		state8,	//next step agent animation
+		state9; //wait step agent animation
 	};
 	private ButtonState buttonState = ButtonState.state2;
 	
@@ -158,7 +162,7 @@ public abstract class Gui extends JPanel{
 					buttonCalculateAnimation.setText("Nachrichtenberechnung animieren");
 				}else{
 					homeBase = ((CIMAVertice) rootVertice).findHomeBase();
-					calcAlgorithmus(true);
+//					calcAlgorithmus(true);
 					((CIMAVertice) rootVertice).animateMsgData();
 					buttonCalculateAnimation.setText("Nachrichtenanimation anhalten");
 				}
@@ -182,26 +186,27 @@ public abstract class Gui extends JPanel{
 			}
 		});
 				
-//		buttonNextAgentAnimationStep.addActionListener(new ActionListener() {
-//
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//
-//				((CIMAVertice) homeBase).doStepAgentAnimation();
-//				
-//			}
-//		});
+		buttonNextAgentAnimationStep.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				((CIMAVertice) homeBase).animateAgents(true);
+				
+			}
+		});
 		
-//		buttonNextCalculateAnimationStep.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				
-//				homeBase = ((CIMAVertice) rootVertice).findHomeBase();
-//				((CIMAVertice) rootVertice).doStepSendMessageAnimation();
-//				
-//			}
-//		});
+		buttonNextCalculateAnimationStep.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+//				calcAlgorithmus(true);
+				homeBase = ((CIMAVertice) rootVertice).findHomeBase();
+				((CIMAVertice) rootVertice).animateMsgData(true);
+				
+			}
+		});
 		
 		spinnerAnimationSpeed.addChangeListener(new ChangeListener() {
 			
@@ -323,8 +328,8 @@ public abstract class Gui extends JPanel{
 		buttonBarSouth.add(buttonCalculate);
 		buttonBarSouth.add(buttonCalculateAnimation);
 		buttonBarSouth.add(buttonCompleteAgentAnimation);
-//		buttonBarSouth.add(buttonNextAgentAnimationStep);
-//		buttonBarSouth.add(buttonNextCalculateAnimationStep);
+		buttonBarSouth.add(buttonNextAgentAnimationStep);
+		buttonBarSouth.add(buttonNextCalculateAnimationStep);
 		buttonBarSouth.add(buttonClear);
 		buttonBarSouth.add(checkboxShowMessageData);
 		this.add(buttonBarSouth, "South");
@@ -417,21 +422,38 @@ public abstract class Gui extends JPanel{
 		
 		buttonState = ButtonState.state2; //default
 		
+		if(CIMAAnimation.getCIMAAnimation().singleStepAnimationIsInProgress() && !CIMAVertice.drawMu){
+			buttonState = ButtonState.state7;
+		}
+		
 		if(rootVertice == null || rootVertice.getChildren().size() < 1){
 			buttonState = ButtonState.state1;
 		}
 		
 		if(CIMAAnimation.getCIMAAnimation().animationIsInProgress() && !CIMAVertice.activeAgentAnimation){
 			buttonState = ButtonState.state3;
+			
+			if(CIMAAnimation.getCIMAAnimation().singeAnimationModus){
+				buttonState = ButtonState.state6;
+			}
 		}
 		
 		if(!CIMAAnimation.getCIMAAnimation().animationIsInProgress() && CIMAVertice.drawMu){
 			buttonState = ButtonState.state4;
+			
+			if(CIMAAnimation.getCIMAAnimation().singleStepAnimationIsInProgress()){
+				buttonState = ButtonState.state9;
+			}
 		}
 		
 		if(CIMAAnimation.getCIMAAnimation().animationIsInProgress() && CIMAVertice.activeAgentAnimation){
 			buttonState = ButtonState.state5;
+			
+			if(CIMAAnimation.getCIMAAnimation().singeAnimationModus){
+				buttonState = ButtonState.state8;
+			}
 		}
+		
 		
 		
 		//enabe / disable the buttons
@@ -451,6 +473,8 @@ public abstract class Gui extends JPanel{
 		checkboxShowMessageDataBoolean = false;
 		checkboxEditorBoolean = false;
 		buttonDrawAllPotentialEdgesBoolean = false;
+		buttonNextAgentAnimationStepBoolean = false;
+		buttonNextCalculateAnimationStepBoolean = false;
 		
 		
 		if(buttonState == ButtonState.state1){//<2 knoten
@@ -460,6 +484,7 @@ public abstract class Gui extends JPanel{
 			buttonClearBoolean = true;
 			buttonCalculateBoolean = true;
 			buttonCalculateAnimationBoolean = true;
+			buttonNextCalculateAnimationStepBoolean  = true;
 		}
 		if(buttonState == ButtonState.state3){//bei msgData animation
 			buttonCalculateAnimationBoolean = true;
@@ -469,11 +494,37 @@ public abstract class Gui extends JPanel{
 			buttonBackBoolean = true;
 			buttonCompleteAgentAnimationBoolean = true;
 			buttonClearBoolean = true;
+			buttonNextAgentAnimationStepBoolean = true;
 		}
 		if(buttonState == ButtonState.state5){//bei baumdekonta. animation
 			buttonCompleteAgentAnimationBoolean = true;
 			spinnerAnimationSpeedBoolean = true;
 		}
+		
+		//next steps...
+		if(buttonState == ButtonState.state6){//next step msgData animation
+			buttonNextCalculateAnimationStepBoolean = true;
+//			buttonCalculateAnimationBoolean = true;
+			spinnerAnimationSpeedBoolean = true;
+		}
+		
+		if(buttonState == ButtonState.state7){//wait step msgData animation
+			buttonNextCalculateAnimationStepBoolean = true;
+			buttonCalculateAnimationBoolean = true;
+		}
+		
+		if(buttonState == ButtonState.state8){//next step agent animation
+			buttonNextAgentAnimationStepBoolean = true;
+//			buttonCompleteAgentAnimationBoolean = true;
+			spinnerAnimationSpeedBoolean = true;
+		}
+		
+		if(buttonState == ButtonState.state9){//wait step agent animation
+			buttonNextAgentAnimationStepBoolean = true;
+			buttonCompleteAgentAnimationBoolean = true;
+		}
+		
+		
 
 		
 		
@@ -593,6 +644,8 @@ public abstract class Gui extends JPanel{
 //		buttonSetEnabled(buttonNextAgentAnimationStep, buttonNextAgentAnimationStepBoolean);
 //		buttonSetEnabled(buttonNextCalculateAnimationStep, buttonNextCalculateAnimationStepBoolean);
 		buttonSetEnabled(buttonCompleteAgentAnimation, buttonCompleteAgentAnimationBoolean);
+		buttonSetEnabled(buttonNextAgentAnimationStep, buttonNextAgentAnimationStepBoolean);
+		buttonSetEnabled(buttonNextCalculateAnimationStep, buttonNextCalculateAnimationStepBoolean);
 //		togglePause.setVisible(togglePauseBoolean);
 		lableAnimationSpeed.setVisible(spinnerAnimationSpeedBoolean);
 		spinnerAnimationSpeed.setVisible(spinnerAnimationSpeedBoolean);

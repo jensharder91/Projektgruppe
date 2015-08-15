@@ -523,21 +523,47 @@ public class CIMAVertice extends Vertice{
 	}
 	
 	
-	//***ANIMATION*/
+	/***ANIMATION*/
 	
 	public void animateMsgData(){
-		CIMAAnimation.getCIMAAnimation().startSendMessageAnimation(messageDataList);
+		animateMsgData(false);
+	}
+	public void animateMsgData(boolean singlestep){
+		//falls noch keine animation (singel step) gestartet wurde... 
+		if(!CIMAAnimation.getCIMAAnimation().singleStepAnimationIsInProgress()){
+			algorithmus();
+		}
+		
+		
+		if(singlestep){
+			CIMAAnimation.getCIMAAnimation().nextStepSendMessageAnimation(messageDataList);
+		}else{
+			CIMAAnimation.getCIMAAnimation().startSendMessageAnimation(messageDataList);
+		}
 	}
 	
 	public void animateAgents(){
-		//reset the msgData animation
-		for(MessageData msgData : messageDataList){
-			msgData.resetReadyAnimated();
-		}
+		animateAgents(false);
+	}
+	public void animateAgents(boolean singlestep){
+		
+		System.out.println("####animateAgents!");
 		
 		//calc agents steps
-		calcAgentsMove();
-		CIMAAnimation.getCIMAAnimation().startAgentAnimation(agentWayList);
+		if(!activeAgentAnimation){
+			calcAgentsMove();
+		}
+		
+		if(singlestep){
+			CIMAAnimation.getCIMAAnimation().nextStepAgentAnimation(agentWayList);
+		}else{
+			//reset the msgData animation
+			for(MessageData msgData : messageDataList){
+				msgData.resetReadyAnimated();
+			}
+			CIMAAnimation.getCIMAAnimation().startAgentAnimation(agentWayList);
+		}
+	
 	}
 	
 	private void calcAgentsMove(){

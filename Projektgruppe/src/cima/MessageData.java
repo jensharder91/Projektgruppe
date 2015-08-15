@@ -35,6 +35,11 @@ public abstract class MessageData{
 	
 	protected double animationAngle;
 	protected static int animationSpeed = 3;
+
+	protected Color defaultStrongColor = Color.GREEN;
+	protected Color defaultWeakColor = Color.LIGHT_GRAY;
+	protected Color ovalColor = defaultStrongColor;
+	protected Color textColor = Color.BLACK;
 	
 	protected static MessageData currentMsgDataAnimation = null;
 	protected boolean readyAnimated = false;
@@ -188,8 +193,18 @@ public abstract class MessageData{
 			
 			return;
 		}
-		if(!CIMAAnimation.getCIMAAnimation().animationIsInProgress()){
+		if(!CIMAAnimation.getCIMAAnimation().animationIsInProgress() && !CIMAAnimation.getCIMAAnimation().singleStepAnimationIsInProgress()){
 			return;
+		}
+		
+		if(CIMAVertice.activeAgentAnimation){
+			return;
+		}
+		
+		if(currentMsgDataAnimation == this){
+			ovalColor = defaultStrongColor;
+		}else{
+			ovalColor = defaultWeakColor;
 		}
 		
 		
@@ -220,14 +235,14 @@ public abstract class MessageData{
 		int kreisSegmentEndeY = (int) (MiddlepunktKreisY - Math.sin(kreisSegmentEndeAngle) * radius);
 		
 //		drawMessageInfo(g, kreisSegmentEndeX, kreisSegmentEndeY);
-		g.setColor(Color.YELLOW);
+		g.setColor(ovalColor);
 		int ovalMitteX = kreisSegmentEndeX;
 		int ovalMitteY = kreisSegmentEndeY;
 		g.fillOval(ovalMitteX - messageDataRadius, ovalMitteY - messageDataRadius, 2*messageDataRadius, 2*messageDataRadius);
 		
 		
 		//draw the number inside the msgData
-		g.setColor(Color.black);
+		g.setColor(textColor);
 		String string = String.valueOf(lamdaValue);
 		int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
 		Font defaultFont = g.getFont();
@@ -247,11 +262,21 @@ public abstract class MessageData{
 		
 		//just draw if it is the animated msgData or if the animation is ready
 		if(currentMsgDataAnimation != this && !readyAnimated){
-			
 			return;
 		}
-		if(!CIMAAnimation.getCIMAAnimation().animationIsInProgress()){
+
+		if(!CIMAAnimation.getCIMAAnimation().animationIsInProgress() && !CIMAAnimation.getCIMAAnimation().singleStepAnimationIsInProgress()){
 			return;
+		}
+		
+		if(CIMAVertice.activeAgentAnimation){
+			return;
+		}
+		
+		if(currentMsgDataAnimation == this){
+			ovalColor = defaultStrongColor;
+		}else{
+			ovalColor = defaultWeakColor;
 		}
 		
 		
@@ -260,7 +285,7 @@ public abstract class MessageData{
 
 		
 		//draw the msgData LINE
-		g.setColor(Color.BLACK);
+		g.setColor(ovalColor);
 		g.draw(new Arc2D.Double(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, Math.toDegrees(angleSender), Math.toDegrees(animationAngle), Arc2D.OPEN));
 
 	}
@@ -337,7 +362,7 @@ public abstract class MessageData{
 			
 			currentMsgDataAnimation.clearExplainMessageData();
 			currentMsgDataAnimation.setReadyAnimated();
-			currentMsgDataAnimation = null;
+//			currentMsgDataAnimation = null;
 			
 //			activeAnimation = false;
 			gui.repaint();

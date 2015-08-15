@@ -36,6 +36,9 @@ public class CIMAAnimation {
 	public boolean animationIsInProgress(){
 		return animationInProgress;
 	}
+	public boolean singleStepAnimationIsInProgress(){
+		return animationInProgress || singeAnimationModus;
+	}
 	
 	public void stopAllAnimations(){
 		
@@ -81,16 +84,19 @@ public class CIMAAnimation {
 //		gui.repaint();
 	}
 
-//	public void nextStepAgentAnimation(List<AgentWayData> agentsWayList){
-//
+	public void nextStepAgentAnimation(List<AgentWayData> agentsWayList){
+
 //		if(activeAgent || breakThread){
 //			return;
 //		}
-//
-//		singeAnimationModus  = true;
-//		AnimationAgentLoop animationLoop = new AnimationAgentLoop(agentsWayList, singeAnimationModus);
-//		animationLoop.start();
-//	}
+		if(animationInProgress){
+			return;
+		}
+
+		singeAnimationModus  = true;
+		AnimationAgentLoop animationLoop = new AnimationAgentLoop(agentsWayList, singeAnimationModus);
+		animationLoop.start();
+	}
 
 	/*
 	 *
@@ -113,19 +119,22 @@ public class CIMAAnimation {
 
 	}
 	
-//	public void nextStepSendMessageAnimation(List<MessageData> messageDataList){
-//
+	public void nextStepSendMessageAnimation(List<MessageData> messageDataList){
+
 //		if(activeAgent || breakThread){
 //			return;
 //		}
-//
+		if(animationInProgress){
+			return;
+		}
+
 //		if(!MessageData.animationInProgress){
 //			index = 0;
 //		}
-//		singeAnimationModus  = true;
-//		AnimationSendMessageLoop animationLoop = new AnimationSendMessageLoop(messageDataList, singeAnimationModus);
-//		animationLoop.start();
-//	}
+		singeAnimationModus  = true;
+		AnimationSendMessageLoop animationLoop = new AnimationSendMessageLoop(messageDataList, singeAnimationModus);
+		animationLoop.start();
+	}
 	
 	private void stopSendMessageAnimation(){
 //		if(activeAgent){
@@ -208,7 +217,7 @@ public class CIMAAnimation {
 			}
 
 			animationInProgress = false;
-			CIMAVertice.activeAgentAnimation = false;
+//			CIMAVertice.activeAgentAnimation = false;
 			breakThread = false;
 			gui.repaint();
 //			activeAgent = false;
@@ -282,21 +291,23 @@ public class CIMAAnimation {
 				doAnimation(index);
 				index++;
 
-//				if(index < 0){
-//					index = 0;
+				if(index < 0){
+					index = 0;
 //					MessageData.resetDisplayCalcInfos();
-//				}
-//
-//				//bis size - 1 weil der letzte schritt die animation null -> homebase ist und übersprungen werden muss
-//				if(index > messageDataList.size() -1){
+				}
+
+				//bis size - 1 weil der letzte schritt die animation null -> homebase ist und übersprungen werden muss
+				if(index > messageDataList.size() -1){
 //					MessageData.animationInProgress = false;
 //					if(breakThread){
 //						MessageData.clearGui = true;
 //					}else{
 //						CIMAAnimation.afterMessageDataCalc = true;
 //					}
-//					index = 0;
-//				}
+					index = 0;
+					singleStepAnimation = false;
+					CIMAVertice.drawMu = true;
+				}
 				
 
 			}else{
@@ -316,6 +327,7 @@ public class CIMAAnimation {
 					}
 				}
 				index = 0;
+				singleStepAnimation = false;
 //				MessageData.animationInProgress = false;
 				if(breakThread){
 //					MessageData.clearGui = true;
