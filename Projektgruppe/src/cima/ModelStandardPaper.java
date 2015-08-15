@@ -44,10 +44,10 @@ public class ModelStandardPaper extends ICalcStrategy{
  
  		MessageData calcMessageData;
  		int verticeWeight = calcGeneralVerticeWeight(senderNode);
- 		if(max1.getLamdaValue() >= max2.getLamdaValue() + verticeWeight){
- 			calcMessageData = new MessageData_normal(senderNode, receiverNode, max1.getLamdaValue());
+ 		if(max1.getValue() >= max2.getValue() + verticeWeight){
+ 			calcMessageData = new MessageData_normal(senderNode, receiverNode, max1.getValue());
  		}else{
- 			calcMessageData = new MessageData_normal(senderNode, receiverNode, max2.getLamdaValue() + verticeWeight);
+ 			calcMessageData = new MessageData_normal(senderNode, receiverNode, max2.getValue() + verticeWeight);
  		}
  	
  
@@ -61,7 +61,7 @@ public class ModelStandardPaper extends ICalcStrategy{
 	@Override
 	public int calcGeneralVerticeWeight(CIMAVertice vertice) {
  		//calc the verticeWeight
-		return calcSortedEdgeWeightList(vertice, null).get(0).getEdgeWeightValue();
+		return calcSortedEdgeWeightList(vertice, null).get(0).getValue();
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class ModelStandardPaper extends ICalcStrategy{
  		}
  
  		int verticeWeight = calcGeneralVerticeWeight(vertice);
- 		int mu = Math.max(max1.getLamdaValue(), max2.getLamdaValue() + verticeWeight);
+ 		int mu = Math.max(max1.getValue(), max2.getValue() + verticeWeight);
  		
  		return mu;
 	}

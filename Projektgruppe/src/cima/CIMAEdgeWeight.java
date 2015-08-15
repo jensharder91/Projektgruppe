@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
-public class CIMAEdgeWeight implements Comparable<CIMAEdgeWeight>{
+public class CIMAEdgeWeight implements Comparable<CIMAEdgeWeight>, IMarkable{
 	
 	private CIMAVertice vertice;
 	private CIMAVertice parent;
@@ -64,7 +64,7 @@ public class CIMAEdgeWeight implements Comparable<CIMAEdgeWeight>{
 
 	
 	
-	public int getEdgeWeightValue(){
+	public int getValue(){
 		return edgeWeightValue;
 	}
 	public void edgeWeightIncrease(){
@@ -115,7 +115,7 @@ public class CIMAEdgeWeight implements Comparable<CIMAEdgeWeight>{
 	 * 
 	 */	
 	public int compareTo(CIMAEdgeWeight o) {
-		return o.getEdgeWeightValue() - edgeWeightValue;
+		return o.getValue() - edgeWeightValue;
 	}
 	
 	@Override

@@ -92,11 +92,11 @@ public class PotentialData {
 	public void setPotentialEdgeWeight(CIMAEdgeWeight potentialEdgeWeight1, CIMAEdgeWeight potentialEdgeWeight2){
 		flag = false;
 		potentialEdgeWeights.clear();
-		if(potentialEdgeWeight1.getEdgeWeightValue() > 0){
+		if(potentialEdgeWeight1.getValue() > 0){
 			potentialEdgeWeights.add(potentialEdgeWeight1);
 		}
 		if(potentialEdgeWeight2 != null){
-			if(potentialEdgeWeight2.getEdgeWeightValue() > 0){
+			if(potentialEdgeWeight2.getValue() > 0){
 				potentialEdgeWeights.add(potentialEdgeWeight2);
 			}
 		}

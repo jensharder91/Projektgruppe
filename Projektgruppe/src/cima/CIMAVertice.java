@@ -592,8 +592,8 @@ public class CIMAVertice extends Vertice{
 		for(int i = lamdas.size() - 1; i >= 0; i--){
 
 			if(sender == null  || !(lamdas.get(i).getSender().equals(sender))){
-				agentWayList.add(new AgentWayData(this, lamdas.get(i).getSender(), lamdas.get(i).getLamdaValue()));
-				lamdas.get(i).getSender().moveAgents(this, lamdas.get(i).getLamdaValue());
+				agentWayList.add(new AgentWayData(this, lamdas.get(i).getSender(), lamdas.get(i).getValue()));
+				lamdas.get(i).getSender().moveAgents(this, lamdas.get(i).getValue());
 			}
 		}
 

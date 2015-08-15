@@ -5,7 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Arc2D;
 
-public abstract class MessageData{
+public abstract class MessageData implements IMarkable{
 
 	protected int lamdaValue = 0;
 	protected CIMAVertice sender = null;
@@ -36,7 +36,7 @@ public abstract class MessageData{
 	protected double animationAngle;
 	protected static int animationSpeed = 3;
 
-	protected Color defaultStrongColor = Color.GREEN;
+	protected Color defaultStrongColor = Color.RED;
 	protected Color defaultWeakColor = Color.LIGHT_GRAY;
 	protected Color ovalColor = defaultStrongColor;
 	protected Color textColor = Color.BLACK;
@@ -68,7 +68,7 @@ public abstract class MessageData{
 		return "Sender : "+sender.getName()+"  Empfänger : "+receiver.getName()+"  LamdaValue: "+lamdaValue;
 	}
 
-	public int getLamdaValue(){
+	public int getValue(){
 		return lamdaValue;
 	}
 	public CIMAVertice getSender(){
@@ -201,12 +201,12 @@ public abstract class MessageData{
 			return;
 		}
 		
-		if(currentMsgDataAnimation == this){
-			ovalColor = defaultStrongColor;
-		}else{
-			ovalColor = defaultWeakColor;
-		}
-		
+//		if(currentMsgDataAnimation == this){
+//			ovalColor = defaultStrongColor;
+//		}else{
+//			ovalColor = defaultWeakColor;
+//		}
+//		
 		
 		double animationAngle = this.animationAngle;
 		
@@ -273,11 +273,11 @@ public abstract class MessageData{
 			return;
 		}
 		
-		if(currentMsgDataAnimation == this){
-			ovalColor = defaultStrongColor;
-		}else{
-			ovalColor = defaultWeakColor;
-		}
+//		if(currentMsgDataAnimation == this){
+//			ovalColor = defaultStrongColor;
+//		}else{
+//			ovalColor = defaultWeakColor;
+//		}
 		
 		
 		double animationAngle = this.animationAngle;
@@ -290,6 +290,13 @@ public abstract class MessageData{
 
 	}
 
+	public void setOvalColor(Color color){
+		this.ovalColor = color;
+	}
+	public void resetColor(){
+		this.ovalColor = this.defaultWeakColor;
+	}
+	
 	
 	public void setReadyAnimated(){
 		readyAnimated = true;
@@ -307,7 +314,15 @@ public abstract class MessageData{
 		}
 	}
 	
-	
+	public void resetCurrentmsgDataAnimation(){
+		System.out.println("reset..");
+		if(currentMsgDataAnimation != null){
+			System.out.println("reseting....");
+			currentMsgDataAnimation.resetColor();
+			currentMsgDataAnimation.clearExplainMessageData();
+			currentMsgDataAnimation.setReadyAnimated();
+		}
+	}
 	
 	//start animation
 	
@@ -315,7 +330,9 @@ public abstract class MessageData{
 	public SendMessageAnimationTimer animation(){
 		SendMessageAnimationTimer timer = new SendMessageAnimationTimer();
 		timer.start();
+		resetCurrentmsgDataAnimation();
 		currentMsgDataAnimation = this;
+		currentMsgDataAnimation.setOvalColor(defaultStrongColor);
 		return timer;
 	}
 
@@ -360,8 +377,8 @@ public abstract class MessageData{
 				}
 			}
 			
-			currentMsgDataAnimation.clearExplainMessageData();
-			currentMsgDataAnimation.setReadyAnimated();
+//			currentMsgDataAnimation.clearExplainMessageData();
+//			currentMsgDataAnimation.setReadyAnimated();
 //			currentMsgDataAnimation = null;
 			
 //			activeAnimation = false;

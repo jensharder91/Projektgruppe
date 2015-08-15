@@ -94,7 +94,7 @@ public class CIMAAnimation {
 		}
 
 		singeAnimationModus  = true;
-		AnimationAgentLoop animationLoop = new AnimationAgentLoop(agentsWayList, singeAnimationModus);
+		AnimationAgentLoop animationLoop = new AnimationAgentLoop(agentsWayList);
 		animationLoop.start();
 	}
 
@@ -132,7 +132,7 @@ public class CIMAAnimation {
 //			index = 0;
 //		}
 		singeAnimationModus  = true;
-		AnimationSendMessageLoop animationLoop = new AnimationSendMessageLoop(messageDataList, singeAnimationModus);
+		AnimationSendMessageLoop animationLoop = new AnimationSendMessageLoop(messageDataList);
 		animationLoop.start();
 	}
 	
@@ -160,11 +160,7 @@ public class CIMAAnimation {
 		private boolean singleStepAnimation = false;
 
 		public AnimationAgentLoop(List<AgentWayData> agentsWayList) {
-			this(agentsWayList, false);
-		}
-		public AnimationAgentLoop(List<AgentWayData> agentsWayList, boolean singeStepAnimation) {
 			this.agentsWayList = agentsWayList;
-			this.singleStepAnimation = singeStepAnimation;
 		}
 
 		@Override
@@ -263,14 +259,9 @@ public class CIMAAnimation {
 	public class AnimationSendMessageLoop extends Thread{
 
 		List<MessageData> messageDataList = new ArrayList<MessageData>();
-		boolean singleStepAnimation = false;
-
+		
 		public AnimationSendMessageLoop(List<MessageData> messageDataList) {
-			this(messageDataList, false);
-		}
-		public AnimationSendMessageLoop(List<MessageData> messageDataList, boolean singleStepAnimation) {
 			this.messageDataList = messageDataList;
-			this.singleStepAnimation = singleStepAnimation;
 		}
 
 		@Override
@@ -286,7 +277,7 @@ public class CIMAAnimation {
 //				messageDataList.get(j).prepareForAnimation();
 //			}
 
-			if(singleStepAnimation){
+			if(singeAnimationModus){
 
 				doAnimation(index);
 				index++;
@@ -305,7 +296,7 @@ public class CIMAAnimation {
 //						CIMAAnimation.afterMessageDataCalc = true;
 //					}
 					index = 0;
-					singleStepAnimation = false;
+					singeAnimationModus = false;
 					CIMAVertice.drawMu = true;
 				}
 				
@@ -327,7 +318,7 @@ public class CIMAAnimation {
 					}
 				}
 				index = 0;
-				singleStepAnimation = false;
+				singeAnimationModus = false;
 //				MessageData.animationInProgress = false;
 				if(breakThread){
 //					MessageData.clearGui = true;
@@ -337,10 +328,10 @@ public class CIMAAnimation {
 					CIMAVertice.drawMu = true;
 				}
 			}
-			gui.repaint();
 			breakThread = false;
 //			activeAgent = false;
 			animationInProgress = false;
+			gui.repaint();
 
 		}
 		
@@ -357,7 +348,10 @@ public class CIMAAnimation {
 			SendMessageAnimationTimer timer = messageDataList.get(i).animation();
 			try {
 				timer.join();
-				if(i < messageDataList.size()){
+				System.out.println("join.... i = "+i+"  / msgDataList.size() = "+messageDataList.size());
+				if(i == messageDataList.size()-1){
+					System.out.println("ende");
+					messageDataList.get(i).resetCurrentmsgDataAnimation();
 //					messageDataList.get(i).animationFinished();
 				}
 			} catch (InterruptedException e) {
