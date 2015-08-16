@@ -4,7 +4,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class ModelStandardPaper extends ICalcStrategy{
@@ -41,13 +43,18 @@ public class ModelStandardPaper extends ICalcStrategy{
 //		CIMAEdgeWeight max2 = calcSortedEdgeWeightList(senderNode, receiverNode).get(1);
 //		
 //		System.out.println("vertex name: "+name+"   max1 : "+max1.getEdgeWeightValue() + " / max2 : "+max2.getEdgeWeightValue());
+		
+		Map<String, IMarkable> mapMarkable = new HashMap<String, IMarkable>();
+		mapMarkable.put("max1", max1);
+		mapMarkable.put("max2", max2);
+		mapMarkable.put("vertice", senderNode);
  
  		MessageData calcMessageData;
  		int verticeWeight = calcGeneralVerticeWeight(senderNode);
  		if(max1.getValue() >= max2.getValue() + verticeWeight){
- 			calcMessageData = new MessageData_normal(senderNode, receiverNode, max1.getValue());
+ 			calcMessageData = new MessageData_normal(senderNode, receiverNode, mapMarkable, max1.getValue());
  		}else{
- 			calcMessageData = new MessageData_normal(senderNode, receiverNode, max2.getValue() + verticeWeight);
+ 			calcMessageData = new MessageData_normal(senderNode, receiverNode, mapMarkable, max2.getValue() + verticeWeight);
  		}
  	
  

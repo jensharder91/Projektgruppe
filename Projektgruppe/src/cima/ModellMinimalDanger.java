@@ -3,7 +3,9 @@ package cima;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ModellMinimalDanger extends ICalcStrategy{
 
@@ -47,6 +49,13 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		
 	
 		
+		Map<String, IMarkable> mapMarkable = new HashMap<String, IMarkable>();
+		mapMarkable.put("max1", max1);
+		mapMarkable.put("max2", max2);
+		mapMarkable.put("edge", edgeToReceiverNode);
+		mapMarkable.put("msgData", biggestMsgData);
+		
+		
 		/*
 		 * calc messageData and potentialDta
 		 */
@@ -62,7 +71,7 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		}else{
 			calculatedPotentialData = new PotentialData(max1, max2);
 		}
-		calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, max1.getValue() + max2.getValue(), calculatedPotentialData);
+		calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, max1.getValue() + max2.getValue(), mapMarkable, calculatedPotentialData);
 		
 		//make sure it is not smaller then the edge
 		if(calculatedMessageData.getValue() <= edgeToReceiverNode.getValue()){
@@ -79,7 +88,7 @@ public class ModellMinimalDanger extends ICalcStrategy{
 						//potential data shouldnt change
 //						calcMessageData = new MessageData(senderNode.getEdgeWeightToParent().getEdgeWeightValue(), senderNode, receiverNode, edgeToReceiverNode, max1, max2, specialVerticeWeight, null, senderNode.getEdgeWeightToParent(), new PotentialData(senderNode.getEdgeWeightToParent()));
 					}else{
-						calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, edgeToReceiverNode.getValue(), new PotentialData(true));
+						calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, edgeToReceiverNode.getValue(), mapMarkable, new PotentialData(true));
 					}
 					
 				}
@@ -87,7 +96,7 @@ public class ModellMinimalDanger extends ICalcStrategy{
 				
 				
 			}else{
-				calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, edgeToReceiverNode.getValue(), new PotentialData(edgeToReceiverNode));								
+				calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, edgeToReceiverNode.getValue(), mapMarkable, new PotentialData(edgeToReceiverNode));								
 			}
 			
 			//
@@ -107,16 +116,16 @@ public class ModellMinimalDanger extends ICalcStrategy{
 						if(calculatedMessageData.getPotentialData().hasSameEdge(edge)){
 							//potential data shouldnt change
 						}else{
-							calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, biggestMsgData.getValue(), new PotentialData(true));
+							calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, biggestMsgData.getValue(), mapMarkable, new PotentialData(true));
 						}
 					}
 				}else{
-					calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, biggestMsgData.getValue(), new PotentialData(true));
+					calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, biggestMsgData.getValue(), mapMarkable, new PotentialData(true));
 				}
 				
 				
 			}else{
-				calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, biggestMsgData.getValue(), biggestMsgData.getPotentialData().getPotentialDataCopy());								
+				calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, biggestMsgData.getValue(), mapMarkable, biggestMsgData.getPotentialData().getPotentialDataCopy());								
 			}
 			
 			//

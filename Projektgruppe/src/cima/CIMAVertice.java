@@ -11,7 +11,7 @@ import java.util.List;
 import cima.Gui;
 import cima.Vertice;
 
-public class CIMAVertice extends Vertice{
+public class CIMAVertice extends Vertice implements IMarkable{
 
 	private CIMAEdgeWeight edgeWeightToParent;
 	private int verticeWeight;
@@ -476,17 +476,16 @@ public class CIMAVertice extends Vertice{
 	public List<MessageData> getLamdas(){
 		return lamdas;
 	}
-	public void markColor(Color color){
+	@Override
+	public void setOvalColor(Color color) {
 		verticeColor = color;
-	}
-	public void markAsMax(int specialVerticeWeight){
-		verticeColor = CIMAConstants.getMarkAsMaxColor();
 		marked = true;
 	}
-	public void markAsSecMax(int specialVerticeWeight){
-		verticeColor = CIMAConstants.getMarkAsSecMaxColor();
-		marked = true;
+	@Override
+	public int getValue() {
+		return calcStrategy.calcGeneralVerticeWeight(this);
 	}
+	@Override
 	public void resetColor(){
 		verticeColor = Color.white;
 		marked = false;
@@ -599,6 +598,5 @@ public class CIMAVertice extends Vertice{
 
 		agentWayList.add(new AgentWayData(this, sender, agentNumber));
 		return agentNumber;
-	}
-	
+	}	
 }

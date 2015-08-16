@@ -71,20 +71,26 @@ public class MessageData_complexPotential extends MessageData{
 	
 	@Override
 	protected void explainMessageData(Graphics2D g) {
-//		String[] explainStrings = 
-//			{"Nachricht", 
-//				"normale Nachricht: "+lamdaValue, 
-//				"bestmögliche Nachricht: "+bestPossibleLamdaValue};
-//		InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, Color.BLUE, null, explainStrings);
-//		
-//		
-//		for(CIMAEdgeWeight edge : potentialEdges){
-//			edge.setOvalColor(Color.GREEN);
-////			System.out.println("color "+edge.toString());
-//		}
+
+		if(ICalcStrategy.getShowPotential()){
+			displayPotentialCalculation(g);
+		}else{
+			displayValueCalculation(g);
+		}
+	}
+	
+	private void displayPotentialCalculation(Graphics2D g){
+		String[] explainStrings = 
+			{"Nachricht", 
+				"normale Nachricht: "+lamdaValue, 
+				"bestmögliche Nachricht: "+bestPossibleLamdaValue};
+		InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, Color.BLUE, null, explainStrings);
 		
 		
-		displayValueCalculation(g);
+		for(CIMAEdgeWeight edge : potentialEdges){
+			edge.setOvalColor(Color.GREEN);
+//			System.out.println("color "+edge.toString());
+		}
 	}
 	
 	private void displayValueCalculation(Graphics2D g){
@@ -119,9 +125,9 @@ public class MessageData_complexPotential extends MessageData{
 		explainStrings[2] = "Nachrichtenkante = "+edge.getValue();
 		explainStrings[3] = "Größte Nachricht = "+msgData.getValue();
 		
-		Color maxColor = Color.WHITE;
-		Color edgeColor = Color.WHITE;
-		Color msgDataColor = Color.WHITE;
+		Color maxColor = defaultColorMax;
+		Color edgeColor = defaultColorEdge;
+		Color msgDataColor = defaultColorMsgData;
 			
 
 		if((max1.getValue() + max2.getValue()) == lamdaValue){

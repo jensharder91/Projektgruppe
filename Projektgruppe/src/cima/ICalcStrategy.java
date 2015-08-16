@@ -1,10 +1,13 @@
 package cima;
 
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.List;
 
-public abstract class ICalcStrategy {
+public abstract class ICalcStrategy {	
+	
+	protected static boolean showPotential = false;
+	
+	
 	
 	public abstract MessageData calcMessageData(CIMAVertice senderNode, CIMAVertice receiverNode, int potential);
 	public abstract int calcGeneralVerticeWeight(CIMAVertice vertice);
@@ -13,4 +16,12 @@ public abstract class ICalcStrategy {
 	
 	//animation
 	public abstract void displayResult(CIMAVertice vertice, Graphics2D g2);
+	
+	//potential on-off
+	public static void setShowPotential(boolean showPotential){
+		ICalcStrategy.showPotential = showPotential;
+	}
+	public static boolean getShowPotential(){
+		return showPotential;
+	}
 }

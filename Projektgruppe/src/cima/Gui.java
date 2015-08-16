@@ -42,6 +42,7 @@ public abstract class Gui extends JPanel{
 	protected JButton buttonCalculateAnimation = new JButton("Nachrichtenberechnung animieren");
 	protected JButton buttonClear = new JButton("Clear");
 	protected JButton buttonBack = new JButton("Zurück");
+	protected JButton buttonPotentialOnOff = new JButton("Potential aktivieren");
 //	protected JButton buttonShowMu = new JButton("berechne minimale Agenten");
 //	protected JToggleButton togglePause = new JToggleButton("\u25AE\u25AE");
 	private JButton buttonNextAgentAnimationStep = new JButton("\u25BA");//RightArrow
@@ -64,6 +65,7 @@ public abstract class Gui extends JPanel{
 	private boolean buttonCalculateAnimationBoolean = false;
 	private boolean buttonClearBoolean = false;
 	private boolean buttonBackBoolean = false;
+	private boolean buttonPotentialOnOffBoolean = false;
 	private boolean buttonShowMuBoolean = false;
 	private boolean togglePauseBoolean = false;
 	private boolean buttonNextAgentAnimationStepBoolean = false;
@@ -146,6 +148,21 @@ public abstract class Gui extends JPanel{
 
 				calcAlgorithmus(true);
 
+			}
+		});
+		
+		buttonPotentialOnOff.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				if(ICalcStrategy.getShowPotential()){
+					ICalcStrategy.setShowPotential(false);
+					buttonPotentialOnOff.setText("Potential einschalten");
+				}else{
+					ICalcStrategy.setShowPotential(true);
+					buttonPotentialOnOff.setText("Potential ausschalten");
+				}
 			}
 		});
 		
@@ -312,6 +329,7 @@ public abstract class Gui extends JPanel{
 //		buttonBarNorth.add(checkboxEditor);
 //		buttonBarNorth.add(buttonDrawAllPotentialEdges);
 		buttonBarNorth.add(comboBoxCalcStrategy);
+		buttonBarNorth.add(buttonPotentialOnOff);
 		buttonBarNorth.add(spinnerPotential);
 //		buttonBarNorth.add(checkboxDisableAllInfos);
 		this.add(buttonBarNorth, "North");
@@ -418,7 +436,8 @@ public abstract class Gui extends JPanel{
 		
 
 		
-		//***  BUTTON logic   **/
+		/***  BUTTON logic   **/
+		/* button south*/
 		
 		buttonState = ButtonState.state2; //default
 		
@@ -454,6 +473,9 @@ public abstract class Gui extends JPanel{
 			}
 		}
 		
+		/* button north */
+		
+		
 		
 		
 		//enabe / disable the buttons
@@ -475,6 +497,8 @@ public abstract class Gui extends JPanel{
 		buttonDrawAllPotentialEdgesBoolean = false;
 		buttonNextAgentAnimationStepBoolean = false;
 		buttonNextCalculateAnimationStepBoolean = false;
+		
+		buttonPotentialOnOffBoolean = true;
 		
 		
 		if(buttonState == ButtonState.state1){//<2 knoten
@@ -639,6 +663,7 @@ public abstract class Gui extends JPanel{
 		buttonSetEnabled(buttonCalculate, buttonCalculateBoolean);
 		buttonSetEnabled(buttonCalculateAnimation, buttonCalculateAnimationBoolean);
 		buttonSetEnabled(buttonClear, buttonClearBoolean);
+		buttonSetEnabled(buttonPotentialOnOff, buttonPotentialOnOffBoolean);
 		buttonSetEnabled(buttonBack, buttonBackBoolean);
 //		buttonSetEnabled(buttonShowMu, buttonShowMuBoolean);
 //		buttonSetEnabled(buttonNextAgentAnimationStep, buttonNextAgentAnimationStepBoolean);
