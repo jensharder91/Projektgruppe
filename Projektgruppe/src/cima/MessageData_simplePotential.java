@@ -10,12 +10,7 @@ public class MessageData_simplePotential extends MessageData{
 	protected PotentialData potentialData;
 	
 	protected Map<String, IMarkable> mapMarkable = new HashMap<String, IMarkable>();
-	protected Color markColor = Color.GREEN;
-	protected Color defaultColorMax = Color.CYAN;
-	protected Color defaultColorEdge = Color.PINK;
-	protected Color defaultColorMsgData = Color.MAGENTA;
-	
-	
+
 	
 	public MessageData_simplePotential() {
 		
@@ -85,10 +80,10 @@ public class MessageData_simplePotential extends MessageData{
 		}
 		
 		//default coloring
-		max1.setOvalColor(defaultColorMax);
-		max2.setOvalColor(defaultColorMax);
-		edge.setOvalColor(defaultColorEdge);
-		msgData.setOvalColor(defaultColorMsgData);
+		max1.setOvalColor(defaultColorMax, Color.BLACK);
+		max2.setOvalColor(defaultColorMax, Color.BLACK);
+		edge.setOvalColor(defaultColorEdge, Color.BLACK);
+		msgData.setOvalColor(defaultColorMsgData, Color.BLACK);
 		
 		
 		String[] explainStrings = new String[4];
@@ -102,16 +97,16 @@ public class MessageData_simplePotential extends MessageData{
 			
 
 		if((max1.getValue() + max2.getValue()) == lamdaValue){
-			max1.setOvalColor(markColor);
-			max2.setOvalColor(markColor);
+			max1.setOvalColor(markColor, Color.BLACK);
+			max2.setOvalColor(markColor, Color.BLACK);
 			maxColor = Color.GREEN;
 			explainStrings[0] = "Neue Nachricht = max1 + max2:";
 		}else if(edge.getValue() == lamdaValue){
-			edge.setOvalColor(markColor);
+			edge.setOvalColor(markColor, Color.BLACK);
 			edgeColor = Color.GREEN;
 			explainStrings[0] = "Neue Nachricht = Nachrichtenkante";
 		}else if(msgData.getValue() == lamdaValue){
-			msgData.setOvalColor(markColor);
+			msgData.setOvalColor(markColor, Color.BLACK);
 			msgDataColor = Color.GREEN;
 			explainStrings[0] = "Neue Nachricht = größte Nachricht";
 		}else{

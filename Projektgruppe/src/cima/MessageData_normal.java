@@ -5,14 +5,13 @@ import java.awt.Graphics2D;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.plaf.basic.BasicLookAndFeel;
+
 public class MessageData_normal extends MessageData{
 	
 	
 	Map<String, IMarkable> mapMarkable = new HashMap<String, IMarkable>();
-	protected Color markColor = Color.GREEN;
-	protected Color defaultColorMax = Color.CYAN;
-	protected Color defaultColorEdge = Color.PINK;
-	
+
 	
 	public MessageData_normal(){
 		
@@ -52,9 +51,9 @@ public class MessageData_normal extends MessageData{
 		}
 		
 		//default coloring
-		max1.setOvalColor(defaultColorMax);
-		max2.setOvalColor(defaultColorMax);
-		vertice.setOvalColor(defaultColorEdge);
+		max1.setOvalColor(defaultColorMax, Color.BLACK);
+		max2.setOvalColor(defaultColorMax, Color.BLACK);
+		vertice.setOvalColor(defaultColorEdge, Color.BLACK);
 		
 		
 		String[] explainStrings = new String[4];
@@ -66,12 +65,12 @@ public class MessageData_normal extends MessageData{
 			
 
 		if((max1.getValue()) == lamdaValue){
-			max1.setOvalColor(markColor);
-			max2.setOvalColor(markColor);
+			max1.setOvalColor(markColor, Color.BLACK);
 			maxColor = Color.GREEN;
 			explainStrings[0] = "Neue Nachricht = max1";
 		}else if(vertice.getValue() + max2.getValue() == lamdaValue){
-			vertice.setOvalColor(markColor);
+			vertice.setOvalColor(markColor, Color.BLACK);
+			max2.setOvalColor(markColor, Color.BLACK);
 			edgeColor = Color.GREEN;
 			explainStrings[0] = "Neue Nachricht = Knotengewicht + max2";
 		}else{

@@ -36,10 +36,20 @@ public abstract class MessageData implements IMarkable{
 	protected double animationAngle;
 	protected static int animationSpeed = 3;
 
-	protected Color defaultStrongColor = Color.RED;
+//	protected Color defaultStrongColor = Color.RED;
+	protected Color defaultStrongColor = new Color(140, 220, 230);
 	protected Color defaultWeakColor = Color.LIGHT_GRAY;
 	protected Color ovalColor = defaultStrongColor;
+	protected Color defaultTextColor = Color.BLACK;
 	protected Color textColor = Color.BLACK;
+	
+//	protected Color markColor = Color.GREEN;
+	protected Color markColor = new Color(58, 255, 0);
+//	protected Color defaultColorMax = Color.CYAN;
+	protected Color defaultColorMax = new Color(255, 234, 13);
+	protected Color defaultColorEdge = Color.PINK;
+//	protected Color defaultColorMsgData = Color.BLUE;
+	protected Color defaultColorMsgData = new Color(255, 183, 138);
 	
 	protected static MessageData currentMsgDataAnimation = null;
 	protected boolean readyAnimated = false;
@@ -289,12 +299,17 @@ public abstract class MessageData implements IMarkable{
 		g.draw(new Arc2D.Double(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, Math.toDegrees(angleSender), Math.toDegrees(animationAngle), Arc2D.OPEN));
 
 	}
-
+	
 	public void setOvalColor(Color color){
+		setOvalColor(color, defaultTextColor);
+	}
+	public void setOvalColor(Color color, Color textcolor){
 		this.ovalColor = color;
+		this.textColor = textcolor;
 	}
 	public void resetColor(){
 		this.ovalColor = this.defaultWeakColor;
+		this.textColor = defaultTextColor;
 	}
 	
 	

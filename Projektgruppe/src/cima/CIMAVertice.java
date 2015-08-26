@@ -16,6 +16,7 @@ public class CIMAVertice extends Vertice implements IMarkable{
 	private CIMAEdgeWeight edgeWeightToParent;
 	private int verticeWeight;
 	public static boolean drawMu = false;
+	private Color defaultStringColor = Color.BLACK;
 	private Color stringColor = Color.black;
 	private int mu;
 	private List<MessageData> lamdas = new ArrayList<MessageData>();
@@ -26,7 +27,7 @@ public class CIMAVertice extends Vertice implements IMarkable{
 	private static boolean showDisplayInfo = false;
 	
 	//pot >= 1
-	private static int potential = 2;
+	private static int potential = 0;
 	private int bestMu;
 	private ArrayList<CIMAEdgeWeight> potentialEdges;
 
@@ -478,7 +479,11 @@ public class CIMAVertice extends Vertice implements IMarkable{
 	}
 	@Override
 	public void setOvalColor(Color color) {
+		setOvalColor(color, defaultStringColor);
+	}
+	public void setOvalColor(Color color, Color textColor) {
 		verticeColor = color;
+		this.stringColor = textColor;
 		marked = true;
 	}
 	@Override
@@ -489,6 +494,7 @@ public class CIMAVertice extends Vertice implements IMarkable{
 	public void resetColor(){
 		verticeColor = Color.white;
 		marked = false;
+		this.stringColor = defaultStringColor;
 	}
 	
 	public boolean isDecontaminated(){

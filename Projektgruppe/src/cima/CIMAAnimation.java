@@ -322,6 +322,9 @@ public class CIMAAnimation {
 //				MessageData.animationInProgress = false;
 				if(breakThread){
 //					MessageData.clearGui = true;
+					for(MessageData msgData : messageDataList){
+						msgData.clearExplainMessageData();
+					}
 					CIMAVertice.drawMu = false;
 				}else{
 //					CIMAAnimation.afterMessageDataCalc = true;

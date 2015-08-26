@@ -93,10 +93,15 @@ public class CIMAEdgeWeight implements Comparable<CIMAEdgeWeight>, IMarkable{
 	
 	//animation
 	public void setOvalColor(Color color){
+		setOvalColor(color, defaultTextColor);
+	}
+	public void setOvalColor(Color color, Color textColor){
 		this.ovalColor = color;
+		this.textColor = textColor;
 	}
 	public void resetColor(){
 		this.ovalColor = this.defaultOvalColor;
+		this.textColor = defaultTextColor;
 	}
 	
 	

@@ -35,14 +35,15 @@ public abstract class Gui extends JPanel{
 	protected JPanel buttonBarSouth = new JPanel();
 	protected JPanel buttonBarNorth = new JPanel();
 	
-	private ICalcStrategy[] calcStrategies = {new ModellMinimalDanger(), new ModelMultPotential(), new ModelStandardPaper()};
+	private String[] chooseAlgo = {"Paperalgorithmus", "Modifikation"};
+	private String[] choosePotential = {"ohne Potential", "mit Potential"};
 
 	/** Buttons */
 	protected JButton buttonCalculate = new JButton("Nachrichten sofort berechnen");
 	protected JButton buttonCalculateAnimation = new JButton("Nachrichtenberechnung animieren");
 	protected JButton buttonClear = new JButton("Clear");
 	protected JButton buttonBack = new JButton("Zurück");
-	protected JButton buttonPotentialOnOff = new JButton("Potential aktivieren");
+//	protected JButton buttonPotentialOnOff = new JButton("Potential aktivieren");
 //	protected JButton buttonShowMu = new JButton("berechne minimale Agenten");
 //	protected JToggleButton togglePause = new JToggleButton("\u25AE\u25AE");
 	private JButton buttonNextAgentAnimationStep = new JButton("\u25BA");//RightArrow
@@ -50,14 +51,16 @@ public abstract class Gui extends JPanel{
 	protected JButton buttonCompleteAgentAnimation = new JButton("Baumdekontamination animieren");
 	private JLabel lableAnimationSpeed = new JLabel("Animation speed:");
 	private SpinnerNumberModel spinnerModel_speed = new SpinnerNumberModel(3, 0, 10, 1);
-	private SpinnerNumberModel spinnerModel_potential = new SpinnerNumberModel(1, 1, 999, 1);
+	private SpinnerNumberModel spinnerModel_potential = new SpinnerNumberModel(0, 0, 999, 1);
 	private JSpinner spinnerAnimationSpeed = new JSpinner(spinnerModel_speed);
 	private JSpinner spinnerPotential = new JSpinner(spinnerModel_potential);
 	private JCheckBox checkboxShowMessageData = new JCheckBox("zeige die Berechnung an");
 //	private JCheckBox checkboxEditor = new JCheckBox("editiere den Baum");
 //	private JCheckBox checkboxDisableAllInfos = new JCheckBox("schalte alle Infos aus");
 //	protected JButton buttonDrawAllPotentialEdges = new JButton("FÃ¤rbe alle mÃ¶glichen Kanten");
-	protected JComboBox<ICalcStrategy> comboBoxCalcStrategy = new JComboBox<ICalcStrategy>(calcStrategies);
+	protected JComboBox<String> comboBoxCalcStrategy = new JComboBox<String>(chooseAlgo);
+//	protected JComboBox<String> comboBoxChosePotantial = new JComboBox<String>(choosePotential);
+	protected JLabel lableChosePotantial = new JLabel("ohne Potantial");
 	
 	
 	/** bollean if gui element should be visible*/
@@ -76,6 +79,8 @@ public abstract class Gui extends JPanel{
 	private boolean checkboxShowMessageDataBoolean = false;
 	private boolean checkboxEditorBoolean = true;
 	private boolean buttonDrawAllPotentialEdgesBoolean = true;
+	private boolean comboBoxChosePotantialBoolean = false;
+	private boolean lableChosePotantialBoolean = false;
 	
 	private enum ButtonState{
 		state1, //<2 knoten
@@ -86,9 +91,17 @@ public abstract class Gui extends JPanel{
 		state6, //next msgData animation
 		state7, //wait step msgData animation
 		state8,	//next step agent animation
-		state9; //wait step agent animation
+		state9, //wait step agent animation
+		
+		//north
+		state20, //ausgangssituation, wähle paperModell oder modifikation
+		state21, //mod ausgewählt: wähle msgData
+		state22; //mod ausgewählt: wähle pot
+		
+		
 	};
-	private ButtonState buttonState = ButtonState.state2;
+	private ButtonState buttonStateSouth = ButtonState.state2;
+	private ButtonState buttonStateNorth = ButtonState.state20;
 	
 	
 	protected boolean autoAlgo = false;
@@ -151,20 +164,20 @@ public abstract class Gui extends JPanel{
 			}
 		});
 		
-		buttonPotentialOnOff.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				if(ICalcStrategy.getShowPotential()){
-					ICalcStrategy.setShowPotential(false);
-					buttonPotentialOnOff.setText("Potential einschalten");
-				}else{
-					ICalcStrategy.setShowPotential(true);
-					buttonPotentialOnOff.setText("Potential ausschalten");
-				}
-			}
-		});
+//		buttonPotentialOnOff.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				
+//				if(ICalcStrategy.getShowPotential()){
+//					ICalcStrategy.setShowPotential(false);
+//					buttonPotentialOnOff.setText("Potential einschalten");
+//				}else{
+//					ICalcStrategy.setShowPotential(true);
+//					buttonPotentialOnOff.setText("Potential ausschalten");
+//				}
+//			}
+//		});
 		
 
 		buttonCalculateAnimation.addActionListener(new ActionListener() {
@@ -235,16 +248,32 @@ public abstract class Gui extends JPanel{
 		});
 		
 	spinnerPotential.addChangeListener(new ChangeListener() {
-		
 		@Override
 		public void stateChanged(ChangeEvent e) {
+			
+//			System.out.println("spinnerPotential");
 			CIMAVertice.setPotential((int) spinnerPotential.getValue());
-			if((int) spinnerPotential.getValue() <= 1){
-				comboBoxCalcStrategy.setSelectedIndex(0);
-				CIMAVertice.setStrategy((ICalcStrategy) comboBoxCalcStrategy.getSelectedItem());
+			if((int) spinnerPotential.getValue() <= 0){
+//				System.out.println("case1 "+spinnerPotential.getValue());
+//				comboBoxChosePotantial.setSelectedIndex(0);
+				lableChosePotantial.setText("ohne Potantial");
+				CIMAVertice.setStrategy(new ModelMultPotential());
+				ICalcStrategy.setShowPotential(false);
+				treeChanged();
+			}else if((int) spinnerPotential.getValue() == 1){
+//				System.out.println("case2 "+spinnerPotential.getValue());
+//				comboBoxChosePotantial.setSelectedIndex(1);
+				lableChosePotantial.setText("Potantial = 1");
+				CIMAVertice.setStrategy(new ModellMinimalDanger());
+				ICalcStrategy.setShowPotential(true);
+				treeChanged();
 			}else{
-				comboBoxCalcStrategy.setSelectedIndex(1);
-				CIMAVertice.setStrategy((ICalcStrategy) comboBoxCalcStrategy.getSelectedItem());
+//				System.out.println("case3 "+spinnerPotential.getValue());
+//				comboBoxChosePotantial.setSelectedIndex(1);
+				lableChosePotantial.setText("Potential \u2265 1");
+				CIMAVertice.setStrategy(new ModelMultPotential());
+				ICalcStrategy.setShowPotential(true);
+				treeChanged();
 			}
 		}
 	});
@@ -309,19 +338,55 @@ public abstract class Gui extends JPanel{
 //			}
 //		});
 		
+//		comboBoxChosePotantial.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				
+//				System.out.println("comboBoxChosePotantial");
+//				
+//				if(comboBoxChosePotantial.getSelectedIndex() == 0){
+//					System.out.println("ohne Potential");
+//					CIMAVertice.setStrategy(new ModelStandardPaper());
+//					spinnerPotential.setValue(0);
+//					ICalcStrategy.setShowPotential(false);
+//					buttonStateNorth = ButtonState.state21;
+//				}else{
+//					System.out.println("mit Potential");
+//					CIMAVertice.setStrategy(new ModellMinimalDanger());
+//					spinnerPotential.setValue(1);
+//					ICalcStrategy.setShowPotential(true);
+//					buttonStateNorth = ButtonState.state22;
+//					
+//					if((int) spinnerPotential.getValue() < 1){
+//						System.out.println("...darum setze Potential");
+//						spinnerPotential.setValue(1);
+//					}
+//				}
+//				
+//			}
+//		});
+		
+		
 		comboBoxCalcStrategy.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				CIMAVertice.setStrategy((ICalcStrategy) comboBoxCalcStrategy.getSelectedItem());
-				
-				
+				if(comboBoxCalcStrategy.getSelectedIndex() == 0){
+					CIMAVertice.setStrategy(new ModelStandardPaper());
+					buttonStateNorth = ButtonState.state20;
+					treeChanged();
+				}else{
+					CIMAVertice.setStrategy(new ModelMultPotential());
+					buttonStateNorth = ButtonState.state21;
+					treeChanged();
+				}
 			}
 		});
 		//init
 		comboBoxCalcStrategy.setSelectedIndex(0);
-		CIMAVertice.setStrategy((ICalcStrategy) comboBoxCalcStrategy.getSelectedItem());
+		CIMAVertice.setStrategy(new ModelStandardPaper());
 		
 		
 
@@ -329,7 +394,9 @@ public abstract class Gui extends JPanel{
 //		buttonBarNorth.add(checkboxEditor);
 //		buttonBarNorth.add(buttonDrawAllPotentialEdges);
 		buttonBarNorth.add(comboBoxCalcStrategy);
-		buttonBarNorth.add(buttonPotentialOnOff);
+//		buttonBarNorth.add(buttonPotentialOnOff);
+//		buttonBarNorth.add(comboBoxChosePotantial);
+		buttonBarNorth.add(lableChosePotantial);
 		buttonBarNorth.add(spinnerPotential);
 //		buttonBarNorth.add(checkboxDisableAllInfos);
 		this.add(buttonBarNorth, "North");
@@ -439,37 +506,37 @@ public abstract class Gui extends JPanel{
 		/***  BUTTON logic   **/
 		/* button south*/
 		
-		buttonState = ButtonState.state2; //default
+		buttonStateSouth = ButtonState.state2; //default
 		
 		if(CIMAAnimation.getCIMAAnimation().singleStepAnimationIsInProgress() && !CIMAVertice.drawMu){
-			buttonState = ButtonState.state7;
+			buttonStateSouth = ButtonState.state7;
 		}
 		
 		if(rootVertice == null || rootVertice.getChildren().size() < 1){
-			buttonState = ButtonState.state1;
+			buttonStateSouth = ButtonState.state1;
 		}
 		
 		if(CIMAAnimation.getCIMAAnimation().animationIsInProgress() && !CIMAVertice.activeAgentAnimation){
-			buttonState = ButtonState.state3;
+			buttonStateSouth = ButtonState.state3;
 			
-			if(CIMAAnimation.getCIMAAnimation().singeAnimationModus){
-				buttonState = ButtonState.state6;
+			if(CIMAAnimation.singeAnimationModus){
+				buttonStateSouth = ButtonState.state6;
 			}
 		}
 		
 		if(!CIMAAnimation.getCIMAAnimation().animationIsInProgress() && CIMAVertice.drawMu){
-			buttonState = ButtonState.state4;
+			buttonStateSouth = ButtonState.state4;
 			
 			if(CIMAAnimation.getCIMAAnimation().singleStepAnimationIsInProgress()){
-				buttonState = ButtonState.state9;
+				buttonStateSouth = ButtonState.state9;
 			}
 		}
 		
 		if(CIMAAnimation.getCIMAAnimation().animationIsInProgress() && CIMAVertice.activeAgentAnimation){
-			buttonState = ButtonState.state5;
+			buttonStateSouth = ButtonState.state5;
 			
-			if(CIMAAnimation.getCIMAAnimation().singeAnimationModus){
-				buttonState = ButtonState.state8;
+			if(CIMAAnimation.singeAnimationModus){
+				buttonStateSouth = ButtonState.state8;
 			}
 		}
 		
@@ -501,54 +568,72 @@ public abstract class Gui extends JPanel{
 		buttonPotentialOnOffBoolean = true;
 		
 		
-		if(buttonState == ButtonState.state1){//<2 knoten
+		if(buttonStateSouth == ButtonState.state1){//<2 knoten
 			buttonClearBoolean = true;
 		}
-		if(buttonState == ButtonState.state2){//"normal"
+		if(buttonStateSouth == ButtonState.state2){//"normal"
 			buttonClearBoolean = true;
 			buttonCalculateBoolean = true;
 			buttonCalculateAnimationBoolean = true;
 			buttonNextCalculateAnimationStepBoolean  = true;
 		}
-		if(buttonState == ButtonState.state3){//bei msgData animation
+		if(buttonStateSouth == ButtonState.state3){//bei msgData animation
 			buttonCalculateAnimationBoolean = true;
 			spinnerAnimationSpeedBoolean = true;
 		}
-		if(buttonState == ButtonState.state4){//nach msgData animation
+		if(buttonStateSouth == ButtonState.state4){//nach msgData animation
 			buttonBackBoolean = true;
 			buttonCompleteAgentAnimationBoolean = true;
 			buttonClearBoolean = true;
 			buttonNextAgentAnimationStepBoolean = true;
 		}
-		if(buttonState == ButtonState.state5){//bei baumdekonta. animation
+		if(buttonStateSouth == ButtonState.state5){//bei baumdekonta. animation
 			buttonCompleteAgentAnimationBoolean = true;
 			spinnerAnimationSpeedBoolean = true;
 		}
 		
 		//next steps...
-		if(buttonState == ButtonState.state6){//next step msgData animation
-			buttonNextCalculateAnimationStepBoolean = true;
+		if(buttonStateSouth == ButtonState.state6){//next step msgData animation
+			buttonNextCalculateAnimationStepBoolean = false;
 //			buttonCalculateAnimationBoolean = true;
 			spinnerAnimationSpeedBoolean = true;
 		}
 		
-		if(buttonState == ButtonState.state7){//wait step msgData animation
+		if(buttonStateSouth == ButtonState.state7){//wait step msgData animation
 			buttonNextCalculateAnimationStepBoolean = true;
 			buttonCalculateAnimationBoolean = true;
 		}
 		
-		if(buttonState == ButtonState.state8){//next step agent animation
-			buttonNextAgentAnimationStepBoolean = true;
+		if(buttonStateSouth == ButtonState.state8){//next step agent animation
+			buttonNextAgentAnimationStepBoolean = false;
 //			buttonCompleteAgentAnimationBoolean = true;
 			spinnerAnimationSpeedBoolean = true;
 		}
 		
-		if(buttonState == ButtonState.state9){//wait step agent animation
+		if(buttonStateSouth == ButtonState.state9){//wait step agent animation
 			buttonNextAgentAnimationStepBoolean = true;
 			buttonCompleteAgentAnimationBoolean = true;
 		}
 		
 		
+		//north
+		if(buttonStateNorth == ButtonState.state20){//ausgangssituation
+			spinnerPotentialBoolean = false;		
+			comboBoxChosePotantialBoolean = false;
+			lableChosePotantialBoolean = false;
+		}
+
+		if(buttonStateNorth == ButtonState.state21){//modifikation ausgewählt, ohne pot
+			spinnerPotentialBoolean = true;
+			comboBoxChosePotantialBoolean = true;
+			lableChosePotantialBoolean = true;
+		}
+		
+		if(buttonStateNorth == ButtonState.state22){//modifikation ausgewählt, mit pot
+			spinnerPotentialBoolean = true;
+			comboBoxChosePotantialBoolean = true;
+			lableChosePotantialBoolean = true;
+		}
 
 		
 		
@@ -663,7 +748,7 @@ public abstract class Gui extends JPanel{
 		buttonSetEnabled(buttonCalculate, buttonCalculateBoolean);
 		buttonSetEnabled(buttonCalculateAnimation, buttonCalculateAnimationBoolean);
 		buttonSetEnabled(buttonClear, buttonClearBoolean);
-		buttonSetEnabled(buttonPotentialOnOff, buttonPotentialOnOffBoolean);
+//		buttonSetEnabled(buttonPotentialOnOff, buttonPotentialOnOffBoolean);
 		buttonSetEnabled(buttonBack, buttonBackBoolean);
 //		buttonSetEnabled(buttonShowMu, buttonShowMuBoolean);
 //		buttonSetEnabled(buttonNextAgentAnimationStep, buttonNextAgentAnimationStepBoolean);
@@ -674,7 +759,10 @@ public abstract class Gui extends JPanel{
 //		togglePause.setVisible(togglePauseBoolean);
 		lableAnimationSpeed.setVisible(spinnerAnimationSpeedBoolean);
 		spinnerAnimationSpeed.setVisible(spinnerAnimationSpeedBoolean);
+		spinnerPotential.setVisible(spinnerPotentialBoolean);
 		checkboxShowMessageData.setVisible(checkboxShowMessageDataBoolean);
+//		comboBoxChosePotantial.setVisible(comboBoxChosePotantialBoolean);
+		lableChosePotantial.setVisible(lableChosePotantialBoolean);
 //		checkboxEditor.setVisible(checkboxEditorBoolean);
 //		buttonDrawAllPotentialEdges.setVisible(buttonDrawAllPotentialEdgesBoolean);
 		
@@ -711,6 +799,8 @@ public abstract class Gui extends JPanel{
 
 	protected abstract void calcAlgorithmus(boolean repaintBool);
 	protected abstract void addGuiMouseListener();
+	protected abstract void treeChanged();
+	
 
 }
 

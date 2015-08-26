@@ -117,11 +117,16 @@ public class CIMAGui extends Gui{
 	}
 
 	
-	private void treeChanged(){
+	@Override
+	protected void treeChanged(){
 		CIMAVertice.drawMu = false;
+		if(gui != null){
+			CIMAAnimation.getCIMAAnimation().stopAllAnimations();
+		}
 		if(rootVertice != null){
 			((CIMAVertice) rootVertice).reset();
 		}
+		repaint();
 	}
 
 }
