@@ -77,15 +77,23 @@ public class MessageData_complexPotential extends MessageData{
 	}
 	
 	private void displayPotentialCalculation(Graphics2D g){
-		String[] explainStrings = 
-			{"Nachricht", 
-				"normale Nachricht: "+lamdaValue, 
-				"bestmögliche Nachricht: "+bestPossibleLamdaValue};
-		InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, Color.BLUE, null, explainStrings);
+		String[] explainStrings = new String[3]; 
+		explainStrings[0] = "normale Nachricht: "+lamdaValue;
+		explainStrings[1] = "bestmögliche Nachricht: "+bestPossibleLamdaValue;
+		explainStrings[2] = potentialEdges.size()+" Kanten protokolliert";
+		
+		
+		InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, explainStrings[0], 1, Color.BLACK, ovalColor);
+		InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, explainStrings[1], 2, Color.BLACK, null);
+		if(potentialEdges.size() > 0){
+			InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, explainStrings[2], 3, Color.BLACK, markColor);
+		}else{
+			InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, explainStrings[2], 3, Color.BLACK, null);
+		}
 		
 		
 		for(CIMAEdgeWeight edge : potentialEdges){
-			edge.setOvalColor(Color.GREEN, Color.BLACK);
+			edge.setOvalColor(markColor, Color.BLACK);
 //			System.out.println("color "+edge.toString());
 		}
 	}
@@ -130,15 +138,18 @@ public class MessageData_complexPotential extends MessageData{
 		if((max1.getValue() + max2.getValue()) == lamdaValue){
 			max1.setOvalColor(markColor, Color.BLACK);
 			max2.setOvalColor(markColor, Color.BLACK);
-			maxColor = Color.GREEN;
+//			maxColor = Color.GREEN;
+			maxColor = markColor;
 			explainStrings[0] = "Neue Nachricht = max1 + max2:";
 		}else if(edge.getValue() == lamdaValue){
 			edge.setOvalColor(markColor, Color.BLACK);
-			edgeColor = Color.GREEN;
+//			edgeColor = Color.GREEN;
+			edgeColor = markColor;
 			explainStrings[0] = "Neue Nachricht = Nachrichtenkante";
 		}else if(msgData.getValue() == lamdaValue){
 			msgData.setOvalColor(markColor, Color.BLACK);
-			msgDataColor = Color.GREEN;
+//			msgDataColor = Color.GREEN;
+			msgDataColor = markColor;
 			explainStrings[0] = "Neue Nachricht = größte Nachricht";
 		}else{
 			System.out.println("######################################################################\n"
@@ -146,7 +157,7 @@ public class MessageData_complexPotential extends MessageData{
 					+ "######################################################################");
 		}
 		
-		InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, explainStrings[0], 1, Color.BLACK, Color.GREEN);
+		InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, explainStrings[0], 1, Color.BLACK, markColor);
 		InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, explainStrings[1], 2, Color.BLACK, maxColor);
 		InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, explainStrings[2], 3, Color.BLACK, edgeColor);
 		InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, explainStrings[3], 4, Color.BLACK, msgDataColor);
