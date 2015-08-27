@@ -123,6 +123,9 @@ public class AgentWayData {
 				if(vektorLength < 2*animationSpeed){
 					this.interrupt();
 				}
+				if(CIMAAnimation.getCIMAAnimation().breakAnimation()){
+					this.interrupt();
+				}
 			}
 			
 //			activeAgent = false;

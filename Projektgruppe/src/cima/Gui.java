@@ -251,6 +251,8 @@ public abstract class Gui extends JPanel{
 		@Override
 		public void stateChanged(ChangeEvent e) {
 			
+			treeChanged();
+			
 //			System.out.println("spinnerPotential");
 			CIMAVertice.setPotential((int) spinnerPotential.getValue());
 			if((int) spinnerPotential.getValue() <= 0){
@@ -259,21 +261,18 @@ public abstract class Gui extends JPanel{
 				lableChosePotantial.setText("ohne Potantial");
 				CIMAVertice.setStrategy(new ModelMultPotential());
 				ICalcStrategy.setShowPotential(false);
-				treeChanged();
 			}else if((int) spinnerPotential.getValue() == 1){
 //				System.out.println("case2 "+spinnerPotential.getValue());
 //				comboBoxChosePotantial.setSelectedIndex(1);
 				lableChosePotantial.setText("Potantial = 1");
 				CIMAVertice.setStrategy(new ModellMinimalDanger());
 				ICalcStrategy.setShowPotential(true);
-				treeChanged();
 			}else{
 //				System.out.println("case3 "+spinnerPotential.getValue());
 //				comboBoxChosePotantial.setSelectedIndex(1);
 				lableChosePotantial.setText("Potential \u2265 1");
 				CIMAVertice.setStrategy(new ModelMultPotential());
 				ICalcStrategy.setShowPotential(true);
-				treeChanged();
 			}
 		}
 	});

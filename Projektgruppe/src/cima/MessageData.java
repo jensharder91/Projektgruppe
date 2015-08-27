@@ -390,6 +390,10 @@ public abstract class MessageData implements IMarkable{
 					this.interrupt();
 					break;
 				}
+				if(CIMAAnimation.getCIMAAnimation().breakAnimation()){
+					this.interrupt();
+					break;
+				}
 			}
 			
 //			currentMsgDataAnimation.clearExplainMessageData();

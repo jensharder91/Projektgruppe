@@ -39,9 +39,12 @@ public class CIMAAnimation {
 	public boolean singleStepAnimationIsInProgress(){
 		return animationInProgress || singeAnimationModus;
 	}
+	public boolean breakAnimation(){
+		return breakThread;
+	}
 	
 	public void stopAllAnimations(){
-		
+				
 //		if(CIMAVertice.activeAnimation || MessageData.animationInProgress){
 		if(animationInProgress){
 			index = 0;
@@ -297,7 +300,11 @@ public class CIMAAnimation {
 //					}
 					index = 0;
 					singeAnimationModus = false;
-					CIMAVertice.drawMu = true;
+					if(!breakThread){
+						CIMAVertice.drawMu = true;
+						System.out.println("set draw Mu = true");
+					}
+					
 				}
 				
 
