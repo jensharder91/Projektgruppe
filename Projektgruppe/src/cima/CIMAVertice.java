@@ -227,8 +227,12 @@ public class CIMAVertice extends Vertice implements IMarkable{
 		
 		lamdas.clear();
 		for(MessageData msgData : messageDataList){
-//			msgData.resetAllColors();
+			msgData.resetColor();
 		}
+		if(edgeWeightToParent != null){
+			edgeWeightToParent.resetColor();
+		}
+		resetColor();
 		messageDataList.clear();
 		agentWayList.clear();
 		resetCurrentAgents();
@@ -513,7 +517,9 @@ public class CIMAVertice extends Vertice implements IMarkable{
 		CIMAVertice.potential = potential;
 	}
 	
-	//potential >= 1
+	
+	
+	//potential k >= 1  und k == 1
 	public void setBestMu(int bestMu){
 		this.bestMu = bestMu;
 	}

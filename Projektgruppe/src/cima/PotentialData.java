@@ -6,7 +6,7 @@ import java.util.List;
 public class PotentialData {
 	
 	private boolean flag = false;
-	private List<CIMAEdgeWeight> potentialEdgeWeights = new ArrayList<CIMAEdgeWeight>();
+	private ArrayList<CIMAEdgeWeight> potentialEdgeWeights = new ArrayList<CIMAEdgeWeight>();
 	private CIMAVertice vertice = null;
 	
 	
@@ -90,11 +90,11 @@ public class PotentialData {
 	public void setPotentialEdgeWeight(CIMAEdgeWeight potentialEdgeWeight1, CIMAEdgeWeight potentialEdgeWeight2){
 		flag = false;
 		potentialEdgeWeights.clear();
-		if(potentialEdgeWeight1.getValue() > 0){
+		if(potentialEdgeWeight1.getValue() > 1){
 			potentialEdgeWeights.add(potentialEdgeWeight1);
 		}
 		if(potentialEdgeWeight2 != null){
-			if(potentialEdgeWeight2.getValue() > 0){
+			if(potentialEdgeWeight2.getValue() > 1){
 				potentialEdgeWeights.add(potentialEdgeWeight2);
 			}
 		}
@@ -138,7 +138,7 @@ public class PotentialData {
 		return flag;
 	}
 	
-	public List<CIMAEdgeWeight> getPotentialEdgeWeights(){
+	public ArrayList<CIMAEdgeWeight> getPotentialEdgeWeights(){
 		return potentialEdgeWeights;
 	}
 	

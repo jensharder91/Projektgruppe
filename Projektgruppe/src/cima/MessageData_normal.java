@@ -53,7 +53,7 @@ public class MessageData_normal extends MessageData{
 		//default coloring
 		max1.setOvalColor(defaultColorMax, Color.BLACK);
 		max2.setOvalColor(defaultColorMax, Color.BLACK);
-		vertice.setOvalColor(defaultColorEdge, Color.BLACK);
+		vertice.setOvalColor(defaultColorMax, Color.BLACK);
 		
 		
 		String[] explainStrings = new String[4];
@@ -61,7 +61,7 @@ public class MessageData_normal extends MessageData{
 		explainStrings[2] = "Knotengewicht ("+vertice.getValue()+") + max2 ("+max2.getValue()+") = "+(vertice.getValue()+max2.getValue());
 		
 		Color maxColor = defaultColorMax;
-		Color edgeColor = defaultColorEdge;
+		Color edgeColor = defaultColorMax;
 			
 
 		if((max1.getValue()) == lamdaValue){

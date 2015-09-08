@@ -2,7 +2,9 @@ package cima;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MessageData_simplePotential extends MessageData{
@@ -42,24 +44,58 @@ public class MessageData_simplePotential extends MessageData{
 		}
 	}
 	
+//	private void displayPotentialCalculation(Graphics2D g){
+////		String[] explainStrings = 
+////			{"Nachricht", 
+////				"normale Nachricht: "+lamdaValue, 
+////				"bestmögliche Nachricht: "+bestPossibleLamdaValue};
+////		InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, Color.BLUE, null, explainStrings);
+////		
+////		
+////		for(CIMAEdgeWeight edge : potentialEdges){
+////			edge.setOvalColor(Color.GREEN);
+//////			System.out.println("color "+edge.toString());
+////		}
+//		
+//		String[] explainStrings = {"test1", "test2", "hier erklär ich die msgData"};
+//		InfoDisplayClass.getInfoDisplayClass().displayInLowerRightCorner(g, Color.RED, null, explainStrings);
+//		
+////		System.out.println(potentialData.toString());
+//	}
 	private void displayPotentialCalculation(Graphics2D g){
-//		String[] explainStrings = 
-//			{"Nachricht", 
-//				"normale Nachricht: "+lamdaValue, 
-//				"bestmögliche Nachricht: "+bestPossibleLamdaValue};
-//		InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, Color.BLUE, null, explainStrings);
-//		
-//		
-//		for(CIMAEdgeWeight edge : potentialEdges){
-//			edge.setOvalColor(Color.GREEN);
-////			System.out.println("color "+edge.toString());
-//		}
 		
-		String[] explainStrings = {"test1", "test2", "hier erklär ich die msgData"};
-		InfoDisplayClass.getInfoDisplayClass().displayInLowerRightCorner(g, Color.RED, null, explainStrings);
+		
+		boolean flag = potentialData.getFlag();
+		List<CIMAEdgeWeight> potentialEdgeWeights = potentialData.getPotentialEdgeWeights();
+		
+		
+		String[] explainStrings = new String[2]; 
+		explainStrings[0] = "normale Nachricht: "+lamdaValue;
+		explainStrings[1] = potentialEdgeWeights.size()+" Kanten protokolliert";
+		
+		
+		InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, explainStrings[0], 1, Color.BLACK, ovalColor);
+//		InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, explainStrings[1], 2, Color.BLACK, null);
+		if(potentialEdgeWeights.size() > 0){
+			InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, explainStrings[1], 2, Color.BLACK, markColor);
+		}else{
+			InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, explainStrings[1], 2, Color.BLACK, null);
+		}
+		
+		
+		for(CIMAEdgeWeight edge : potentialEdgeWeights){
+			edge.setOvalColor(markColor, Color.BLACK);
+//			System.out.println("color "+edge.toString());
+		}
 	}
 	
 	private void displayValueCalculation(Graphics2D g){
+		
+		List<CIMAEdgeWeight> potentialEdgeWeights = potentialData.getPotentialEdgeWeights();
+		for(CIMAEdgeWeight edge : potentialEdgeWeights){
+			edge.resetColor();
+//			System.out.println("color "+edge.toString());
+		}
 		
 		IMarkable max1 = mapMarkable.get("max1");
 		IMarkable max2 = mapMarkable.get("max2");
@@ -139,6 +175,14 @@ public class MessageData_simplePotential extends MessageData{
 		max2.resetColor();
 		edge.resetColor();
 		msgData.resetColor();
+	}
+	
+	public boolean getFlag(){
+		return potentialData.getFlag();
+	}
+	
+	public ArrayList<CIMAEdgeWeight> getPotentialEdgeWeights(){
+		return potentialData.getPotentialEdgeWeights();
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package cima;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 public class ModellMinimalDanger extends ICalcStrategy{
+	
+	private static int bestPossibleLamdaValue;
+	private static ArrayList<CIMAEdgeWeight> potentialEdges = new ArrayList<CIMAEdgeWeight>();
 
 	@Override
 	public MessageData calcMessageData(CIMAVertice senderNode, CIMAVertice receiverNode, int potential) {
@@ -96,7 +100,12 @@ public class ModellMinimalDanger extends ICalcStrategy{
 				
 				
 			}else{
-				calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, edgeToReceiverNode.getValue(), mapMarkable, new PotentialData(edgeToReceiverNode));								
+				//check if edgeToReceiver is > 1,  if not.. set flag
+				if(edgeToReceiverNode.getValue() > 1){
+					calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, edgeToReceiverNode.getValue(), mapMarkable, new PotentialData(edgeToReceiverNode));								
+				}else{
+					calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, edgeToReceiverNode.getValue(), mapMarkable, new PotentialData(true));
+				}
 			}
 			
 			//
@@ -253,6 +262,13 @@ public class ModellMinimalDanger extends ICalcStrategy{
 			mu = biggestMsgData.getValue();
 		}
 		
+		
+		//return...
+		if(!potentialData.getFlag()){
+			vertice.setBestMu(mu -1);
+			vertice.setPotentialEdges(potentialData.getPotentialEdgeWeights());
+		}
+		
 		return mu;
 	}
 
@@ -265,8 +281,62 @@ public class ModellMinimalDanger extends ICalcStrategy{
 
 	@Override
 	public void displayResult(CIMAVertice vertice, Graphics2D g2) {
-		// TODO Auto-generated method stub
 		
+		System.out.println("displayResult");
+		
+		bestPossibleLamdaValue = CIMAVertice.getMinimalMu();
+		potentialEdges = new ArrayList<CIMAEdgeWeight>();
+		
+		//find root
+		while (vertice.getParent() != null) {
+			vertice = (CIMAVertice) vertice.getParent();
+		}
+		
+		calcBestPossibleLamdaValue(vertice);
+		
+		//check if potential reduce the minimumMu
+		if(bestPossibleLamdaValue >= CIMAVertice.getMinimalMu()){
+			bestPossibleLamdaValue = CIMAVertice.getMinimalMu();
+			potentialEdges.clear();
+		}
+		
+//		System.out.println("bestPossibleLamdaValue vom ganzen Baum: "+bestPossibleLamdaValue + "  potentialEdges:  "+potentialEdges.toString());
+		
+		if(ICalcStrategy.showPotential){
+			if(potentialEdges.size() > 0){
+				InfoDisplayClass.getInfoDisplayClass().displayInUpperRightCorner(g2, "Agentenzahl kann auf  >>"+bestPossibleLamdaValue+"<<  reduziert werde", 1, Color.black, null);
+				for(CIMAEdgeWeight edge : potentialEdges){
+					edge.setOvalColor(Color.RED);
+					edge.draw(g2);
+				}
+			}else{
+				InfoDisplayClass.getInfoDisplayClass().displayInUpperRightCorner(g2, "Agentenzahl kann  >>nicht<<  reduziert werde", 1, Color.black, null);
+			}
+		}
+		
+	}
+	
+	private void calcBestPossibleLamdaValue(CIMAVertice vertice){
+		
+			
+		if(vertice.getBestMu() < bestPossibleLamdaValue){
+			bestPossibleLamdaValue = vertice.getBestMu();
+			potentialEdges.clear();
+			potentialEdges = vertice.getPotentialEdges();
+		}else if(vertice.getBestMu() == bestPossibleLamdaValue){
+			bestPossibleLamdaValue = vertice.getBestMu();
+			
+			for(CIMAEdgeWeight weight : vertice.getPotentialEdges()){
+				if(!potentialEdges.contains(weight)){
+					potentialEdges.add(weight);
+				}
+			}
+//			potentialEdges.addAll(vertice.getPotentialEdges());
+		}
+		
+		for(Vertice childVertice : vertice.getChildren()){
+			calcBestPossibleLamdaValue(((CIMAVertice)childVertice));
+		}
 	}
 
 }

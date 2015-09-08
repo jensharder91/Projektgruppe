@@ -481,6 +481,8 @@ public class ModelMultPotential extends ICalcStrategy{
 	@Override
 	public void displayResult(CIMAVertice vertice, Graphics2D g2) {
 		
+		System.out.println("displayResult");
+		
 		bestPossibleLamdaValue = CIMAVertice.getMinimalMu();
 		potentialEdges = new ArrayList<CIMAEdgeWeight>();
 		

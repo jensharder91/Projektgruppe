@@ -54,6 +54,8 @@ public class CIMAAnimation {
 			stopAgentAnimation();
 			stopSendMessageAnimation();
 		}
+		index = 0;
+		singeAnimationModus = false;
 	}
 
 	/*

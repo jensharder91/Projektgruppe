@@ -505,6 +505,18 @@ public abstract class Gui extends JPanel{
 		/***  BUTTON logic   **/
 		/* button south*/
 		
+//		System.out.println("##button logik:");
+//		System.out.println("CIMAAnimation.getCIMAAnimation().singleStepAnimationIsInProgress(): "+CIMAAnimation.getCIMAAnimation().singleStepAnimationIsInProgress());
+//		System.out.println("CIMAVertice.drawMu: "+CIMAVertice.drawMu);
+//		if(rootVertice == null){
+//			System.out.println("root == null: true");
+//		}else{
+//			System.out.println("rootVertice == null || rootVertice.getChildren().size() < 1: "+ rootVertice == null || rootVertice.getChildren().size() < 1);
+//		}
+//		System.out.println("CIMAAnimation.getCIMAAnimation().animationIsInProgress(): "+CIMAAnimation.getCIMAAnimation().animationIsInProgress());
+//		System.out.println("CIMAVertice.activeAgentAnimation: "+CIMAVertice.activeAgentAnimation);
+//		System.out.println("##end");
+		
 		buttonStateSouth = ButtonState.state2; //default
 		
 		if(CIMAAnimation.getCIMAAnimation().singleStepAnimationIsInProgress() && !CIMAVertice.drawMu){
@@ -538,6 +550,8 @@ public abstract class Gui extends JPanel{
 				buttonStateSouth = ButtonState.state8;
 			}
 		}
+		
+//		System.out.println("BUTTON STATE: "+buttonStateSouth);
 		
 		/* button north */
 		
