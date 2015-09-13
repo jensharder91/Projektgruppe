@@ -302,9 +302,7 @@ public abstract class MessageData implements IMarkable{
 	}
 	
 	public void resetCurrentmsgDataAnimation(){
-		System.out.println("reset..");
 		if(currentMsgDataAnimation != null){
-			System.out.println("reseting....");
 			currentMsgDataAnimation.resetColor();
 			currentMsgDataAnimation.clearExplainMessageData();
 			currentMsgDataAnimation.setReadyAnimated();

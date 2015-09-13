@@ -240,7 +240,6 @@ public class CIMAAnimation {
 					singeAnimationModus = false;
 					if(!breakThread){
 						CIMAVertice.drawMu = true;
-						System.out.println("set draw Mu = true");
 					}
 					
 				}
@@ -288,9 +287,7 @@ public class CIMAAnimation {
 			SendMessageAnimationTimer timer = messageDataList.get(i).animation();
 			try {
 				timer.join();
-				System.out.println("join.... i = "+i+"  / msgDataList.size() = "+messageDataList.size());
 				if(i == messageDataList.size()-1){
-					System.out.println("ende");
 					messageDataList.get(i).resetCurrentmsgDataAnimation();
 				}
 			} catch (InterruptedException e) {

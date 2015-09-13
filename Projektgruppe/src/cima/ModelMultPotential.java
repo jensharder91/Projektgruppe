@@ -53,7 +53,6 @@ public class ModelMultPotential extends ICalcStrategy{
 		mapMarkable.put("max2", max2);
 		mapMarkable.put("edge", edgeValue);
 		mapMarkable.put("msgData", maxMsgData);
-		System.out.println("case a: Sender: "+sender.getName()+" --> Receiver: "+receiver.getName());
 		
 		//normal value without potential
 		int normalMsgDataValue = calcMsgDataValue(max1.getValue(), max2.getValue(), maxMsgData.getValue(), edgeValue.getValue());
@@ -67,12 +66,10 @@ public class ModelMultPotential extends ICalcStrategy{
 		//case1: reduce the edgeValue
 		reducedValue = edgeValue.getValue() - potential;
 		if(reducedValue < 1){
-			System.out.println("case b_1");
 			reducedValue = 1;
 		}
 		possibleMsgData = calcMsgDataValue(max1.getValue(), max2.getValue(), maxMsgData.getValue(), reducedValue);
 		if(possibleMsgData <= bestMsgDataValue){
-			System.out.println("case b_2");
 			bestMsgDataValue = possibleMsgData;
 			newMessageData.updateMessageData(bestMsgDataValue, edgeValue);
 		}
@@ -80,16 +77,13 @@ public class ModelMultPotential extends ICalcStrategy{
 		//case2: reduce the max1
 		reducedValue = max1.getValue() - potential;
 		if(reducedValue < 1){
-			System.out.println("case c_1");
 			reducedValue = 1;
 		}
 		if(reducedValue < max3.getValue()){
 			reducedValue = max3.getValue();
-			System.out.println("case c_2");
 		}
 		possibleMsgData = calcMsgDataValue(reducedValue, max2.getValue(), maxMsgData.getValue(), edgeValue.getValue());
 		if(possibleMsgData <= bestMsgDataValue){
-			System.out.println("case c_3");
 			bestMsgDataValue = possibleMsgData;
 			newMessageData.updateMessageData(bestMsgDataValue, max1);
 		}
@@ -97,53 +91,41 @@ public class ModelMultPotential extends ICalcStrategy{
 		//case3: reduce the max2
 		reducedValue = max2.getValue() - potential;
 		if(reducedValue < 1){
-			System.out.println("case d_1");
 			reducedValue = 1;
 		}
 		if(reducedValue < max3.getValue()){
 			reducedValue = max3.getValue();
-			System.out.println("case d_2");
 		}
 		possibleMsgData = calcMsgDataValue(max1.getValue(), reducedValue, maxMsgData.getValue(), edgeValue.getValue());
 		if(possibleMsgData <= bestMsgDataValue){
-			System.out.println("case d_3");
 			bestMsgDataValue = possibleMsgData;
 			newMessageData.updateMessageData(bestMsgDataValue, max2);
 		}
 		
 		//case4: reduce the maxMsgData
-		System.out.println("case e");
 		reducedValue = maxMsgData.getBestPossiblelamdaValue();
 		if(reducedValue < 1){
-			System.out.println("case e_1");
 			reducedValue = 1;
 		}
 		
 		
 		if(reducedValue < max2MsgData.getValue()){
-			System.out.println("case e_1_b");
 			int reducedValueFromMax2MsgData = max2MsgData.getValue();
 			
 			
 			if(reducedValue < max3.getValue()){
 				reducedValue = max3.getValue();
-				System.out.println("case e_1_b2");
 			}
 			
 			if(maxMsgData.getPotentialEdges() != null){
-				System.out.println("case e_2b");
 				if(maxMsgData.getPotentialEdges().size() == 1 && maxMsgData.getPotentialEdges().get(0).equals(max1)){
-					System.out.println("case e_3b");
 					possibleMsgData = calcMsgDataValue(reducedValue, max2.getValue(), reducedValueFromMax2MsgData, edgeValue.getValue());					
 				}else if(maxMsgData.getPotentialEdges().size() == 1 && maxMsgData.getPotentialEdges().get(0).equals(max2)){
-					System.out.println("case e_4b");
 					possibleMsgData = calcMsgDataValue(max1.getValue(), reducedValue, reducedValueFromMax2MsgData, edgeValue.getValue());
 				}else{
-					System.out.println("case e_5b");
 					possibleMsgData = calcMsgDataValue(max1.getValue(), max2.getValue(), reducedValueFromMax2MsgData, edgeValue.getValue());
 				}
 				if(possibleMsgData <= bestMsgDataValue){
-					System.out.println("case e_6b");
 					bestMsgDataValue = possibleMsgData;
 					newMessageData.updateMessageData(bestMsgDataValue, maxMsgData.getPotentialEdges());
 				}
@@ -153,27 +135,20 @@ public class ModelMultPotential extends ICalcStrategy{
 			
 			
 		}else if(maxMsgData.getPotentialEdges() != null){
-			System.out.println("case e_2c");
 			if(maxMsgData.getPotentialEdges().size() == 1 && maxMsgData.getPotentialEdges().get(0).equals(max1)){
-				System.out.println("case e_3c");
 				possibleMsgData = calcMsgDataValue(reducedValue, max2.getValue(), reducedValue, edgeValue.getValue());
 			}else if(maxMsgData.getPotentialEdges().size() == 1 && maxMsgData.getPotentialEdges().get(0).equals(max2)){
-				System.out.println("case e_4c");
 				possibleMsgData = calcMsgDataValue(max1.getValue(), reducedValue, reducedValue, edgeValue.getValue());
 			}else{
-				System.out.println("case e_5c");
 				possibleMsgData = calcMsgDataValue(max1.getValue(), max2.getValue(), reducedValue, edgeValue.getValue());
 			}
 			if(possibleMsgData <= bestMsgDataValue){
-				System.out.println("case e_6c");
 				bestMsgDataValue = possibleMsgData;
 				newMessageData.updateMessageData(bestMsgDataValue, maxMsgData.getPotentialEdges());
 			}
 		}
 		
-		//return the bestMsgDataValue		
-		System.out.println("case return: message from "+newMessageData.getSender().getName()+" to "+newMessageData.getReceiver().getName() + " //  data: "+newMessageData.getValue()+" / optimal data: "+newMessageData.getBestPossiblelamdaValue() + " / edges: "+newMessageData.getPotentialEdges());
-		
+		//return the bestMsgDataValue	
 		return newMessageData;
 	}
 
@@ -292,19 +267,16 @@ public class ModelMultPotential extends ICalcStrategy{
 		//case2: reduce the max1
 		reducedValue = max1.getValue() - potential;
 		if(reducedValue < 1){
-			System.out.println("case c_1");
 			reducedValue = 1;
 		}
 		if(reducedValue < max3.getValue()){
 			reducedValue = max3.getValue();
-			System.out.println("case c_2");
 		}
 		possibleMu = calcBestMuValue(reducedValue, max2.getValue(), maxMsgData.getValue());
 		if(possibleMu <= bestMuResult){
 			if(possibleMu < bestMuResult){
 				potentialEdges.clear();
 			}
-			System.out.println("case c_3");
 			bestMuResult = possibleMu;
 			potentialEdges.add(max1);
 		}
@@ -312,19 +284,16 @@ public class ModelMultPotential extends ICalcStrategy{
 		//case3: reduce the max2
 		reducedValue = max2.getValue() - potential;
 		if(reducedValue < 1){
-			System.out.println("case d_1");
 			reducedValue = 1;
 		}
 		if(reducedValue < max3.getValue()){
 			reducedValue = max3.getValue();
-			System.out.println("case d_2");
 		}
 		possibleMu = calcBestMuValue(max1.getValue(), reducedValue, maxMsgData.getValue());
 		if(possibleMu <= bestMuResult){
 			if(possibleMu < bestMuResult){
 				potentialEdges.clear();
 			}
-			System.out.println("case d_3");
 			bestMuResult = possibleMu;
 			potentialEdges.add(max2);
 		}
@@ -333,11 +302,9 @@ public class ModelMultPotential extends ICalcStrategy{
 		boolean edge1Case = true;
 		reducedValue = maxMsgData.getBestPossiblelamdaValue();
 		if(reducedValue < 1){
-			System.out.println("case e_1");
 			reducedValue = 1;
 		}
 		if(reducedValue < max2MsgData.getValue()){
-			System.out.println("case e_1_b");
 			reducedValue = max2MsgData.getValue();
 			edge1Case = false;
 		}
@@ -346,7 +313,6 @@ public class ModelMultPotential extends ICalcStrategy{
 			if(possibleMu < bestMuResult){
 				potentialEdges.clear();
 			}
-			System.out.println("case e_2");
 			bestMuResult = possibleMu;
 			for(CIMAEdgeWeight edge : maxMsgData.getPotentialEdges()){
 				if(!potentialEdges.contains(edge)){
@@ -361,24 +327,18 @@ public class ModelMultPotential extends ICalcStrategy{
 		
 		
 		if(reducedValue < max2MsgData.getValue()){
-			System.out.println("case e_1_b");
 			int reducedValueFromMax2MsgData = max2MsgData.getValue();
 			
 			
 			if(maxMsgData.getPotentialEdges() != null){
-				System.out.println("case e_2b");
 				if(maxMsgData.getPotentialEdges().size() == 1 && maxMsgData.getPotentialEdges().get(0).equals(max1)){
-					System.out.println("case e_3b");
 					possibleMu = calcBestMuValue(reducedValue, max2.getValue(), reducedValueFromMax2MsgData);					
 				}else if(maxMsgData.getPotentialEdges().size() == 1 && maxMsgData.getPotentialEdges().get(0).equals(max2)){
-					System.out.println("case e_4b");
 					possibleMu = calcBestMuValue(max1.getValue(), reducedValue, reducedValueFromMax2MsgData);
 				}else{
-					System.out.println("case e_5b");
 					possibleMu = calcBestMuValue(max1.getValue(), max2.getValue(), reducedValueFromMax2MsgData);
 				}
 				if(possibleMu <= bestMuResult){
-					System.out.println("case e_6b");
 					if(possibleMu < bestMuResult){
 						potentialEdges.clear();
 					}
@@ -395,19 +355,14 @@ public class ModelMultPotential extends ICalcStrategy{
 			
 			
 		}else if(maxMsgData.getPotentialEdges() != null){
-			System.out.println("case e_2c");
 			if(maxMsgData.getPotentialEdges().size() == 1 && maxMsgData.getPotentialEdges().get(0).equals(max1)){
-				System.out.println("case e_3c");
 				possibleMu = calcBestMuValue(reducedValue, max2.getValue(), reducedValue);
 			}else if(maxMsgData.getPotentialEdges().size() == 1 && maxMsgData.getPotentialEdges().get(0).equals(max2)){
-				System.out.println("case e_4c");
 				possibleMu = calcBestMuValue(max1.getValue(), reducedValue, reducedValue);
 			}else{
-				System.out.println("case e_5c");
 				possibleMu = calcBestMuValue(max1.getValue(), max2.getValue(), reducedValue);
 			}
 			if(possibleMu <= bestMuResult){
-				System.out.println("case e_6c");
 				if(possibleMu < bestMuResult){
 					potentialEdges.clear();
 				}
@@ -424,10 +379,7 @@ public class ModelMultPotential extends ICalcStrategy{
 		if(bestMuResult >= mu){
 			potentialEdges.clear();
 		}
-		
-		
-		System.out.println("##VERTICE: "+vertice.getName()+"  // mu: "+mu+ "  bestMu: "+bestMuResult+"  edges: "+potentialEdges.toString());
-		
+
 		
 		//more return values:
 		vertice.setBestMu(bestMuResult);
@@ -438,8 +390,7 @@ public class ModelMultPotential extends ICalcStrategy{
 
 	@Override
 	public void displayResult(CIMAVertice vertice, Graphics2D g2) {
-		
-		System.out.println("displayResult");
+	
 		
 		bestPossibleLamdaValue = CIMAVertice.getMinimalMu();
 		potentialEdges = new ArrayList<CIMAEdgeWeight>();

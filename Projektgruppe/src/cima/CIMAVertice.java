@@ -457,8 +457,6 @@ public class CIMAVertice extends Vertice implements IMarkable{
 	}
 	public void animateAgents(boolean singlestep){
 		
-		System.out.println("####animateAgents!");
-		
 		//calc agents steps
 		if(!activeAgentAnimation){
 			calcAgentsMove();

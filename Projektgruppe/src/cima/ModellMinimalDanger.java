@@ -49,8 +49,6 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		CIMAEdgeWeight max2 = calcSortedEdgeWeightList(senderNode, receiverNode).get(1);
 		CIMAEdgeWeight max3 = calcSortedEdgeWeightList(senderNode, receiverNode).get(2);
 		
-		System.out.println("start calc mesgData...."+senderNode.getName()+" > "+receiverNode.getName());
-		
 	
 		
 		Map<String, IMarkable> mapMarkable = new HashMap<String, IMarkable>();
@@ -124,9 +122,6 @@ public class ModellMinimalDanger extends ICalcStrategy{
 				calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, biggestMsgData.getValue(), mapMarkable, biggestMsgData.getPotentialData().getPotentialDataCopy());								
 			}
 		}
-	
-		
-		System.out.println("end: "+calculatedMessageData.getPotentialData().toString());
 		
 		return calculatedMessageData;
 	}
@@ -186,13 +181,10 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		//default case max1 + max2
 		if(max1.getValue() == max3.getValue()){
 			potentialData = new PotentialData(vertice, true);
-			System.out.println("case a");
 		}else if(max2.getValue() == 0 || max2.getValue() == max3.getValue()){
 			potentialData = new PotentialData(vertice, max1);
-			System.out.println("case b");
 		}else{
 			potentialData = new PotentialData(vertice, max1, max2);
-			System.out.println("case c");
 		}
 		mu = max1.getValue() + max2.getValue();
 
@@ -206,24 +198,18 @@ public class ModellMinimalDanger extends ICalcStrategy{
 					for(CIMAEdgeWeight edge : biggestMsgData.getPotentialData().getPotentialEdgeWeights()){
 						if(potentialData.hasSameEdge(edge)){
 							//potential data shouldnt change
-							System.out.println("case d_1");
 						}else{
 							potentialData = new PotentialData(vertice, true);
-							System.out.println("case d_2");
 						}
 					}
 				}else{
 					potentialData = new PotentialData(vertice, true);
-					System.out.println("case d_3");
 				}
 				
 				
 			}
 			else{
 				potentialData = biggestMsgData.getPotentialData().getPotentialDataCopy(vertice);
-				System.out.println("case e");
-				System.out.println(biggestMsgData.getPotentialData());
-				System.out.println(potentialData);
 			}
 						
 			mu = biggestMsgData.getValue();
@@ -248,9 +234,7 @@ public class ModellMinimalDanger extends ICalcStrategy{
 
 	@Override
 	public void displayResult(CIMAVertice vertice, Graphics2D g2) {
-		
-		System.out.println("displayResult");
-		
+				
 		bestPossibleLamdaValue = CIMAVertice.getMinimalMu();
 		potentialEdges = new ArrayList<CIMAEdgeWeight>();
 		
