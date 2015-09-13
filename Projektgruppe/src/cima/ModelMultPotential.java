@@ -73,7 +73,6 @@ public class ModelMultPotential extends ICalcStrategy{
 		possibleMsgData = calcMsgDataValue(max1.getValue(), max2.getValue(), maxMsgData.getValue(), reducedValue);
 		if(possibleMsgData <= bestMsgDataValue){
 			System.out.println("case b_2");
-//			System.out.println(possibleMsgData +" / "+bestMsgDataValue +" / "+maxMsgData.getLamdaValue());
 			bestMsgDataValue = possibleMsgData;
 			newMessageData.updateMessageData(bestMsgDataValue, edgeValue);
 		}
@@ -90,7 +89,6 @@ public class ModelMultPotential extends ICalcStrategy{
 		}
 		possibleMsgData = calcMsgDataValue(reducedValue, max2.getValue(), maxMsgData.getValue(), edgeValue.getValue());
 		if(possibleMsgData <= bestMsgDataValue){
-//			System.out.println(possibleMsgData +" / "+bestMsgDataValue +" / "+maxMsgData.getLamdaValue());
 			System.out.println("case c_3");
 			bestMsgDataValue = possibleMsgData;
 			newMessageData.updateMessageData(bestMsgDataValue, max1);
@@ -173,8 +171,7 @@ public class ModelMultPotential extends ICalcStrategy{
 			}
 		}
 		
-		//return the bestMsgDataValue
-		
+		//return the bestMsgDataValue		
 		System.out.println("case return: message from "+newMessageData.getSender().getName()+" to "+newMessageData.getReceiver().getName() + " //  data: "+newMessageData.getValue()+" / optimal data: "+newMessageData.getBestPossiblelamdaValue() + " / edges: "+newMessageData.getPotentialEdges());
 		
 		return newMessageData;
@@ -274,21 +271,9 @@ public class ModelMultPotential extends ICalcStrategy{
 		}
 		
 		List<CIMAEdgeWeight> edgeWeightList = calcSortedEdgeWeightList(vertice, null);
-//		Collections.sort(edgeWeightList);
 		CIMAEdgeWeight max1 = edgeWeightList.get(0);
 		CIMAEdgeWeight max2 = edgeWeightList.get(1);
 		CIMAEdgeWeight max3 = edgeWeightList.get(2);
-		
-//		CIMAEdgeWeight max1 = calcMaxOrSecmaxEdge(null, true);
-//		CIMAEdgeWeight max2 = calcMaxOrSecmaxEdge(null, false);
-		
-//		System.out.println("Vertice : "+vertice.getName());
-//		
-//		System.out.println("max1: "+ max1.getEdgeWeightValue());
-//		System.out.println("max2: "+ max2.getEdgeWeightValue());
-//		System.out.println("max3: "+ max3.getEdgeWeightValue());
-//		System.out.println("maxMsgData: "+ maxMsgData.getLamdaValue());
-//		System.out.println("max2MsgData: "+ max2MsgData.getLamdaValue());
 
 		int bestMuResult;
 		
@@ -363,11 +348,6 @@ public class ModelMultPotential extends ICalcStrategy{
 			}
 			System.out.println("case e_2");
 			bestMuResult = possibleMu;
-//			if(edge1Case){//TODO
-//				potentialEdges.addAll(maxMsgData.getPotentialEdges());
-//			}else{
-//				potentialEdges.addAll(max2MsgData.getPotentialEdges());
-//			}
 			for(CIMAEdgeWeight edge : maxMsgData.getPotentialEdges()){
 				if(!potentialEdges.contains(edge)){
 					potentialEdges.add(edge);
@@ -408,7 +388,6 @@ public class ModelMultPotential extends ICalcStrategy{
 							potentialEdges.add(edge);
 						}
 					}
-//					potentialEdges.addAll(maxMsgData.getPotentialEdges());
 				}
 				
 			}
@@ -438,29 +417,8 @@ public class ModelMultPotential extends ICalcStrategy{
 						potentialEdges.add(edge);
 					}
 				}
-//				potentialEdges.addAll(maxMsgData.getPotentialEdges());
 			}
 		}
-		
-		
-		
-//		if(maxMsgData.getPotentialEdges() != null && maxMsgData.getPotentialEdges().size() == 1){
-//			System.out.println("case e_2");
-//			if(maxMsgData.getPotentialEdges().get(0).equals(max1)){
-//				System.out.println("case e_3");
-//				possibleMu = calcBestMuValue(reducedValue, max2.getEdgeWeightValue(), reducedValue);
-//			}else if(maxMsgData.getPotentialEdges().get(0).equals(max2)){
-//				System.out.println("case e_4");
-//				possibleMu = calcBestMuValue(max1.getEdgeWeightValue(), reducedValue, reducedValue);
-//			}else{
-//				System.out.println("case e_5");
-//				possibleMu = calcBestMuValue(max1.getEdgeWeightValue(), max2.getEdgeWeightValue(), reducedValue);
-//			}
-//			if(possibleMu < bestMuResult){
-//				System.out.println("case e_6");
-//				bestMuResult = possibleMu;
-//			}
-//		}
 		
 		//no improvement... potential cant be used
 		if(bestMuResult >= mu){
@@ -498,9 +456,7 @@ public class ModelMultPotential extends ICalcStrategy{
 			bestPossibleLamdaValue = CIMAVertice.getMinimalMu();
 			potentialEdges.clear();
 		}
-		
-//		System.out.println("bestPossibleLamdaValue vom ganzen Baum: "+bestPossibleLamdaValue + "  potentialEdges:  "+potentialEdges.toString());
-		
+
 		if(ICalcStrategy.showPotential){
 			if(potentialEdges.size() > 0){
 				InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g2, "Agentenzahl kann auf  >>"+bestPossibleLamdaValue+"<<  reduziert werde", 1, Color.black, null);
@@ -530,7 +486,6 @@ public class ModelMultPotential extends ICalcStrategy{
 					potentialEdges.add(weight);
 				}
 			}
-//			potentialEdges.addAll(vertice.getPotentialEdges());
 		}
 		
 		for(Vertice childVertice : vertice.getChildren()){

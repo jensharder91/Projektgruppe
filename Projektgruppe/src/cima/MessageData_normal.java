@@ -88,10 +88,6 @@ public class MessageData_normal extends MessageData{
 
 	@Override
 	protected void clearExplainMessageData() {
-//		for(CIMAEdgeWeight edge : potentialEdges){
-////			System.out.println("clear "+edge.toString());
-//			edge.resetColor();
-//		}
 		
 		IMarkable max1 = mapMarkable.get("max1");
 		IMarkable max2 = mapMarkable.get("max2");

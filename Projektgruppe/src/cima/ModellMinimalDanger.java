@@ -79,25 +79,17 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		
 		//make sure it is not smaller then the edge
 		if(calculatedMessageData.getValue() <= edgeToReceiverNode.getValue()){
-//			calculatedMessageData = new MessageData(edgeToReceiverNode.getLamdaValue(), senderNode, receiverNode, edgeToReceiverNode, max1, max2, max2.getLamdaValue(), null, edgeToReceiverNode, calculatedPotentialData);
-			
-			//
-			
+	
 			if(calculatedMessageData.getValue() == edgeToReceiverNode.getValue()){
-				
-				//
+
 				if(calculatedMessageData.getPotentialData().getNumberOfpotentialEdgeWeights() == 1){
 					
 					if(calculatedMessageData.getPotentialData().getPotentialEdgeWeights().get(0).equals(edgeToReceiverNode)){
 						//potential data shouldnt change
-//						calcMessageData = new MessageData(senderNode.getEdgeWeightToParent().getEdgeWeightValue(), senderNode, receiverNode, edgeToReceiverNode, max1, max2, specialVerticeWeight, null, senderNode.getEdgeWeightToParent(), new PotentialData(senderNode.getEdgeWeightToParent()));
 					}else{
 						calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, edgeToReceiverNode.getValue(), mapMarkable, new PotentialData(true));
 					}
-					
-				}
-				//
-				
+				}				
 				
 			}else{
 				//check if edgeToReceiver is > 1,  if not.. set flag
@@ -107,15 +99,10 @@ public class ModellMinimalDanger extends ICalcStrategy{
 					calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, edgeToReceiverNode.getValue(), mapMarkable, new PotentialData(true));
 				}
 			}
-			
-			//
 		}
 		
 		//make sure it is not smaller then the biggest messageData
 		if(calculatedMessageData.getValue() <= biggestMsgData.getValue()){
-//			calculatedMessageData = new MessageData(biggestMsgData.getLamdaValue(), senderNode, receiverNode, edgeToReceiverNode, max1, max2, max2.getLamdaValue(), biggestMsgData, null, calculatedPotentialData);
-			
-			//
 			
 			if(calculatedMessageData.getValue() == biggestMsgData.getValue()){
 				
@@ -136,10 +123,6 @@ public class ModellMinimalDanger extends ICalcStrategy{
 			}else{
 				calculatedMessageData = new MessageData_simplePotential(senderNode, receiverNode, biggestMsgData.getValue(), mapMarkable, biggestMsgData.getPotentialData().getPotentialDataCopy());								
 			}
-			
-			//
-			
-
 		}
 	
 		
@@ -194,22 +177,10 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		}
 		
 		List<CIMAEdgeWeight> edgeWeightList = calcSortedEdgeWeightList(vertice, null);
-//		Collections.sort(edgeWeightList);
 		CIMAEdgeWeight max1 = edgeWeightList.get(0);
 		CIMAEdgeWeight max2 = edgeWeightList.get(1);
 		CIMAEdgeWeight max3 = edgeWeightList.get(2);
 		
-//		CIMAEdgeWeight max1 = calcMaxOrSecmaxEdge(null, true);
-//		CIMAEdgeWeight max2 = calcMaxOrSecmaxEdge(null, false);
-		
-		System.out.println("Vertice : "+vertice.getName());
-		
-		System.out.println("max1: "+ max1.getValue());
-		System.out.println("max2: "+ max2.getValue());
-		System.out.println("max3: "+ max3.getValue());
-	
-
-//		int verticeWeight = calcGeneralVerticeWeight(vertice);
 		PotentialData potentialData;
 
 		//default case max1 + max2
@@ -229,10 +200,6 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		if(mu <=  biggestMsgData.getValue()){
 			
 			if(mu == biggestMsgData.getValue()){
-				
-				System.out.println("show edges:");
-				System.out.println("potentialData: "+ potentialData.getPotentialEdgeWeights());
-				System.out.println("biggest.potential: "+biggestMsgData.getPotentialData().getPotentialEdgeWeights());
 				
 				//check if both potentialData has same number of edges
 				if(potentialData.getNumberOfpotentialEdgeWeights() == biggestMsgData.getPotentialData().getNumberOfpotentialEdgeWeights()){
@@ -299,9 +266,7 @@ public class ModellMinimalDanger extends ICalcStrategy{
 			bestPossibleLamdaValue = CIMAVertice.getMinimalMu();
 			potentialEdges.clear();
 		}
-		
-//		System.out.println("bestPossibleLamdaValue vom ganzen Baum: "+bestPossibleLamdaValue + "  potentialEdges:  "+potentialEdges.toString());
-		
+
 		if(ICalcStrategy.showPotential){
 			if(potentialEdges.size() > 0){
 				InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g2, "Agentenzahl kann auf  >>"+bestPossibleLamdaValue+"<<  reduziert werde", 1, Color.black, null);
@@ -331,7 +296,6 @@ public class ModellMinimalDanger extends ICalcStrategy{
 					potentialEdges.add(weight);
 				}
 			}
-//			potentialEdges.addAll(vertice.getPotentialEdges());
 		}
 		
 		for(Vertice childVertice : vertice.getChildren()){

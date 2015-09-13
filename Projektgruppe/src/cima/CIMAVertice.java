@@ -134,45 +134,9 @@ public class CIMAVertice extends Vertice implements IMarkable{
 		super.drawAllTreeLines(g);
 
 		if(parent != null){
-//			edgeWeightToParent.resetColor();
 			edgeWeightToParent.draw(g);
 		}
 	}
-	
-//	protected void drawPotentialData(Graphics g){
-//		
-//		System.out.println("name : "+name);
-//		 
-//		if(drawPotentialData){
-//			System.out.println("draw potential??");
-//			potentialData.draw(g);
-//		}
-//		
-//		for(Vertice child : children){
-//			((CIMAVertice)child).drawPotentialData(g);
-//		}
-//	}
-	
-//    public void drawAnimation(Graphics g) {
-//    	
-//    	if(activeAgent){
-//    		g.setColor(Color.green);
-//	        g.fillOval((int)(xMiddleAnimation - diameter/2), (int)(yMiddleAnimation - diameter/2), diameter, diameter);
-//			g.setColor(new Color(0x33,0x44,0x55));
-//			g.drawOval((int)(xMiddleAnimation - diameter/2), (int)(yMiddleAnimation - diameter/2), diameter, diameter);
-//			g.setColor(Color.black);
-//			String string = String.valueOf(moveAgentCounter);
-//			int stringWidth = (int) Math.floor(g.getFontMetrics().getStringBounds(string,g).getWidth());
-//			Font defaultFont = g.getFont();
-//			g.setFont(CIMAConstants.getTextFont());
-//			g.drawString(string, (int)(xMiddleAnimation - stringWidth/2), (int)(yMiddleAnimation + diameter/4));
-//			g.setFont(defaultFont);
-//    	}
-//	        
-//		for(Vertice child : children){
-//			((CIMAVertice)child).drawAnimation(g);;
-//		}
-//    }
     
 	public void resetAllVerticeAnimation(){
 		resetCurrentAgents();
@@ -216,11 +180,6 @@ public class CIMAVertice extends Vertice implements IMarkable{
 
 		drawMu = true;
 		
-		
-//		messageDataList.get(0).animation();
-
-//		CIMAAnimation.getCIMAAnimation().startSendMessageAnimation(messageDataList);
-		
 	}
 
 	public void reset(){
@@ -255,7 +214,6 @@ public class CIMAVertice extends Vertice implements IMarkable{
 			//got a ready leaf -> send message
 			
 			((CIMAVertice) parent).receive(calcStrategy.calcMessageData(this, (CIMAVertice) getParent(), potential));
-//			((CIMAVertice) parent).receive(new MessageData(specialVerticeWeight, this, (CIMAVertice) parent, edgeWeightToParent, null, null, specialVerticeWeight, null, null, new PotentialData(edgeWeightToParent)));
 		}else{
 			for(Vertice child : children){
 				if(!(child instanceof CIMAVertice)){
@@ -269,14 +227,6 @@ public class CIMAVertice extends Vertice implements IMarkable{
 	private void receive(MessageData data){
 		this.lamdas.add(data);
 		messageDataList.add(data);
-		
-//		if(data.getSender() != null && data.getReceiver() != null){
-//			System.out.println("+++++++++++++++++");
-//			System.out.println("++");
-//			System.out.println("++ message from "+data.getSender().getName()+" to "+data.getReceiver().getName() + " //  data: "+data.getLamdaValue());
-//			System.out.println("++");
-//			System.out.println("+++++++++++++++++");
-//		}
 		
 		if(lamdas.size() == numberOfNeighbors() -1){
 			computeLamdasAndSendTo(getMissingNeightbour());
@@ -312,59 +262,6 @@ public class CIMAVertice extends Vertice implements IMarkable{
 	}
 
 	private void computeLamdasAndSendTo(CIMAVertice receiverNode){
-		
-//		CIMAEdgeWeight edgeToReceiverNode = null;
-//		if(receiverNode == parent){
-//			edgeToReceiverNode = edgeWeightToParent;
-//		}else{
-//			edgeToReceiverNode = receiverNode.getEdgeWeightToParent();
-//		}
-//		
-//		Collections.sort(lamdas, new MessageDataComparator());
-//		List<MessageData> maximums = new ArrayList<MessageData>();
-//		for(MessageData data : lamdas){
-//			if(data.getSender() != receiverNode){
-//				maximums.add(data);
-//			}
-//			if(maximums.size() == 2){
-//				break;
-//			}
-//		}
-//		
-//		MessageData biggestMsgData = new MessageData();
-//		if(maximums.size() >= 1){
-//			biggestMsgData = maximums.get(0);
-//		}
-//		
-//		CIMAEdgeWeight max1 = calcMaxOrSecmaxEdge(receiverNode, true);
-//		CIMAEdgeWeight max2 = calcMaxOrSecmaxEdge(receiverNode, false);
-//		
-//		MessageData calcMessageData;
-//		specialVerticeWeight = calcSpecialVerticeWeight(receiverNode);
-//		if(max1.getLamdaValue() >= max2.getLamdaValue() + specialVerticeWeight){
-//			calcMessageData = new MessageData(max1.getLamdaValue(), this, receiverNode, edgeToReceiverNode, max1, max2, specialVerticeWeight, null, null);
-//		}else{
-//			calcMessageData = new MessageData(max2.getLamdaValue() + specialVerticeWeight, this, receiverNode, edgeToReceiverNode, max1, max2, specialVerticeWeight, null, null);
-//		}
-//		
-//		//make sure the lamdaValue is not less the biggest msgData
-//		if(biggestMsgData.getLamdaValue() > calcMessageData.getLamdaValue()){
-////			calcMessageData = biggestMsgData;
-//			calcMessageData = new MessageData(biggestMsgData.getLamdaValue(), this, receiverNode, edgeToReceiverNode, max1, max2, specialVerticeWeight, biggestMsgData, null);
-//		}
-//		
-//		//make sure the lamdaValue is not less then the edgeWeight
-//		if(receiverNode == parent){
-//			if(edgeWeightToParent.getEdgeWeightValue() > calcMessageData.getLamdaValue()){
-//				calcMessageData = new MessageData(edgeWeightToParent.getEdgeWeightValue(), this, receiverNode, edgeToReceiverNode, max1, max2, specialVerticeWeight, null, edgeWeightToParent);
-//			}
-//		}else{
-//			if(receiverNode.getEdgeWeightToParent().getEdgeWeightValue() > calcMessageData.getLamdaValue()){
-//				calcMessageData = new MessageData(receiverNode.getEdgeWeightToParent().getEdgeWeightValue(), this, receiverNode, edgeToReceiverNode, max1, max2, specialVerticeWeight, null, receiverNode.getEdgeWeightToParent());
-//			}
-//		}
-//
-//		receiverNode.receive(calcMessageData);
 		
 		receiverNode.receive(calcStrategy.calcMessageData(this, receiverNode, potential));
 	}
@@ -582,12 +479,6 @@ public class CIMAVertice extends Vertice implements IMarkable{
 	private void calcAgentsMove(){
 		
 		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
-
-		//animation läuft schon.... breche neue animation ab
-//		if(activeAnimation){
-//			animation.stopAgentAnimation();
-//			return;
-//		}
 
 		agentWayList.clear();
 		
