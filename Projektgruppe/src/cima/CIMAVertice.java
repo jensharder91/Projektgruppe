@@ -69,6 +69,8 @@ public class CIMAVertice extends Vertice implements IMarkable{
 	}
 	
 	public static void drawDisplayInformation(CIMAVertice root, Graphics2D g2){
+		
+		InfoDisplayClass.getInfoDisplayClass().displayInUpperRightCorner(g2, displayedInfoString, 1, Color.BLACK, null);
 
 
 		if(showDisplayInfo && drawMu){

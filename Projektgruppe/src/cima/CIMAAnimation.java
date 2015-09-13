@@ -162,7 +162,6 @@ public class CIMAAnimation {
 	public class AnimationAgentLoop extends Thread{
 
 		private List<AgentWayData> agentsWayList;
-		private boolean singleStepAnimation = false;
 
 		public AnimationAgentLoop(List<AgentWayData> agentsWayList) {
 			this.agentsWayList = agentsWayList;
@@ -177,7 +176,7 @@ public class CIMAAnimation {
 
 			gui.repaint();
 
-			if(singleStepAnimation){
+			if(singeAnimationModus){
 
 				doAnimation(index);
 				index++;

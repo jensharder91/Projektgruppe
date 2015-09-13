@@ -503,13 +503,13 @@ public class ModelMultPotential extends ICalcStrategy{
 		
 		if(ICalcStrategy.showPotential){
 			if(potentialEdges.size() > 0){
-				InfoDisplayClass.getInfoDisplayClass().displayInUpperRightCorner(g2, "Agentenzahl kann auf  >>"+bestPossibleLamdaValue+"<<  reduziert werde", 1, Color.black, null);
+				InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g2, "Agentenzahl kann auf  >>"+bestPossibleLamdaValue+"<<  reduziert werde", 1, Color.black, null);
 				for(CIMAEdgeWeight edge : potentialEdges){
 					edge.setOvalColor(Color.RED);
 					edge.draw(g2);
 				}
 			}else{
-				InfoDisplayClass.getInfoDisplayClass().displayInUpperRightCorner(g2, "Agentenzahl kann  >>nicht<<  reduziert werde", 1, Color.black, null);
+				InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g2, "Agentenzahl kann  >>nicht<<  reduziert werde", 1, Color.black, null);
 			}
 		}
 		
