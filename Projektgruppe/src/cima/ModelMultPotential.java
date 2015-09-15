@@ -9,6 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 
+ * algorithmus - logic for potential >=1
+ *
+ */
 public class ModelMultPotential extends ICalcStrategy{
 	
 	

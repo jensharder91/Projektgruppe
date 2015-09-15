@@ -19,6 +19,12 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+
+/**
+ * 
+ * draws all buttons in the gui, paint all components
+ *
+ */
 public abstract class Gui extends JPanel{
 
 	protected static final long serialVersionUID = 1L;
@@ -63,6 +69,7 @@ public abstract class Gui extends JPanel{
 	private boolean checkboxShowMessageDataBoolean = false;
 	private boolean lableChosePotantialBoolean = false;
 	
+	/* button logic */
 	private enum ButtonState{
 		state1, //<2 knoten
 		state2,	//"normal"
@@ -95,6 +102,10 @@ public abstract class Gui extends JPanel{
 		addGuiMouseListener();
 	}
 
+	/**
+	 * add all listeners
+	 * 
+	 */
 	protected void createGui(){
 
 		setLayout(new BorderLayout());
@@ -272,6 +283,9 @@ public abstract class Gui extends JPanel{
 		return rootVertice;
 	}
 
+	/**
+	 * repaint...
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
 		

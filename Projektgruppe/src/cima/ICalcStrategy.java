@@ -3,11 +3,14 @@ package cima;
 import java.awt.Graphics2D;
 import java.util.List;
 
+/**
+ * 
+ * abstract class: for all strategys (paper-algorithmus, modifikation, potential, ...)
+ *
+ */
 public abstract class ICalcStrategy {	
 	
 	protected static boolean showPotential = false;
-	
-	
 	
 	public abstract MessageData calcMessageData(CIMAVertice senderNode, CIMAVertice receiverNode, int potential);
 	public abstract int calcGeneralVerticeWeight(CIMAVertice vertice);

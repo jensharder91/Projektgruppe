@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 
+ * messagedata for potential >=1
+ *
+ */
 public class MessageData_complexPotential extends MessageData{
 	
 	protected int bestPossibleLamdaValue;
@@ -14,6 +19,7 @@ public class MessageData_complexPotential extends MessageData{
 	protected Map<String, IMarkable> mapMarkable = new HashMap<String, IMarkable>();
 
 	
+	//constructer
 	public MessageData_complexPotential(){
 		
 	}
@@ -31,6 +37,8 @@ public class MessageData_complexPotential extends MessageData{
 		this.mapMarkable = mapMarkable;
 	}
 	
+	
+	//update (instead of creat a new one)
 	public MessageData_complexPotential updateMessageData(int bestPossibleLamdaValue, CIMAEdgeWeight... potentialEdge){
 		
 		ArrayList<CIMAEdgeWeight> newPotentialEdges = new ArrayList<CIMAEdgeWeight>();
@@ -65,6 +73,8 @@ public class MessageData_complexPotential extends MessageData{
 		return this;
 	}
 	
+	
+	//explant the msgData (color tree-emenets, write in InfoDisplayClass)
 	@Override
 	protected void explainMessageData(Graphics2D g) {
 
@@ -177,6 +187,8 @@ public class MessageData_complexPotential extends MessageData{
 		msgData.resetColor();
 	}
 	
+	
+	//basic methods
 	@Override
 	public String toString() {
 		if(sender == null || receiver == null){

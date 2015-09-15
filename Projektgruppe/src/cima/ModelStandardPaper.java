@@ -8,7 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * 
+ * algorithmus - logic for paper algorithmus
+ *
+ */
 public class ModelStandardPaper extends ICalcStrategy{
 
 	@Override

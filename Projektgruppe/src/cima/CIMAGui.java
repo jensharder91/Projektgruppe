@@ -23,6 +23,8 @@ public class CIMAGui extends Gui{
 		return gui;
 	}
 
+	
+	// start algorithmus
 	@Override
 	protected void calcAlgorithmus(boolean repaintBool) {
 
@@ -61,6 +63,11 @@ public class CIMAGui extends Gui{
 		});
 	}
 	
+	/**
+	 * 
+	 * listens all mous clicks and calls the right method
+	 * 
+	 */
 	private void editTree(MouseEvent e){
 		if(SwingUtilities.isRightMouseButton(e)){
 			if(rootVertice != null){
@@ -117,6 +124,7 @@ public class CIMAGui extends Gui{
 	}
 
 	
+	//reset tree, if it was changed
 	@Override
 	protected void treeChanged(){
 		CIMAVertice.drawMu = false;

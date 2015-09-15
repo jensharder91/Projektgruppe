@@ -6,6 +6,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 
+/**
+ * 
+ *   handels the animation animation
+ *   agentNumber: from sender to receiver
+ *
+ */
 public class AgentWayData {
 	
 	private CIMAVertice senderVertice;
@@ -24,13 +30,14 @@ public class AgentWayData {
 	
 	
 	
-	
+	// constrctor
 	public AgentWayData(CIMAVertice sender, CIMAVertice receiver, int number){
 		this.senderVertice  = sender;
 		this.receiverVertice = receiver;
 		this.agentNumber = number;
 	}
 
+	//getter
 	public CIMAVertice getSender(){
 		return senderVertice;
 	}
@@ -44,6 +51,8 @@ public class AgentWayData {
 	public static int getAnimationSpeed(){
 		return animationSpeed;
 	}
+	
+	//setter
 	public static void setAnimationSpeed(int speed){
 		animationSpeed = speed;
 		if(animationSpeed < 0){
@@ -52,7 +61,7 @@ public class AgentWayData {
 	}
 	
 	
-	//animation
+	//animation draw
     public void drawAnimation(Graphics2D g) {
     	
     	if(currentAgentAnimation == this){
@@ -72,6 +81,7 @@ public class AgentWayData {
     }
 	
 	
+    //start animation
 	public AgentAnimationTimer animation(){
 		currentAgentAnimation = this;
 		AgentAnimationTimer timer = new AgentAnimationTimer();

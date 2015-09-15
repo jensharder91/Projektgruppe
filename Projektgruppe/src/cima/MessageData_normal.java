@@ -7,12 +7,18 @@ import java.util.Map;
 
 import javax.swing.plaf.basic.BasicLookAndFeel;
 
+/**
+ * 
+ * messageData for the paper-algorithmus (no potential)
+ *
+ */
 public class MessageData_normal extends MessageData{
 	
 	
 	Map<String, IMarkable> mapMarkable = new HashMap<String, IMarkable>();
 
 	
+	//constructers
 	public MessageData_normal(){
 		
 	}
@@ -27,6 +33,8 @@ public class MessageData_normal extends MessageData{
 		calcArc();
 	}
 	
+	
+	//explant the msgData (color tree-emenets, write in InfoDisplayClass)
 	@Override
 	protected void explainMessageData(Graphics2D g) {
 

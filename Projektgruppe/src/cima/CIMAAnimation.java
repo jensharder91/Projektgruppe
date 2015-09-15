@@ -6,6 +6,13 @@ import java.util.List;
 import cima.AgentWayData.AgentAnimationTimer;
 import cima.MessageData.SendMessageAnimationTimer;
 
+
+/**
+ * 
+ * 
+ * starts / stops all animations (MessageData Animation and Agent Animation)
+ *
+ */
 public class CIMAAnimation {
 
 	private static CIMAAnimation cimaAnimation = null;
@@ -31,6 +38,7 @@ public class CIMAAnimation {
 
 	}
 	
+	//getter
 	public boolean animationIsInProgress(){
 		return animationInProgress;
 	}
@@ -41,6 +49,8 @@ public class CIMAAnimation {
 		return breakThread;
 	}
 	
+	
+	//stop all animations
 	public void stopAllAnimations(){
 				
 		if(animationInProgress){
@@ -131,7 +141,7 @@ public class CIMAAnimation {
 
 			gui.repaint();
 
-			if(singeAnimationModus){
+			if(singeAnimationModus){//step by step
 
 				doAnimation(index);
 				index++;
@@ -146,7 +156,7 @@ public class CIMAAnimation {
 					index = 0;
 				}
 
-			}else{
+			}else{//complete animation
 
 				breakThread = false;
 
@@ -226,7 +236,7 @@ public class CIMAAnimation {
 			CIMAVertice.drawMu = false;
 			animationInProgress = true;
 
-			if(singeAnimationModus){
+			if(singeAnimationModus){//step by step
 
 				doAnimation(index);
 				index++;
@@ -246,7 +256,7 @@ public class CIMAAnimation {
 				}
 				
 
-			}else{
+			}else{//complete animation
 
 				breakThread = false;
 			

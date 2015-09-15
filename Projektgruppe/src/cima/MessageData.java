@@ -5,6 +5,12 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Arc2D;
 
+
+/**
+ * 
+ * abstract messageData (for basic informations (sender, receiver) and animation
+ *
+ */
 public abstract class MessageData implements IMarkable{
 
 	protected int lamdaValue = 0;
@@ -52,7 +58,7 @@ public abstract class MessageData implements IMarkable{
 	
 	
 	
-	
+	//constructers
 	public MessageData(){
 		
 	}
@@ -74,6 +80,7 @@ public abstract class MessageData implements IMarkable{
 		return "Sender : "+sender.getName()+"  Empfänger : "+receiver.getName()+"  LamdaValue: "+lamdaValue;
 	}
 
+	//getter
 	public int getValue(){
 		return lamdaValue;
 	}
@@ -285,6 +292,7 @@ public abstract class MessageData implements IMarkable{
 	}
 	
 	
+	//setter
 	public void setReadyAnimated(){
 		readyAnimated = true;
 	}

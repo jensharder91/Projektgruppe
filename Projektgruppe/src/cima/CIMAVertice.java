@@ -11,6 +11,12 @@ import java.util.List;
 import cima.Gui;
 import cima.Vertice;
 
+
+/**
+ * 
+ * CIMAVertice, for tha algorithmus, draw, animation, ...
+ *
+ */
 public class CIMAVertice extends Vertice implements IMarkable{
 
 	private CIMAEdgeWeight edgeWeightToParent;
@@ -49,6 +55,7 @@ public class CIMAVertice extends Vertice implements IMarkable{
 	public static List<MessageData> messageDataList = new ArrayList<MessageData>();
 
 
+	//constrcter
 	public CIMAVertice(String name, Vertice parent){
 		this(name, parent, 1);
 	}
@@ -62,6 +69,8 @@ public class CIMAVertice extends Vertice implements IMarkable{
 		}
 	}
 	
+	
+	//different draw methods
 	@Override
 	protected void drawSubtree(Graphics2D g, int areaX, int areaY, int areaWidth,
 			int areaHeight) {
@@ -138,6 +147,8 @@ public class CIMAVertice extends Vertice implements IMarkable{
 		}
 	}
     
+	
+	//reset
 	public void resetAllVerticeAnimation(){
 		resetCurrentAgents();
 		
@@ -325,6 +336,7 @@ public class CIMAVertice extends Vertice implements IMarkable{
 	}
 	
 
+	//basic methods
 	@Override
 	public String toString(){
 		return "##Vertice "+this.name+"; "+this.children.size()+" children; mu: "+this.mu+"; currentAgents: "+currentAgents + "\n"
@@ -341,6 +353,8 @@ public class CIMAVertice extends Vertice implements IMarkable{
 		return false;
 	}
 
+	
+	//getter and setter
 	private String getAlllamda(){
 
 		String alllamda = "   ";

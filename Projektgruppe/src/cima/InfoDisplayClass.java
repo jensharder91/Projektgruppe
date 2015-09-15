@@ -6,6 +6,12 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
+
+/**
+ * 
+ * draw in the gui informations (in the corner)
+ *
+ */
 public class InfoDisplayClass {
 	
 	private static InfoDisplayClass infoClass;

@@ -4,6 +4,12 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
+
+/**
+ * 
+ * draws and handels the edges
+ *
+ */
 public class CIMAEdgeWeight implements Comparable<CIMAEdgeWeight>, IMarkable{
 	
 	private CIMAVertice vertice;
@@ -31,6 +37,8 @@ public class CIMAEdgeWeight implements Comparable<CIMAEdgeWeight>, IMarkable{
 		this.edgeWeightValue = edgeWeightValue;
 	}
 	
+	
+	//draw
     public void draw(Graphics g){
         g.setColor(ovalColor);        
         ovalMiddleX = Math.min(vertice.getMiddleX(), parent.getMiddleX()) + Math.abs(vertice.getMiddleX() - parent.getMiddleX()) / 2;
@@ -55,6 +63,7 @@ public class CIMAEdgeWeight implements Comparable<CIMAEdgeWeight>, IMarkable{
 	}
 
 	
+	//check if the click is on the edgeWeight
 	public boolean onEdgeWeightClick(int x, int y){
 		if((Math.abs(this.ovalMiddleX - x) <= ovalWidth/2) && (Math.abs(this.ovalMiddleY - y) < ovalWidth/2)){
 			return true;
@@ -63,7 +72,7 @@ public class CIMAEdgeWeight implements Comparable<CIMAEdgeWeight>, IMarkable{
 	}
 
 	
-	
+	//getter and setter
 	public int getValue(){
 		return edgeWeightValue;
 	}
@@ -91,7 +100,7 @@ public class CIMAEdgeWeight implements Comparable<CIMAEdgeWeight>, IMarkable{
 		return "Edge: ("+verticeName + " - " + parentName+")";
 	}
 	
-	//animation
+	//animation change color (setter)
 	public void setOvalColor(Color color){
 		setOvalColor(color, defaultTextColor);
 	}

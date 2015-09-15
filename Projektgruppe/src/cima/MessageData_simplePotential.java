@@ -7,6 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * 
+ * messageData for potential == 1
+ *
+ */
 public class MessageData_simplePotential extends MessageData{
 	
 	protected PotentialData potentialData;
@@ -14,6 +20,7 @@ public class MessageData_simplePotential extends MessageData{
 	protected Map<String, IMarkable> mapMarkable = new HashMap<String, IMarkable>();
 
 	
+	//constructers
 	public MessageData_simplePotential() {
 		
 	}
@@ -33,7 +40,7 @@ public class MessageData_simplePotential extends MessageData{
 	}
 	
 
-	
+	//explant the msgData (color tree-emenets, write in InfoDisplayClass)
 	@Override
 	protected void explainMessageData(Graphics2D g) {
 
@@ -152,6 +159,8 @@ public class MessageData_simplePotential extends MessageData{
 		msgData.resetColor();
 	}
 	
+	
+	//getter
 	public boolean getFlag(){
 		return potentialData.getFlag();
 	}

@@ -3,6 +3,12 @@ package cima;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * 
+ * potentialdata for potential == 1
+ *
+ */
 public class PotentialData {
 	
 	private boolean flag = false;
