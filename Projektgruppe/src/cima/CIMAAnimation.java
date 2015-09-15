@@ -50,6 +50,7 @@ public class CIMAAnimation {
 		}
 		index = 0;
 		singeAnimationModus = false;
+		CIMAVertice.activeAgentAnimation = false;
 	}
 
 	/*
@@ -152,12 +153,12 @@ public class CIMAAnimation {
 				//bis size - 1 weil der letzte schritt die animation null -> homebase ist und übersprungen werden muss
 				for(int i = index; i < agentsWayList.size() -1; i++){
 
+					pauseAnimation();
+					
 					//breche bei bedarf die animation ab!
 					if(breakThread){
 						break;
 					}
-
-					pauseAnimation();
 
 					doAnimation(i);
 

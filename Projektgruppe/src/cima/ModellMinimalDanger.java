@@ -275,9 +275,11 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		}else if(vertice.getBestMu() == bestPossibleLamdaValue){
 			bestPossibleLamdaValue = vertice.getBestMu();
 			
-			for(CIMAEdgeWeight weight : vertice.getPotentialEdges()){
-				if(!potentialEdges.contains(weight)){
-					potentialEdges.add(weight);
+			if(vertice.getPotentialEdges() != null){
+				for(CIMAEdgeWeight weight : vertice.getPotentialEdges()){
+					if(!potentialEdges.contains(weight)){
+						potentialEdges.add(weight);
+					}
 				}
 			}
 		}
