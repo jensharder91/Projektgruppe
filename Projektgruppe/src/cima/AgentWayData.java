@@ -17,18 +17,9 @@ public class AgentWayData {
     protected Gui gui = CIMAGui.getGui();
     protected double xMiddleAnimation;
     protected double yMiddleAnimation;
-//    protected boolean activeAgent = false;
-//    public static boolean activeAnimation = false;
-//    private boolean marked = false;
     private static int animationSpeed = 3;
     protected int diameter = 20;
-//    private static String displayedInfoString ="";
-//    private boolean drawPotentialData = false;
     
-//    protected int currentAgents = 0;
-//    protected int moveAgentCounter = 0;
-//    protected boolean decontaminated = false;
-//    protected Color verticeColor = Color.white;
     protected static AgentWayData currentAgentAnimation = null;
 	
 	
@@ -88,6 +79,7 @@ public class AgentWayData {
 		return timer;
 	}
 	
+	// animation thread
 	public class AgentAnimationTimer extends Thread{
 				
 		public AgentAnimationTimer() {
@@ -99,9 +91,7 @@ public class AgentWayData {
 			
 			xMiddleAnimation = senderVertice.getMiddleX();
 			yMiddleAnimation = senderVertice.getMiddleY();
-			
-//			activeAgent = true;
-			
+						
 			while(isInterrupted() == false){
 				
 				double vektorX = receiverVertice.getMiddleX() - xMiddleAnimation;
@@ -127,8 +117,7 @@ public class AgentWayData {
 					this.interrupt();
 				}
 			}
-			
-//			activeAgent = false;
+
 			currentAgentAnimation = null;
 			gui.repaint();
 		}

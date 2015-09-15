@@ -13,10 +13,7 @@ public class ModelStandardPaper extends ICalcStrategy{
 
 	@Override
 	public MessageData calcMessageData(CIMAVertice senderNode,
-			CIMAVertice receiverNode, int potential) {
-		// TODO Auto-generated method stub
-		
-		/****************************************************/
+		CIMAVertice receiverNode, int potential) {
 		
 		List<MessageData> lamdas = senderNode.getLamdas();
 		Collections.sort(lamdas, new MessageDataComparator());
@@ -39,11 +36,6 @@ public class ModelStandardPaper extends ICalcStrategy{
 			max2 = maximums.get(1);
  		}
 		
-//		CIMAEdgeWeight max1 = calcSortedEdgeWeightList(senderNode, receiverNode).get(0);
-//		CIMAEdgeWeight max2 = calcSortedEdgeWeightList(senderNode, receiverNode).get(1);
-//		
-//		System.out.println("vertex name: "+name+"   max1 : "+max1.getEdgeWeightValue() + " / max2 : "+max2.getEdgeWeightValue());
-		
 		Map<String, IMarkable> mapMarkable = new HashMap<String, IMarkable>();
 		mapMarkable.put("max1", max1);
 		mapMarkable.put("max2", max2);
@@ -59,10 +51,6 @@ public class ModelStandardPaper extends ICalcStrategy{
  	
  
  		return calcMessageData;
-		
-		
-		
-		/****************************************************/
 	}
 
 	@Override
@@ -123,7 +111,6 @@ public class ModelStandardPaper extends ICalcStrategy{
 
 	@Override
 	public void displayResult(CIMAVertice vertice, Graphics2D g2) {
-		// TODO Auto-generated method stub
 		
 	}
 

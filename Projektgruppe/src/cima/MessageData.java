@@ -36,19 +36,15 @@ public abstract class MessageData implements IMarkable{
 	protected double animationAngle;
 	protected static int animationSpeed = 3;
 
-//	protected Color defaultStrongColor = Color.RED;
 	protected Color defaultStrongColor = new Color(140, 220, 230);
 	protected Color defaultWeakColor = Color.LIGHT_GRAY;
 	protected Color ovalColor = defaultStrongColor;
 	protected Color defaultTextColor = Color.BLACK;
 	protected Color textColor = Color.BLACK;
 	
-//	protected Color markColor = Color.GREEN;
 	protected Color markColor = new Color(58, 255, 0);
-//	protected Color defaultColorMax = Color.CYAN;
 	protected Color defaultColorMax = new Color(255, 234, 13);
 	protected Color defaultColorEdge = Color.PINK;
-//	protected Color defaultColorMsgData = Color.BLUE;
 	protected Color defaultColorMsgData = new Color(255, 183, 138);
 	
 	protected static MessageData currentMsgDataAnimation = null;
@@ -209,27 +205,10 @@ public abstract class MessageData implements IMarkable{
 		
 		if(CIMAVertice.activeAgentAnimation){
 			return;
-		}
-		
-//		if(currentMsgDataAnimation == this){
-//			ovalColor = defaultStrongColor;
-//		}else{
-//			ovalColor = defaultWeakColor;
-//		}
-//		
+		}		
 		
 		double animationAngle = this.animationAngle;
 		
-
-		
-//		//draw the msgData LINE
-//		g.setColor(Color.BLACK);
-//		g.draw(new Arc2D.Double(MiddlepunktKreisX - radius, MiddlepunktKreisY - radius, 2*radius, 2*radius, Math.toDegrees(angleSender), Math.toDegrees(animationAngle), Arc2D.OPEN));
-
-		//if the animation is ready animationAngle should be the angleReceiver
-//		if(readyAnimated){
-//			animationAngle = angleReceiver;
-//		}
 		
 		//draw the msgData
 		double kreisSegmentEndeAngle = angleSender + animationAngle;
@@ -244,7 +223,6 @@ public abstract class MessageData implements IMarkable{
 		int kreisSegmentEndeX = (int) (MiddlepunktKreisX + Math.cos(kreisSegmentEndeAngle) * radius);
 		int kreisSegmentEndeY = (int) (MiddlepunktKreisY - Math.sin(kreisSegmentEndeAngle) * radius);
 		
-//		drawMessageInfo(g, kreisSegmentEndeX, kreisSegmentEndeY);
 		g.setColor(ovalColor);
 		int ovalMitteX = kreisSegmentEndeX;
 		int ovalMitteY = kreisSegmentEndeY;
@@ -282,12 +260,6 @@ public abstract class MessageData implements IMarkable{
 		if(CIMAVertice.activeAgentAnimation){
 			return;
 		}
-		
-//		if(currentMsgDataAnimation == this){
-//			ovalColor = defaultStrongColor;
-//		}else{
-//			ovalColor = defaultWeakColor;
-//		}
 		
 		
 		double animationAngle = this.animationAngle;
@@ -330,9 +302,7 @@ public abstract class MessageData implements IMarkable{
 	}
 	
 	public void resetCurrentmsgDataAnimation(){
-		System.out.println("reset..");
 		if(currentMsgDataAnimation != null){
-			System.out.println("reseting....");
 			currentMsgDataAnimation.resetColor();
 			currentMsgDataAnimation.clearExplainMessageData();
 			currentMsgDataAnimation.setReadyAnimated();
@@ -340,8 +310,6 @@ public abstract class MessageData implements IMarkable{
 	}
 	
 	//start animation
-	
-	
 	public SendMessageAnimationTimer animation(){
 		SendMessageAnimationTimer timer = new SendMessageAnimationTimer();
 		timer.start();
@@ -362,7 +330,6 @@ public abstract class MessageData implements IMarkable{
 		@Override
 		public void run() {
 
-//			activeAnimation = true;
 			animationAngle = 0;
 			
 			calcArc();//TODO ?
@@ -371,11 +338,6 @@ public abstract class MessageData implements IMarkable{
 				
 				double calcAngle = 2f/radius;
 				animationAngle += animationSpeed * calcAngle / 4;
-				
-//				System.out.println("animationAngle: "+animationAngle);
-//				System.out.println("animationSpeed: "+animationSpeed);
-//				System.out.println("calcAngle: "+calcAngle);
-//				System.out.println("radius: "+radius);
 
 				gui.repaint();
 
@@ -396,11 +358,6 @@ public abstract class MessageData implements IMarkable{
 				}
 			}
 			
-//			currentMsgDataAnimation.clearExplainMessageData();
-//			currentMsgDataAnimation.setReadyAnimated();
-//			currentMsgDataAnimation = null;
-			
-//			activeAnimation = false;
 			gui.repaint();
 		}
 	}

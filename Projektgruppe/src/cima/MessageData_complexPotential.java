@@ -62,7 +62,6 @@ public class MessageData_complexPotential extends MessageData{
 			}
 //			potentialEdges.addAll(newPotentialEdges);
 		}
-//		System.out.println("~update compleyMsgData :: "+bestPossibleLamdaValue + " / "+potentialEdges.toString());
 		return this;
 	}
 	
@@ -94,7 +93,6 @@ public class MessageData_complexPotential extends MessageData{
 		
 		for(CIMAEdgeWeight edge : potentialEdges){
 			edge.setOvalColor(markColor, Color.BLACK);
-//			System.out.println("color "+edge.toString());
 		}
 	}
 	
@@ -138,17 +136,14 @@ public class MessageData_complexPotential extends MessageData{
 		if((max1.getValue() + max2.getValue()) == lamdaValue){
 			max1.setOvalColor(markColor, Color.BLACK);
 			max2.setOvalColor(markColor, Color.BLACK);
-//			maxColor = Color.GREEN;
 			maxColor = markColor;
 			explainStrings[0] = "Neue Nachricht = max1 + max2:";
 		}else if(edge.getValue() == lamdaValue){
 			edge.setOvalColor(markColor, Color.BLACK);
-//			edgeColor = Color.GREEN;
 			edgeColor = markColor;
 			explainStrings[0] = "Neue Nachricht = Nachrichtenkante";
 		}else if(msgData.getValue() == lamdaValue){
 			msgData.setOvalColor(markColor, Color.BLACK);
-//			msgDataColor = Color.GREEN;
 			msgDataColor = markColor;
 			explainStrings[0] = "Neue Nachricht = größte Nachricht";
 		}else{
@@ -168,7 +163,6 @@ public class MessageData_complexPotential extends MessageData{
 	@Override
 	protected void clearExplainMessageData() {
 		for(CIMAEdgeWeight edge : potentialEdges){
-//			System.out.println("clear "+edge.toString());
 			edge.resetColor();
 		}
 		

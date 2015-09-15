@@ -14,9 +14,7 @@ public class CIMAAnimation {
 	private static int index = 0;
 
 	private boolean animationInProgress = false;
-//	private boolean activeAgent = false;
 	public static boolean singeAnimationModus = false;
-//	public static boolean afterMessageDataCalc = false;
 
 	/**Singleton*/
 	public static CIMAAnimation getCIMAAnimation(){
@@ -45,14 +43,10 @@ public class CIMAAnimation {
 	
 	public void stopAllAnimations(){
 				
-//		if(CIMAVertice.activeAnimation || MessageData.animationInProgress){
 		if(animationInProgress){
 			index = 0;
 
 			breakThread = true;
-
-			stopAgentAnimation();
-			stopSendMessageAnimation();
 		}
 		index = 0;
 		singeAnimationModus = false;
@@ -63,12 +57,8 @@ public class CIMAAnimation {
 	 *  Agent Animation....
 	 *
 	 */
-
 	public void startAgentAnimation(List<AgentWayData> agentsWayList){
-		
-//		if(activeAgent || breakThread){
-//			return;
-//		}
+
 		if(animationInProgress){
 			return;
 		}
@@ -76,24 +66,11 @@ public class CIMAAnimation {
 		singeAnimationModus = false;
 		AnimationAgentLoop animationLoop = new AnimationAgentLoop(agentsWayList);
 		animationLoop.start();
-
 	}
 
-	private void stopAgentAnimation(){
-//		if(activeAgent){
-//		if(animationInProgress){
-//			breakThread = true;
-//		}
-//		CIMAVertice.activeAnimation = false;
-//		activeAgent = false;
-//		gui.repaint();
-	}
 
 	public void nextStepAgentAnimation(List<AgentWayData> agentsWayList){
 
-//		if(activeAgent || breakThread){
-//			return;
-//		}
 		if(animationInProgress){
 			return;
 		}
@@ -108,12 +85,8 @@ public class CIMAAnimation {
 	 * SendMessage Animation
 	 *
 	 */
-
 	public void startSendMessageAnimation(List<MessageData> messageDataList){
 			
-//		if(activeAgent || breakThread){
-//			return;
-//		}
 		if(animationInProgress){
 			return;
 		}
@@ -126,39 +99,21 @@ public class CIMAAnimation {
 	
 	public void nextStepSendMessageAnimation(List<MessageData> messageDataList){
 
-//		if(activeAgent || breakThread){
-//			return;
-//		}
 		if(animationInProgress){
 			return;
 		}
 
-//		if(!MessageData.animationInProgress){
-//			index = 0;
-//		}
 		singeAnimationModus  = true;
 		AnimationSendMessageLoop animationLoop = new AnimationSendMessageLoop(messageDataList);
 		animationLoop.start();
 	}
 	
-	private void stopSendMessageAnimation(){
-//		if(activeAgent){
-//		if(animationInProgress){
-//			breakThread = true;
-//		}
-//		MessageData.resetDisplayCalcInfos();
-//		index = 0;	
-//		MessageData.animationInProgress = false;
-//		activeA{gent = false;
-//		gui.repaint();
-	}
 
 	/*
 	 *
 	 * Animation AGENTS Loop Threads.....
 	 *
 	 */
-
 	public class AnimationAgentLoop extends Thread{
 
 		private List<AgentWayData> agentsWayList;
@@ -171,7 +126,6 @@ public class CIMAAnimation {
 		public void run() {
 
 			CIMAVertice.activeAgentAnimation = true;
-//			activeAgent = true;
 			animationInProgress = true;
 
 			gui.repaint();
@@ -217,10 +171,8 @@ public class CIMAAnimation {
 			}
 
 			animationInProgress = false;
-//			CIMAVertice.activeAgentAnimation = false;
 			breakThread = false;
 			gui.repaint();
-//			activeAgent = false;
 
 		}
 
@@ -259,7 +211,6 @@ public class CIMAAnimation {
 	 * Animation MsgData Loop Threads.....
 	 *
 	 */
-
 	public class AnimationSendMessageLoop extends Thread{
 
 		List<MessageData> messageDataList = new ArrayList<MessageData>();
@@ -271,15 +222,8 @@ public class CIMAAnimation {
 		@Override
 		public void run() {
 			
-//			MessageData.animationInProgress = true;
 			CIMAVertice.drawMu = false;
-//			breakThread  = false;
-//			activeAgent = true;
 			animationInProgress = true;
-//
-//			for(int j  = 0; j < messageDataList.size(); j++){
-//				messageDataList.get(j).prepareForAnimation();
-//			}
 
 			if(singeAnimationModus){
 
@@ -288,22 +232,14 @@ public class CIMAAnimation {
 
 				if(index < 0){
 					index = 0;
-//					MessageData.resetDisplayCalcInfos();
 				}
 
 				//bis size - 1 weil der letzte schritt die animation null -> homebase ist und übersprungen werden muss
 				if(index > messageDataList.size() -1){
-//					MessageData.animationInProgress = false;
-//					if(breakThread){
-//						MessageData.clearGui = true;
-//					}else{
-//						CIMAAnimation.afterMessageDataCalc = true;
-//					}
 					index = 0;
 					singeAnimationModus = false;
 					if(!breakThread){
 						CIMAVertice.drawMu = true;
-						System.out.println("set draw Mu = true");
 					}
 					
 				}
@@ -327,20 +263,16 @@ public class CIMAAnimation {
 				}
 				index = 0;
 				singeAnimationModus = false;
-//				MessageData.animationInProgress = false;
 				if(breakThread){
-//					MessageData.clearGui = true;
 					for(MessageData msgData : messageDataList){
 						msgData.clearExplainMessageData();
 					}
 					CIMAVertice.drawMu = false;
 				}else{
-//					CIMAAnimation.afterMessageDataCalc = true;
 					CIMAVertice.drawMu = true;
 				}
 			}
 			breakThread = false;
-//			activeAgent = false;
 			animationInProgress = false;
 			gui.repaint();
 
@@ -348,22 +280,15 @@ public class CIMAAnimation {
 		
 		
 		private void doAnimation(int i){
-//			for(int j  = 0; j < i; j++){
-//				messageDataList.get(j).animationFinished();
-//			}
 			
 			for(MessageData msgData : messageDataList){
 				msgData.clearExplainMessageData();
 			}
-//			messageDataList.get(i).markAllColors();
 			SendMessageAnimationTimer timer = messageDataList.get(i).animation();
 			try {
 				timer.join();
-				System.out.println("join.... i = "+i+"  / msgDataList.size() = "+messageDataList.size());
 				if(i == messageDataList.size()-1){
-					System.out.println("ende");
 					messageDataList.get(i).resetCurrentmsgDataAnimation();
-//					messageDataList.get(i).animationFinished();
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();

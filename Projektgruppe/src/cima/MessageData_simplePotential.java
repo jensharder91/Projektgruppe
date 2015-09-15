@@ -44,24 +44,6 @@ public class MessageData_simplePotential extends MessageData{
 		}
 	}
 	
-//	private void displayPotentialCalculation(Graphics2D g){
-////		String[] explainStrings = 
-////			{"Nachricht", 
-////				"normale Nachricht: "+lamdaValue, 
-////				"bestmögliche Nachricht: "+bestPossibleLamdaValue};
-////		InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, Color.BLUE, null, explainStrings);
-////		
-////		
-////		for(CIMAEdgeWeight edge : potentialEdges){
-////			edge.setOvalColor(Color.GREEN);
-//////			System.out.println("color "+edge.toString());
-////		}
-//		
-//		String[] explainStrings = {"test1", "test2", "hier erklär ich die msgData"};
-//		InfoDisplayClass.getInfoDisplayClass().displayInLowerRightCorner(g, Color.RED, null, explainStrings);
-//		
-////		System.out.println(potentialData.toString());
-//	}
 	private void displayPotentialCalculation(Graphics2D g){
 		
 		
@@ -75,7 +57,6 @@ public class MessageData_simplePotential extends MessageData{
 		
 		
 		InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, explainStrings[0], 1, Color.BLACK, ovalColor);
-//		InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, explainStrings[1], 2, Color.BLACK, null);
 		if(potentialEdgeWeights.size() > 0){
 			InfoDisplayClass.getInfoDisplayClass().displayInUpperLeftCorner(g, explainStrings[1], 2, Color.BLACK, markColor);
 		}else{
@@ -85,7 +66,6 @@ public class MessageData_simplePotential extends MessageData{
 		
 		for(CIMAEdgeWeight edge : potentialEdgeWeights){
 			edge.setOvalColor(markColor, Color.BLACK);
-//			System.out.println("color "+edge.toString());
 		}
 	}
 	
@@ -94,7 +74,6 @@ public class MessageData_simplePotential extends MessageData{
 		List<CIMAEdgeWeight> potentialEdgeWeights = potentialData.getPotentialEdgeWeights();
 		for(CIMAEdgeWeight edge : potentialEdgeWeights){
 			edge.resetColor();
-//			System.out.println("color "+edge.toString());
 		}
 		
 		IMarkable max1 = mapMarkable.get("max1");
@@ -161,10 +140,6 @@ public class MessageData_simplePotential extends MessageData{
 
 	@Override
 	protected void clearExplainMessageData() {
-//		for(CIMAEdgeWeight edge : potentialEdges){
-////			System.out.println("clear "+edge.toString());
-//			edge.resetColor();
-//		}
 		
 		IMarkable max1 = mapMarkable.get("max1");
 		IMarkable max2 = mapMarkable.get("max2");
