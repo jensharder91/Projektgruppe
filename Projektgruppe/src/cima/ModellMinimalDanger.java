@@ -337,6 +337,10 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		for(Vertice childVertice : vertice.getChildren()){
 			calcBestPossibleLamdaValue(((CIMAVertice)childVertice));
 		}
+		
+		if(potentialEdges == null){
+			potentialEdges = new ArrayList<CIMAEdgeWeight>();
+		}
 	}
 
 }
