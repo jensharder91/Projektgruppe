@@ -112,7 +112,7 @@ public class CIMAVertice extends Vertice implements IMarkable{
 		}else{
 			if(drawMu){
 				stringVertice = String.valueOf(mu);
-				displayedInfoString = "minimale Agenten als Homebase";
+				displayedInfoString = "minimale Agentenzahl (als Homebase)";
 			}else{
 				verticeWeight = calcStrategy.calcGeneralVerticeWeight(this);
 				stringVertice = String.valueOf(verticeWeight);
