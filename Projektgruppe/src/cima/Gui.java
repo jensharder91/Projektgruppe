@@ -479,6 +479,9 @@ public abstract class Gui extends JPanel{
 	}
 
 	protected void clearGui(){
+		
+		treeChanged();
+		
 		rootVertice = null;
 		currentVertice = null;
 		homeBase = null;
