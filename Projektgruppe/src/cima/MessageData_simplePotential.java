@@ -54,7 +54,6 @@ public class MessageData_simplePotential extends MessageData{
 	private void displayPotentialCalculation(Graphics2D g){
 		
 		
-		boolean flag = potentialData.getFlag();
 		List<CIMAEdgeWeight> potentialEdgeWeights = potentialData.getPotentialEdgeWeights();
 		
 		

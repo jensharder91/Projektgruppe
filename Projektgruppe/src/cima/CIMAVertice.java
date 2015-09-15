@@ -42,10 +42,7 @@ public class CIMAVertice extends Vertice implements IMarkable{
     protected Gui gui = CIMAGui.getGui();
     protected boolean activeAgent = false;
     public static boolean activeAgentAnimation = false;
-    private boolean marked = false;
     private static String displayedInfoString ="";
-    private boolean drawPotentialData = false;
-    
     protected int currentAgents = 0;
     protected boolean decontaminated = false;
     protected Color verticeColor = Color.white;
@@ -401,7 +398,6 @@ public class CIMAVertice extends Vertice implements IMarkable{
 	public void setOvalColor(Color color, Color textColor) {
 		verticeColor = color;
 		this.stringColor = textColor;
-		marked = true;
 	}
 	@Override
 	public int getValue() {
@@ -410,7 +406,6 @@ public class CIMAVertice extends Vertice implements IMarkable{
 	@Override
 	public void resetColor(){
 		verticeColor = Color.white;
-		marked = false;
 		this.stringColor = defaultStringColor;
 	}
 	
@@ -418,7 +413,6 @@ public class CIMAVertice extends Vertice implements IMarkable{
 		return decontaminated;
 	}
 	public void setDrawPotentialData(boolean bool){
-		drawPotentialData = bool;
 	}
 	public static int getMinimalMu(){
 		return minimalMu;
@@ -489,8 +483,6 @@ public class CIMAVertice extends Vertice implements IMarkable{
 	}
 	
 	private void calcAgentsMove(){
-		
-		CIMAAnimation animation = CIMAAnimation.getCIMAAnimation();
 
 		agentWayList.clear();
 		

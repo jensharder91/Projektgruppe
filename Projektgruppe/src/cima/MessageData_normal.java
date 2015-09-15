@@ -5,8 +5,6 @@ import java.awt.Graphics2D;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.plaf.basic.BasicLookAndFeel;
-
 /**
  * 
  * messageData for the paper-algorithmus (no potential)

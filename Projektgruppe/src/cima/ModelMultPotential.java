@@ -303,15 +303,12 @@ public class ModelMultPotential extends ICalcStrategy{
 			potentialEdges.add(max2);
 		}
 		
-		//case4: reduce the maxMsgData
-		boolean edge1Case = true;
 		reducedValue = maxMsgData.getBestPossiblelamdaValue();
 		if(reducedValue < 1){
 			reducedValue = 1;
 		}
 		if(reducedValue < max2MsgData.getValue()){
 			reducedValue = max2MsgData.getValue();
-			edge1Case = false;
 		}
 		possibleMu = calcBestMuValue(max1.getValue(), max2.getValue(), reducedValue);
 		if(possibleMu < bestMuResult){

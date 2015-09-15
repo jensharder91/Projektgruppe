@@ -43,12 +43,10 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		}
 		
 		MessageData_simplePotential biggestMsgData = new MessageData_simplePotential();
-		MessageData_simplePotential secBiggestMsgData = new MessageData_simplePotential();
 		if(maximums.size() >= 1){
 			biggestMsgData = maximums.get(0);
 		}
 		if(maximums.size() >= 2){
-			secBiggestMsgData = maximums.get(1);
 		}
 		
 		CIMAEdgeWeight max1 = calcSortedEdgeWeightList(senderNode, receiverNode).get(0);
@@ -165,7 +163,6 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		List<MessageData> lamdas = vertice.getLamdas();
 		Collections.sort(lamdas, new MessageDataComparator());
 		MessageData_simplePotential biggestMsgData = new MessageData_simplePotential();
-		MessageData_simplePotential biggest2MsgData = new MessageData_simplePotential();
 		if(lamdas.size() >= 1){
 			if(lamdas.get(0) instanceof MessageData_simplePotential){
 				biggestMsgData = (MessageData_simplePotential)lamdas.get(0);
@@ -173,7 +170,6 @@ public class ModellMinimalDanger extends ICalcStrategy{
 		}
 		if(lamdas.size() >= 2){
 			if(lamdas.get(0) instanceof MessageData_simplePotential){
-				biggest2MsgData = (MessageData_simplePotential)lamdas.get(1);
 			}
 		}
 		

@@ -1,7 +1,6 @@
 package cima;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -13,7 +12,7 @@ public class PotentialData {
 	
 	private boolean flag = false;
 	private ArrayList<CIMAEdgeWeight> potentialEdgeWeights = new ArrayList<CIMAEdgeWeight>();
-	private CIMAVertice vertice = null;
+	
 	
 	
 	//constructors
@@ -30,15 +29,12 @@ public class PotentialData {
 	
 	public PotentialData(CIMAVertice vertice, boolean flag){
 		this(flag);
-		this.vertice = vertice;
 	}
 	public PotentialData(CIMAVertice vertice, CIMAEdgeWeight potentialEdgeWeight1){
 		this(potentialEdgeWeight1);
-		this.vertice = vertice;
 	}
 	public PotentialData(CIMAVertice vertice, CIMAEdgeWeight potentialEdgeWeight1, CIMAEdgeWeight potentialEdgeWeight2){
 		this(potentialEdgeWeight1, potentialEdgeWeight2);
-		this.vertice = vertice;
 	}
 	
 	
